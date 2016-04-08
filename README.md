@@ -20,13 +20,13 @@ Code structure tree to be converted from Matlab to C++:
             - pextend
     - initialise_inverse_depth
     - optimise_constraint_image_inverse_depth
-        - generate_constraints_info_Mviews          .... DONE !!!
+        - generate_constraints_info_Mviews................ DONE !!!
         - initialise_info_matrix
-        - generate_constraints_info_Mviews          .... DONE !!!
+        - generate_constraints_info_Mviews................ DONE !!!
         - update_info_matrix_Mviews
         - constraints_addition_inverse_depth
         - constraints_removal_inverse_depth
-        - compute_gate_inverse_depth_Mviews         .... DONE !!!
+        - compute_gate_inverse_depth_Mviews............... DONE !!!
     
 - assign_constraint_weight
 
@@ -40,6 +40,6 @@ Code structure tree to be converted from Matlab to C++:
         - generate_constraint_info_pose
         - constraint_graph_add
         - constraint_graph_subtract
-        - compute_gate_graph                        .... DONE !!!
+        - compute_gate_graph............................. DONE !!!
         
 - recover_moments
