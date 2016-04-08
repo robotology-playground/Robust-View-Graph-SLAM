@@ -1,0 +1,106 @@
+
+#include "../src/libs.h"
+using namespace std;
+
+/****************************/
+
+/* The gateway function */
+void mexFunction( int nlhs, mxArray *plhs[],
+        int nrhs, const mxArray *prhs[]){
+    
+    /* Check for proper number of arguments */
+    if (nrhs != 1) {
+        mexErrMsgIdAndTxt("MATLAB:triangulate:nargin",
+                "least-squares requires three input arguments.");} 
+    else if (nlhs != 2) {
+        mexErrMsgIdAndTxt("MATLAB:triangulate:nargout",
+                "least-squares requires four output argument.");}
+    
+    /* create a pointer to the real data in the input matrix  */
+    double *vec_in; /* y */
+    double *mat_in; /* Y */
+    vec_in=mxGetPr(prhs[0]);
+    mat_in=mxGetPr(prhs[1]);
+
+    /* get dimensions of the input matrix */
+    size_t ncols;
+    ncols=mxGetN(prhs[1]);
+    
+    /****************************/
+
+    int i,j,k,idx;
+    
+    VecXd y(ncols);
+    for (i=0;i<ncols;i++){
+        y.coeffRef(i) = vec_in[i];}
+     
+    /****************************/
+    
+    // get Y as sparse //
+    SpMat Y(ncols,ncols);
+    vector<T> tripletList;
+    for (i=0;i<ncols;i++){
+        for (j=0;j<ncols;j++){
+            idx=ncols*i+j;
+            if (abs(mat_in[idx])>0&!isnan(mat_in[idx])&isfinite(mat_in[idx])){
+            tripletList.push_back(T(j,i,mat_in[idx]));}}}
+    Y.setFromTriplets(tripletList.begin(), tripletList.end());
+    //cout << "NNZ = " << Y.nonZeros() << endl;
+    
+    /****************************/
+    
+//     // get Y as dense //
+//     MatXd dY(ncols,ncols);
+//     for (i=0;i<ncols;i++){
+//        for (j=0;j<ncols;j++){
+//            idx=ncols*i+j;
+//            dY.coeffRef(j,i)=mat_in[idx];}}
+//     // convert Y as sparse //
+//     SpMat Y=dY.sparseView();
+//     cout << "NNZ = " << Y.nonZeros() << endl;
+       
+    /****************************/
+    
+    /* solve as  sparse */
+    // Solve instead of inverse //        
+    SpMat I(ncols,ncols);
+    I.setIdentity();
+    //Eigen::ConjugateGradient<SpMat> solver(Y);
+    //Eigen::SparseQR<SpMat, Eigen::COLAMDOrdering<int> > solver(Y);
+    Eigen::SparseLU<SpMat, Eigen::COLAMDOrdering<int> > solver(Y);
+    SpMat sP(ncols,ncols);
+    sP=solver.solve(I);
+    VecXd x;
+    x=sP*y;
+    //x=solver.solve(y);
+    MatXd P=Eigen::MatrixXd(sP);
+    
+    /****************************/
+    
+//     /* solve as dense */
+//     MatXd I = Eigen::MatrixXd::Identity(ncols,ncols);
+//     MatXd P=dY.householderQr().solve(I);
+//     VecXd x=P*y;
+    
+//     /* solve as dense per column */
+//     MatXd I = Eigen::MatrixXd::Identity(ncols,ncols);
+//     MatXd P(ncols,ncols);
+//     for (j=0;j<ncols;j++){
+//         P.col(j)=dY.householderQr().solve(I.col(j));}
+//     VecXd x=P*y;
+
+    /****************************/
+    
+    /* get output pointers */
+    plhs[0] = mxCreateDoubleMatrix(ncols, 1, mxREAL);
+    double *vec_out = mxGetPr(plhs[0]);
+    for (i=0; i<ncols; i++) {
+        vec_out[i] = x.coeffRef(i);}
+    
+    plhs[1] = mxCreateDoubleMatrix(ncols, ncols, mxREAL);
+    double *mat_out = mxGetPr(plhs[1]);
+    for (i=0;i<ncols;i++){
+        for (j=0;j<ncols;j++){
+            idx=ncols*i+j;
+            mat_out[idx]=P.coeffRef(j,i);}}
+}

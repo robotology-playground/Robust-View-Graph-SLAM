@@ -1,0 +1,12 @@
+#include "pwg_optimiser.h"
+#include "common.cpp"
+
+using namespace Eigen;
+
+Eigen::VectorXd pwg_optimiser::observation_model_jacobian_inverse_depth(vector<double> x, double* p,){
+    
+    
+}
+
+Eigen::VectorXd pwg_optimiser::compute_observation_model_derivatives(vector<double> x, double* p){   
+}

@@ -1,0 +1,21 @@
+Spanning tree resources:
+
+======================
+
+Spanning tree - C++
+http://cafim.sssup.it/~giulio/software/spanntree/spanning_tree.html
+
+======================
+
+Maximum Weight Spanning tree (Undirected) - MATLAB:
+http://www.mathworks.com/matlabcentral/fileexchange/23276-maximum-weight-spanning-tree-undirected/content/MaximumSpanningTree/UndirectedMaximumSpanningTree.m
+
+======================
+
+Minimum spanning tree:
+http://algs4.cs.princeton.edu/43mst/
+
+======================
+
+Prim’s Minimum Spanning Tree
+http://www.stoimen.com/blog/2012/11/19/computer-algorithms-prims-minimum-spanning-tree/

@@ -1,0 +1,13 @@
+using namespace std;
+
+class pwg_optimiser {
+    
+public:
+    
+    Eigen::VectorXd observation_model_jacobian_inverse_depth(vector<double> x, double* p);
+    
+private:
+    
+    Eigen::VectorXd compute_observation_model_derivatives(vector<double> x, double* p);
+    
+}

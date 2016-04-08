@@ -1,0 +1,49 @@
+I made this function to extract blocks from a Eigen::SparseMatrix<double,ColMaior>
+
+typedef Triplet<double> Tri;
+SparseMatrix<double> sparseBlock(SparseMatrix<double,ColMajor> M,
+        int ibegin, int jbegin, int icount, int jcount){
+        //only for ColMajor Sparse Matrix
+    assert(ibegin+icount <= M.rows());
+    assert(jbegin+jcount <= M.cols());
+    int Mj,Mi,i,j,currOuterIndex,nextOuterIndex;
+    vector<Tri> tripletList;
+    tripletList.reserve(M.nonZeros());
+
+    for(j=0; j<jcount; j++){
+        Mj=j+jbegin;
+        currOuterIndex = M.outerIndexPtr()[Mj];
+        nextOuterIndex = M.outerIndexPtr()[Mj+1];
+
+        for(int a = currOuterIndex; a<nextOuterIndex; a++){
+            Mi=M.innerIndexPtr()[a];
+
+            if(Mi < ibegin) continue;
+            if(Mi >= ibegin + icount) break;
+
+            i=Mi-ibegin;    
+            tripletList.push_back(Tri(i,j,M.valuePtr()[a]));
+        }
+    }
+    SparseMatrix<double> matS(icount,jcount);
+    matS.setFromTriplets(tripletList.begin(), tripletList.end());
+    return matS;
+}
+And these if the sub-matrix is in one of the four corners:
+
+SparseMatrix<double> sparseTopLeftBlock(SparseMatrix<double> M,
+        int icount, int jcount){
+    return sparseBlock(M,0,0,icount,jcount);
+}
+SparseMatrix<double> sparseTopRightBlock(SparseMatrix<double> M,
+        int icount, int jcount){
+    return sparseBlock(M,0,M.cols()-jcount,icount,jcount);
+}
+SparseMatrix<double> sparseBottomLeftBlock(SparseMatrix<double> M,
+        int icount, int jcount){
+    return sparseBlock(M,M.rows()-icount,0,icount,jcount);
+}
+SparseMatrix<double> sparseBottomRightBlock(SparseMatrix<double> M,
+        int icount, int jcount){
+    return sparseBlock(M,M.rows()-icount,M.cols()-jcount,icount,jcount);
+}
