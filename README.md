@@ -2,8 +2,7 @@
 C++ implementation of view-graph SLAM using nonlinear least-squares
 
 Code structure tree to be converted from Matlab to C++:
-\begin{itemize}
-\item get_aligned_point_matches \\
+- get_aligned_point_matches \\
     get_bundle_images\\
         demosaic (Bayer decoding, possibly using OpenCV)\\
     initialise_keyframe\\
@@ -17,6 +16,5 @@ Code structure tree to be converted from Matlab to C++:
         get_intrinsics\\
         remove_lens_distortion\\
         pextend\\
-\item initialise_inverse_depth\\
-\item optimise_constraint_image_inverse_depth\\
-\end{itemize|
+- initialise_inverse_depth\\
+- optimise_constraint_image_inverse_depth\\
