@@ -15,9 +15,9 @@ PwgOptimiser::PwgOptimiser( int M, int N ) {
     /* verbose */
     int VERBOSE = 1;
     if (VERBOSE > 0){
-        //std::cout << std::endl ;
-        //std::cout << "Using bundles of " << ncams << " cameras." << std::endl ;
-        //td::cout << "Number of point tracks " << npts << std::endl ;
+        std::cout << std::endl ;
+        std::cout << "Using bundles of " << ncams << " cameras." << std::endl ;
+        std::cout << "Number of point tracks " << npts << std::endl ;
     }
 }
 
@@ -33,11 +33,15 @@ PwgOptimiser::~PwgOptimiser(void){
 }
 
 /*=====================*/
-void PwgOptimiser::initialise_a_constraint( const int& cam, const int& kpt,
-        const std::vector<double>& p1, const std::vector<double>& z,
-        const std::vector<double>& R, Eigen::MatrixXd Y, Eigen::VectorXd y,
-        const int& sw ){
-    constraints.push_back(PwgOptimiser::constraint( cam, kpt, p1, z, R, Y, y, sw )); // sw=0, initially
+void PwgOptimiser::initialise_a_constraint(
+        const int& cam,
+        const int& kpt,
+        const std::vector<double>& p1,
+        const std::vector<double>& z,
+        const std::vector<double>& R,
+        Eigen::MatrixXd Y,
+        Eigen::VectorXd y){
+    constraints.push_back(PwgOptimiser::constraint( cam, kpt, p1, z, R, Y, y, int(0) )); // sw=0, initially
     //std::cout << "C(" << constraints.size() << ") initialised ." << std::endl;
 }
 
@@ -101,12 +105,6 @@ void PwgOptimiser::get_information_matrix_and_vector( Eigen::VectorXd& yout,
 }
 
 /*=====================*/
-void PwgOptimiser::get_switch_vector( int *sw ){
-    for (int j=0;j<constraints.size();j++)
-        sw[j] = constraints[j].sw;
-}
-
-/*=====================*/
 void PwgOptimiser::optimise_constraints_image_inverse_depth_Mviews(const double *xs){
     
     int VERBOSE = 1 ;
@@ -134,6 +132,17 @@ void PwgOptimiser::optimise_constraints_image_inverse_depth_Mviews(const double 
     
     /* Generate image constraints information */
     generate_constraints_info_Mviews ( xs ) ;
+    
+    /* Include measurements that are initially ON (not trusted) */
+    for (i=0; i<constraints.size(); i++)
+        if (constraints[i].sw==1) UPDATE_SWITCH.push_back(i); /* take ON */
+    Eigen::SparseMatrix<double> Yon ( y.size(), y.size() ) ;
+    Eigen::VectorXd yon ( y.size() ) ;
+    yon.setZero ( y.size(), 1 ) ;
+    update_info_matrix_Mviews ( Yon, yon ) ;
+    Y = Y + Yon ;                     /* update the state of y using Con */
+    y = y + yon ;                     /* update the state of Y using Con */
+    UPDATE_SWITCH.clear();
     
     /* Apply remaining constraints with residual switching */
     constraints_addition_inverse_depth_Mviews ( xs ) ;
@@ -202,7 +211,7 @@ void PwgOptimiser::generate_constraints_info_Mviews( const double *xs ){
         yz = (H.transpose()*R.inverse())*v;        /* information vector */
         Yz = (H.transpose()*R.inverse())*H;        /* information matrix */
         for (int j=0;j<7;j++)/*Numerical checks (remove large information)*/
-            if (Yz.coeffRef(j,j)>1e+9)
+            if (Yz.coeffRef(j,j)>1e+12)
                 b = 1;
         if (b==1){
             t++;
@@ -226,18 +235,12 @@ void PwgOptimiser::generate_constraints_info_Mviews( const double *xs ){
 /*=====================*/
 void PwgOptimiser::constraints_addition_inverse_depth_Mviews( const double *xs ) {
     
-    std::cout << "Step #1" << std::endl;
-    //std::this_thread::sleep_for (std::chrono::seconds(10));
-    sleep(10) ;
     /* initialise memory */
     double *x, *c, *v ;
     int i ;
     int VERBOSE = 1 ;
-    double gateinnov = 9.2103 ;
+    double gateinnov = 9.2 ;
     
-    std::cout << "Step #2" << std::endl;
-    //std::this_thread::sleep_for (std::chrono::seconds(10));
-    sleep(10) ;
     /* get OFF constraints */
     for (i=0; i<constraints.size(); i++)
         if (constraints[i].sw==0) GATE_SWITCH.push_back(i);  /* take OFF */
@@ -245,9 +248,6 @@ void PwgOptimiser::constraints_addition_inverse_depth_Mviews( const double *xs )
         return ;
     }
     
-    std::cout << "Step #3" << std::endl;
-    //std::this_thread::sleep_for (std::chrono::seconds(10));
-    sleep(10) ;
     /* recover moments {y,Y} -> {x,c}
      * y and Y are inputs to this function because its not a friend of
      * PwgOptimiser
@@ -256,39 +256,30 @@ void PwgOptimiser::constraints_addition_inverse_depth_Mviews( const double *xs )
     c = new double [y.size()*y.size()]() ;       /* recovered covariance */
     recover_moments ( x, c ) ;
     
-    std::cout << "Step #4" << std::endl;
-    //std::this_thread::sleep_for (std::chrono::seconds(10));
-    sleep(10) ;
     /* compute gate */
     v = new double [GATE_SWITCH.size()]() ;    /* computed gate function */
     compute_gate_inverse_depth_Mviews( v, x, c, xs ) ;
     delete[] x ;
     delete[] c ;
     
-    std::cout << "Step #5" << std::endl;
-    //std::this_thread::sleep_for (std::chrono::seconds(10));
-    sleep(10) ;
+    //for (i=0; i<GATE_SWITCH.size(); i++)
+    //    std::cout << v[i] << std::endl ;
+    
     /* filter inliers: switch ON gated constraints */
     for (i=0; i<GATE_SWITCH.size(); i++)
-        if (v[i]<gateinnov & v[i]>=0){
+        if (std::fabs(v[i])<gateinnov){
             UPDATE_SWITCH.push_back(GATE_SWITCH[i]);
             constraints[GATE_SWITCH[i]].sw=1;
         }
     
-    std::cout << "Step #6" << std::endl;
-    //std::this_thread::sleep_for (std::chrono::seconds(10));
-    sleep(10) ;
     /* Add constraints that passed residuals test */
-    Eigen::SparseMatrix<double> Yon ( npts+6*ncams, npts+6*ncams ) ;
-    Eigen::VectorXd yon ( npts+6*ncams ) ; // allocates matrix
-    yon.setZero ( yon.size(), 1 ) ;
+    Eigen::SparseMatrix<double> Yon ( y.size(), y.size() ) ;
+    Eigen::VectorXd yon ( y.size() ) ; // allocates matrix
+    yon.setZero ( y.size(), 1 ) ;
     update_info_matrix_Mviews ( Yon, yon ) ;
     Y = Y + Yon ;                     /* update the state of y using Con */
     y = y + yon ;                     /* update the state of Y using Con */
     
-    std::cout << "Step #7" << std::endl;
-    //std::this_thread::sleep_for (std::chrono::seconds(10));
-    sleep(10) ;
     if (VERBOSE>0){
         int noff = GATE_SWITCH.size()-UPDATE_SWITCH.size() ;
         std::cout<<"Switched ON: "<< UPDATE_SWITCH.size()<<", " ;
@@ -297,9 +288,6 @@ void PwgOptimiser::constraints_addition_inverse_depth_Mviews( const double *xs )
         std::cout<<noff<< " off."<<std::endl ;
     }
     
-    std::cout << "Step #8" << std::endl;
-    //std::this_thread::sleep_for (std::chrono::seconds(10));
-    sleep(10) ;
     /* reset switches */
     delete[] v ;
     GATE_SWITCH.clear();
@@ -340,6 +328,9 @@ bool PwgOptimiser::constraints_subtraction_inverse_depth_Mviews( const double *x
     compute_gate_inverse_depth_Mviews( r, x, c, xs ) ;
     delete[] x ;
     delete[] c ;
+    
+    //for (i=0; i<GATE_SWITCH.size(); i++)
+    //    std::cout << gate[i] << std::endl ;
     
     /* determine whether to limit minimum gate threshold (based on Ct) */
     rmax = 0 ;
@@ -406,6 +397,8 @@ void PwgOptimiser::recover_moments ( double *x, double *c ) {
     Phat = Object2->P ;
     xhat = Object2->x ;
     
+    //std::cout << xhat << std::endl ;
+    
     /* state vector */
     for (int i=0; i<y.size() ; i++)
         x[i] = (Object2->x).coeffRef(i) ;
@@ -425,7 +418,7 @@ void PwgOptimiser::update_info_matrix_Mviews( Eigen::SparseMatrix<double>& Yon,
         Eigen::VectorXd& yon ){
     std::vector<T> tripletList;
     int k, n ;
-    for (k=0; k<UPDATE_SWITCH.size(); k++){
+    for (int k=0; k<UPDATE_SWITCH.size(); k++){
         n = UPDATE_SWITCH[k] ;
         diagonal_triplet_form(tripletList, n); // NOTE: triplets accomulate when repeated
         off_diagonal_triplet_form(tripletList, n); // NOTE: triplets accomulate when repeated

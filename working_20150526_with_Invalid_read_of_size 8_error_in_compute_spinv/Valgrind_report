@@ -1,0 +1,76 @@
+root@iiticublap025:~/Dropbox/code/matlab/cpp/src# valgrind ./PwgOptimiser 2
+==3235== Memcheck, a memory error detector
+==3235== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==3235== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
+==3235== Command: ./PwgOptimiser 2
+==3235== 
+==3235== WARNING: valgrind ignores shmget(shmflg) SHM_HUGETLB
+Process iCub images 
+Using bundles of 2 cameras.
+Number of point tracks 5
+Trusted constraints: 0
+ON constraints: 0
+OFF constraints: 10
+EigenSparseToCholmodSparseCopy:        0.0066
+compute_cholesky: 0.059033
+compute_spinv: 0.011181
+Switched ON: 10, Totals: 10 on, 0 off.
+EigenSparseToCholmodSparseCopy:        0.0000
+compute_cholesky: 0.01734
+==3235== Invalid read of size 8
+==3235==    at 0x419F42: RecoverMoments::compute_spinv(cholmod_factor_struct*, cholmod_common_struct*) (in /home/tabuhashim/Dropbox/code/matlab/cpp/src/PwgOptimiser)
+==3235==    by 0x41BB3B: RecoverMoments::RecoverMoments(Eigen::SparseMatrix<double, 0, int> const&, Eigen::Matrix<double, -1, 1, 0, -1, 1> const&) (in /home/tabuhashim/Dropbox/code/matlab/cpp/src/PwgOptimiser)
+==3235==    by 0x409770: PwgOptimiser::recover_moments(double*, double*) (in /home/tabuhashim/Dropbox/code/matlab/cpp/src/PwgOptimiser)
+==3235==    by 0x40CA81: PwgOptimiser::constraints_subtraction_inverse_depth_Mviews(double const*) (in /home/tabuhashim/Dropbox/code/matlab/cpp/src/PwgOptimiser)
+==3235==    by 0x40D1F2: PwgOptimiser::optimise_constraints_image_inverse_depth_Mviews(double const*) (in /home/tabuhashim/Dropbox/code/matlab/cpp/src/PwgOptimiser)
+==3235==    by 0x403D78: process(int) (in /home/tabuhashim/Dropbox/code/matlab/cpp/src/PwgOptimiser)
+==3235==    by 0x404254: main (in /home/tabuhashim/Dropbox/code/matlab/cpp/src/PwgOptimiser)
+==3235==  Address 0x8e846b0 is 0 bytes after a block of size 608 alloc'd
+==3235==    at 0x4C2AC3D: malloc (vg_replace_malloc.c:299)
+==3235==    by 0x4EC281E: cholmod_l_malloc (in /usr/lib/x86_64-linux-gnu/libcholmod.so.2.1.2)
+==3235==    by 0x4EC2BEC: cholmod_l_realloc (in /usr/lib/x86_64-linux-gnu/libcholmod.so.2.1.2)
+==3235==    by 0x4EC2CE8: cholmod_l_realloc_multiple (in /usr/lib/x86_64-linux-gnu/libcholmod.so.2.1.2)
+==3235==    by 0x4EB9DB9: ??? (in /usr/lib/x86_64-linux-gnu/libcholmod.so.2.1.2)
+==3235==    by 0x4EBA673: cholmod_l_change_factor (in /usr/lib/x86_64-linux-gnu/libcholmod.so.2.1.2)
+==3235==    by 0x4EDD4BC: cholmod_l_rowfac_mask (in /usr/lib/x86_64-linux-gnu/libcholmod.so.2.1.2)
+==3235==    by 0x4EDE562: cholmod_l_rowfac (in /usr/lib/x86_64-linux-gnu/libcholmod.so.2.1.2)
+==3235==    by 0x4ED725C: cholmod_l_factorize_p (in /usr/lib/x86_64-linux-gnu/libcholmod.so.2.1.2)
+==3235==    by 0x4ED7634: cholmod_l_factorize (in /usr/lib/x86_64-linux-gnu/libcholmod.so.2.1.2)
+==3235==    by 0x4199E3: RecoverMoments::compute_cholesky(cholmod_sparse_struct*, cholmod_common_struct*) (in /home/tabuhashim/Dropbox/code/matlab/cpp/src/PwgOptimiser)
+==3235==    by 0x41B6FE: RecoverMoments::RecoverMoments(Eigen::SparseMatrix<double, 0, int> const&, Eigen::Matrix<double, -1, 1, 0, -1, 1> const&) (in /home/tabuhashim/Dropbox/code/matlab/cpp/src/PwgOptimiser)
+==3235== 
+compute_spinv: 0.029264
+Max residual: 0.160913 , Gate: 9.2
+EigenSparseToCholmodSparseCopy:        0.0000
+compute_cholesky: 0.000435
+==3235== Invalid read of size 8
+==3235==    at 0x419F42: RecoverMoments::compute_spinv(cholmod_factor_struct*, cholmod_common_struct*) (in /home/tabuhashim/Dropbox/code/matlab/cpp/src/PwgOptimiser)
+==3235==    by 0x41BB3B: RecoverMoments::RecoverMoments(Eigen::SparseMatrix<double, 0, int> const&, Eigen::Matrix<double, -1, 1, 0, -1, 1> const&) (in /home/tabuhashim/Dropbox/code/matlab/cpp/src/PwgOptimiser)
+==3235==    by 0x409770: PwgOptimiser::recover_moments(double*, double*) (in /home/tabuhashim/Dropbox/code/matlab/cpp/src/PwgOptimiser)
+==3235==    by 0x40D29E: PwgOptimiser::optimise_constraints_image_inverse_depth_Mviews(double const*) (in /home/tabuhashim/Dropbox/code/matlab/cpp/src/PwgOptimiser)
+==3235==    by 0x403D78: process(int) (in /home/tabuhashim/Dropbox/code/matlab/cpp/src/PwgOptimiser)
+==3235==    by 0x404254: main (in /home/tabuhashim/Dropbox/code/matlab/cpp/src/PwgOptimiser)
+==3235==  Address 0x8ea6620 is 0 bytes after a block of size 608 alloc'd
+==3235==    at 0x4C2AC3D: malloc (vg_replace_malloc.c:299)
+==3235==    by 0x4EC281E: cholmod_l_malloc (in /usr/lib/x86_64-linux-gnu/libcholmod.so.2.1.2)
+==3235==    by 0x4EC2BEC: cholmod_l_realloc (in /usr/lib/x86_64-linux-gnu/libcholmod.so.2.1.2)
+==3235==    by 0x4EC2CE8: cholmod_l_realloc_multiple (in /usr/lib/x86_64-linux-gnu/libcholmod.so.2.1.2)
+==3235==    by 0x4EB9DB9: ??? (in /usr/lib/x86_64-linux-gnu/libcholmod.so.2.1.2)
+==3235==    by 0x4EBA673: cholmod_l_change_factor (in /usr/lib/x86_64-linux-gnu/libcholmod.so.2.1.2)
+==3235==    by 0x4EDD4BC: cholmod_l_rowfac_mask (in /usr/lib/x86_64-linux-gnu/libcholmod.so.2.1.2)
+==3235==    by 0x4EDE562: cholmod_l_rowfac (in /usr/lib/x86_64-linux-gnu/libcholmod.so.2.1.2)
+==3235==    by 0x4ED725C: cholmod_l_factorize_p (in /usr/lib/x86_64-linux-gnu/libcholmod.so.2.1.2)
+==3235==    by 0x4ED7634: cholmod_l_factorize (in /usr/lib/x86_64-linux-gnu/libcholmod.so.2.1.2)
+==3235==    by 0x4199E3: RecoverMoments::compute_cholesky(cholmod_sparse_struct*, cholmod_common_struct*) (in /home/tabuhashim/Dropbox/code/matlab/cpp/src/PwgOptimiser)
+==3235==    by 0x41B6FE: RecoverMoments::RecoverMoments(Eigen::SparseMatrix<double, 0, int> const&, Eigen::Matrix<double, -1, 1, 0, -1, 1> const&) (in /home/tabuhashim/Dropbox/code/matlab/cpp/src/PwgOptimiser)
+==3235== 
+compute_spinv: 0.000904
+==3235== 
+==3235== HEAP SUMMARY:
+==3235==     in use at exit: 0 bytes in 0 blocks
+==3235==   total heap usage: 2,301 allocs, 2,301 frees, 341,127 bytes allocated
+==3235== 
+==3235== All heap blocks were freed -- no leaks are possible
+==3235== 
+==3235== For counts of detected and suppressed errors, rerun with: -v
+==3235== ERROR SUMMARY: 20 errors from 2 contexts (suppressed: 0 from 0)

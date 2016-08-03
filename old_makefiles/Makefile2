@@ -1,0 +1,82 @@
+#all:
+#	#g++ main.cpp hello.cpp factorial.cpp -o hello
+#	g++ -Wall main.cpp hello.cpp factorial.cpp -o hello
+
+
+#<target>: [ <dependency > ]*
+#   [ <TAB> <command> <endl> ]+
+
+#all: hello
+#
+#hello: main.o factorial.o hello.o
+#	g++ main.o factorial.o hello.o -o hello
+#
+#main.o: main.cpp
+#	g++ -c main.cpp
+#
+#factorial.o: factorial.cpp
+#	g++ -c factorial.cpp
+#
+#hello.o: hello.cpp
+#	g++ -c hello.cpp
+#
+#clean:
+#	rm *o hello
+
+
+#CC: The name of the compiler
+#DEBUG: The debugging flag. This is -g in both g++ and cxx. The purpose of the flag is to include debugging information into the executable, so that you can use utilities such as gdb to debug the code.
+#LFLAGS: The flags used in linking. As it turns out, you don't need any special flags for linking. The option listed is "-Wall" which tells the compiler to print all warnings. But that's fine. We can use that.
+#CFLAGS: The flags used in compiling and creating object files. This includes both "-Wall" and "-c". The "-c" option is needed to create object files, i.e. .o files.
+
+CC = g++
+DEBUG = -g
+CFLAGS = -Wall -c -lcholmod -lmwlapack -lmwblas -llapack -lblas
+LFLAGS = -Wall $(DEBUG) 
+
+# define the C source files
+SRCS = main.cpp PwgOptimiser.cpp RecoverMoments.cpp
+# define the C object files 
+#
+# This uses Suffix Replacement within a macro:
+#   $(name:string1=string2)
+#         For each word in 'name' replace 'string1' with 'string2'
+# Below we are replacing the suffix .c of all words in the macro SRCS
+# with the .o suffix
+#
+#OBJS = $(SRCS:.c=.o)
+OBJS = main.o PwgOptimiser.o RecoverMoments.o
+
+LIB=-L/usr/local/lib -L/usr/lib -lcholmod -lmwlapack -lmwblas -llapack -lblas
+
+LAPACK=-I/usr/local/MATLAB/R2016a/extern/include
+BLAS=-I/usr/local/MATLAB/R2016a/extern/include
+CHOLMOD=-I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/CHOLMOD/MATLAB
+AMD=-I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/AMD/Include
+COLAMD=-I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/COLAMD/Include
+CCOLAMD=-I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/CCOLAMD/Include
+CAMD=-I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/CAMD/Include
+METIS=-I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/metis-4.0/Lib
+INC= $(LAPACK) $(BLAS) $(CHOLMOD) $(AMD) $(COLAMD) $(CCOLAMD) $(CAMD) $(METIS) 
+
+default:    main
+
+main : $(OBJS)
+	$(CC) $(LFLAGS) $(OBJS) $(INC) $(LIB) -c $(SRCS) -I/usr/local/MATLAB/R2016a/extern/include
+
+#main.o : functions.h factorial.cpp hello.cpp
+#	$(CC) $(CFLAGS) main.cpp
+
+#factorial.o :
+#	$(CC) $(CFLAGS) factorial.cpp
+
+#hello.o : functions.h
+#	$(CC) $(CFLAGS) hello.cpp
+
+clean :
+	\rm *.o *~ PwgOptimiser
+
+tar :
+	tar cfv hello.tar PwgOptimiser.h RecoverMoments.h main.cpp PwgOptimiser.cpp RecoverMoments.cpp
+
+all : hello tar

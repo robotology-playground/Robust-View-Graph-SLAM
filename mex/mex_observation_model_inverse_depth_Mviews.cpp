@@ -9,7 +9,7 @@ void mexFunction( int nlhs, mxArray *plhs[],
 {
     
     /* Check for proper number of arguments */
-    if (nrhs != 2) {
+    if (nrhs != 4) {
         mexErrMsgIdAndTxt("MATLAB:triangulate:nargin",
                 "triangulate requires four input arguments.");
     } else if (nlhs != 1) {
@@ -18,10 +18,14 @@ void mexFunction( int nlhs, mxArray *plhs[],
     }
     
     /* create a pointer to the real data in the input matrix  */
-    double *x = mxGetPr(prhs[0]); /* (6+N)x1 */
+    const double *x = mxGetPr(prhs[0]); /* (N+6)x1 */
     double *p = mxGetPr(prhs[1]); /* (2xN)   */
-    long unsigned int N = mxGetN(prhs[1]); /* matrix dimensions */
-    plhs[0] = mxCreateDoubleMatrix(2*N, 1, mxREAL);
+    size_t ncol = mxGetN(prhs[1]);
+    double *ptr = mxGetPr(prhs[2]); /* inverse depth index */
+    int i = ptr[0];
+    ptr = mxGetPr(prhs[3]); /* camera index */
+    int c = ptr[0];
+    plhs[0] = mxCreateDoubleMatrix(2*ncol, 1, mxREAL);
     double *z = mxGetPr(plhs[0]);
     
     /****************************/
@@ -31,6 +35,6 @@ void mexFunction( int nlhs, mxArray *plhs[],
     /* initialise a PwgOptimiser object */
     PwgOptimiser *Object ; // pointer initialisation
     Object = new PwgOptimiser ( ) ; // pointer initialisation
-    Object->observation_model_inverse_depth(z, x, p, N);
+    Object->observation_model_inverse_depth_Mviews(z, x, p, i-1, c-1);
 
 }

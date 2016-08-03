@@ -1,7 +1,8 @@
 #include "mex.h"
 #include <iostream> // std::cout
+#include <string>
 
-#include "../src/PwgOptimiser.cpp"
+#include "../src/PwgOptimiser.h"
 
 /*  the gateway routine.  */
 void mexFunction( int nlhs, mxArray *plhs[],
@@ -27,13 +28,14 @@ void mexFunction( int nlhs, mxArray *plhs[],
     /* Get input MATLAB structure fields data and convert them into C++ fields */
     double *pr;
     mxArray *tmp;
-    int cam, kpt;
+    int cam, kpt, sw = 0;
     std::vector<double> p1(2), z(2), edge(2), R(4,0.0);//, Y(49,0.0), y(7,0.0);
     Eigen::MatrixXd Yz(7,7);
     Eigen::VectorXd yz(7);
     
+    /* initialise a PwgOptimiser object */
     PwgOptimiser *Object; // pointer initialisation
-    Object = new PwgOptimiser; // pointer initialisation
+    Object = new PwgOptimiser ((int)ncams[0], (int)ncols-6*ncams[0]) ;
     
     for (mwIndex jstruct = 0; jstruct < NStructElems; jstruct++) { /* loop the constraints */
         for (int ifield = 0; ifield < nfields; ifield++) {  /* loop the fields */
@@ -51,17 +53,20 @@ void mexFunction( int nlhs, mxArray *plhs[],
             if (ifield==4){// R
                 R[0] = pr[0]; R[3] = pr[3];}
         } // end of nfields loop
-        Object->initialise_a_constraint(cam, kpt, p1, z, R, Yz, yz); // using pointer to object
+        Object->initialise_a_constraint(cam, kpt, p1, z, R, Yz, yz, sw); // using pointer to object
     } // end of NStructElems loop
     
     // evaluate gate
     plhs[0] = mxCreateDoubleMatrix(1, NStructElems, mxREAL);
     double *gate = mxGetPr(plhs[0]); /* output gate */
+    for (int i=0; i<Object->constraints.size(); i++)
+        Object->GATE_SWITCH.push_back(i);        /* take all constraints */
+    Object->compute_gate_inverse_depth_Mviews( gate, x, s, xs ) ; // using pointer to object
     //Object->compute_gate_inverse_depth_nviews(gate, x, ir, jc, s, xs, ncols, ncams[0]); // using pointer to object
-    Object->compute_gate_inverse_depth_Mviews(gate, x, s, xs, ncols, ncams[0]); // using pointer to object
     
     /* Free memory */
     mxFree((void *)fnames);
     mxFree(classIDflags);
     delete Object; // delete class pointer
+
 }

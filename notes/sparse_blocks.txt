@@ -1,4 +1,4 @@
-I wrote this function to extract blocks from a Eigen::SparseMatrix<double,ColMaior>
+I made this function to extract blocks from a Eigen::SparseMatrix<double,ColMaior>
 
 typedef Triplet<double> Tri;
 SparseMatrix<double> sparseBlock(SparseMatrix<double,ColMajor> M,

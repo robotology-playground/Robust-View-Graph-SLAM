@@ -1,0 +1,170 @@
+int N = 2 ;
+int i, j, n ;
+int nz = 0;
+double *Ax ;
+double x, error ;
+cholmod_dense *A, *invK, *spinvK, *I ;
+cholmod_sparse *K, *V ;
+cholmod_factor *L ;
+cholmod_common Common,*cm ;
+clock_t start, end;
+double cpu_time_used;
+cm=&Common;
+// Start using CHOLMOD
+cholmod_start(cm) ;
+cm->print=5;
+/* SPARSE COVARIANCE MATRIX CONSTRUCTION */
+//
+// Generate random symmetric positive (semi)definite matrix
+A = cholmod_zeros(N, N, CHOLMOD_REAL, &Common) ;
+Ax =(double*) A->x ;
+nz = N ;
+//
+// Make positive-definite by adding something positive to the
+// diagonal
+for (n = 0; n < N; n++)
+{
+    Ax[n+n*N] += 5;
+}
+//
+// Make the matrix sparse
+K = cholmod_dense_to_sparse(A, TRUE, &Common) ;
+K->stype = 1 ; // NEED TO MAKE THE MATRIX SYMMETRIC
+//
+// Identity matrix
+I = cholmod_eye(N,N,CHOLMOD_REAL,&Common) ;
+//
+/* SIMPLICIAL */
+//
+// Factorize
+Common.supernodal = CHOLMOD_SIMPLICIAL ;
+L = cholmod_analyze(K, &Common) ;
+cholmod_factorize(K, L, &Common) ;
+//
+// Compute the sparse inverse and the full inverse
+start = clock();
+V = cholmod_spinv(L, &Common) ; // sparse inverse
+end = clock();
+cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+invK = cholmod_solve(CHOLMOD_A, L, I, &Common) ; // full inverse
+//
+// Show results
+cholmod_print_sparse(K,"Original",&Common) ;
+cholmod_print_factor(L,"Factor",&Common) ;
+cholmod_print_sparse(V,"Sparse inverse",&Common) ;
+cholmod_print_dense(invK,"Dense inverse",&Common);
+//
+// Free memory
+cholmod_free_factor(&L, &Common) ;
+cholmod_free_sparse(&K, &Common) ;
+cholmod_free_dense(&I, &Common) ;
+cholmod_free_dense(&A, &Common) ;
+cholmod_finish(&Common) ;
+
+/*--------------------------------------------------*/
+cholmod_dense *x, *b, *r;
+cholmod_factor *L;
+double one_ [2] = {1,0}, m1 [2] = {-1,0};           /* basic scalars */
+b = cholmod_ones(A->nrow, 1, A->xtype, cm);         /* b = ones(n,1) */
+L = cholmod_analyze (A, cm) ;                             /* analyze */
+cholmod_factorize (A, L, cm) ;                          /* factorize */
+x = cholmod_solve (CHOLMOD_A, L, b, cm) ;              /* solve Ax=b */
+r = cholmod_copy_dense (b, cm);                             /* r = b */
+cholmod_sdmult(A, 0, m1, one_, x, r, cm) ;               /* r = r-Ax */
+printf ("norm(b-Ax) %8.1e\n", cholmod_norm_dense (r, 0, cm)) ;
+                                                    /* print norm(r) */
+cholmod_sparse *invY;
+invY = cholmod_spinv(L, cm);
+
+/*--------------------------------------------------*/
+/* ----------------------------------------------------------------- */
+/* solve */
+/* ----------------------------------------------------------------- */
+//
+t = CPUTIME ;
+//
+X = cholmod_solve (CHOLMOD_A, L, B, cm) ;
+//
+ts = CPUTIME - t ;
+ts = MAX (ts, 0) ;
+tot = ta + tf + ts ;
+printf ("solve   cputime:   %12.4f mflop: %8.1f\n",
+       ts, (ts == 0) ? 0 : (1e-6*4*cm->lnz / ts)) ;
+printf ("overall cputime:   %12.4f mflop: %8.1f\n",
+       tot, (tot == 0) ? 0 : (1e-6 * (cm->fl + 4 * cm->lnz) / tot)) ;
+//
+/* ---------------------------------------------------------------------- */
+/* compute the residual */
+/* ---------------------------------------------------------------------- */
+//
+if (A->stype == 0)
+{
+    /* (AA'+beta*I)x=b is the linear system that was solved */
+    /* W = A'*X */
+    W = cholmod_allocate_dense (A->ncol, 1, A->ncol, xtype, cm) ;
+    cholmod_sdmult (A, 2, one, zero, X, W, cm) ;
+    /* R = B - beta*X */
+    R = cholmod_zeros (n, 1, xtype, cm) ;
+    Rx = R->x ;
+    Xx = X->x ;
+    if (xtype == CHOLMOD_REAL)
+    {
+        for (i = 0 ; i < n ; i++)
+        {
+            Rx [i] = Bx [i] - beta [0] * Xx [i] ;
+        }
+    }
+    else
+    {
+        /* complex case */
+        for (i = 0 ; i < n ; i++)
+        {
+            Rx [2*i  ] = Bx [2*i  ] - beta [0] * Xx [2*i  ] ;
+            Rx [2*i+1] = Bx [2*i+1] - beta [0] * Xx [2*i+1] ;
+        }
+    }
+    /* R = A*W - R */
+    cholmod_sdmult (A, 0, one, minusone, W, R, cm) ;
+    cholmod_free_dense (&W, cm) ;
+}
+else
+{
+    /* Ax=b was factorized and solved, R = B-A*X */
+    R = cholmod_copy_dense (B, cm) ;
+    cholmod_sdmult (A, 0, minusone, one, X, R, cm) ;
+}
+rnorm = cholmod_norm_dense (R, 0, cm) ;	    /* max abs. entry */
+xnorm = cholmod_norm_dense (X, 0, cm) ;	    /* max abs. entry */
+//
+axbnorm = (anorm * xnorm + bnorm + ((n == 0) ? 1 : 0)) ;
+resid = rnorm / axbnorm ;
+//
+/* ---------------------------------------------------------------------- */
+/* iterative refinement (real symmetric case only) */
+/* ---------------------------------------------------------------------- */
+//
+resid2 = -1 ;
+if (A->stype != 0 && A->xtype == CHOLMOD_REAL)
+{
+    cholmod_dense *R2 ;
+//
+    /* R2 = A\(B-A*X) */
+    R2 = cholmod_solve (CHOLMOD_A, L, R, cm) ;
+    /* compute X = X + A\(B-A*X) */
+    Xx = X->x ;
+    Rx = R2->x ;
+    for (i = 0 ; i < n ; i++)
+    {
+        Xx [i] = Xx [i] + Rx [i] ;
+    }
+    cholmod_free_dense (&R2, cm) ;
+    cholmod_free_dense (&R, cm) ;
+//
+    /* compute the new residual, R = B-A*X */
+    R = cholmod_copy_dense (B, cm) ;
+    cholmod_sdmult (A, 0, minusone, one, X, R, cm) ;
+    rnorm2 = cholmod_norm_dense (R, 0, cm) ;
+    resid2 = rnorm2 / axbnorm ;
+}
+//
+cholmod_free_dense (&R, cm) ;

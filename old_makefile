@@ -1,0 +1,28 @@
+#Manual:
+#g++ -D_GNU_SOURCE -I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/UFconfig -I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/CHOLMOD/Include -I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/CHOLMOD/MATLAB -I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/AMD/Include -I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/COLAMD/Include -I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/CCOLAMD/Include -I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/CAMD/Include -I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/metis-4.0/Lib  -I"/usr/local/MATLAB/R2016a/extern/include" -I"/usr/local/MATLAB/R2016a/simulink/include" -ansi -fexceptions -fPIC -fno-omit-frame-pointer -pthread -std=c++11 -O -DNDEBUG main.cpp PwgOptimiser.cpp -o hello
+
+# -lglut : OpenGL
+
+#Makefile:
+all: PwgOptimiser ImageViewer
+
+PwgOptimiser: main.o PwgOptimiser.o RecoverMoments.o
+	g++ main.o PwgOptimiser.o RecoverMoments.o -o PwgOptimiser -lcholmod -llapack -lblas -lglfw -O3 -Wall -lCg -lCgGL -lpthread -lglut -lGL -lGLU -lX11 -lXxf86vm -lXrandr -lXi -lopencv_core -lopencv_flann -lopencv_highgui
+
+ImageViewer: imageviewer.o
+	g++ imageviewer.o -o ImageViewer -lglfw -O3 -Wall -lCg -lCgGL -lpthread -lglut -lGL -lGLU -lX11 -lXxf86vm -lXrandr -lXi
+
+main.o: main.cpp
+	g++ -c -D_GNU_SOURCE -I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/UFconfig -I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/CHOLMOD/Include -I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/CHOLMOD/MATLAB -I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/AMD/Include -I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/COLAMD/Include -I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/CCOLAMD/Include -I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/CAMD/Include -I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/metis-4.0/Lib  -I"/usr/local/MATLAB/R2016a/extern/include" -I"/usr/local/MATLAB/R2016a/simulink/include" -ansi -fexceptions -fPIC -fno-omit-frame-pointer -pthread -std=c++11 -O -DNDEBUG main.cpp
+
+PwgOptimiser.o: PwgOptimiser.cpp
+	g++ -c -D_GNU_SOURCE -I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/UFconfig -I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/CHOLMOD/Include -I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/CHOLMOD/MATLAB -I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/AMD/Include -I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/COLAMD/Include -I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/CCOLAMD/Include -I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/CAMD/Include -I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/metis-4.0/Lib  -I"/usr/local/MATLAB/R2016a/extern/include" -I"/usr/local/MATLAB/R2016a/simulink/include" -ansi -fexceptions -fPIC -fno-omit-frame-pointer -pthread -std=c++11 -O -DNDEBUG PwgOptimiser.cpp
+
+RecoverMoments.o: RecoverMoments.cpp
+	g++ -c -D_GNU_SOURCE -I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/UFconfig -I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/CHOLMOD/Include -I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/CHOLMOD/MATLAB -I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/AMD/Include -I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/COLAMD/Include -I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/CCOLAMD/Include -I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/CAMD/Include -I/home/tabuhashim/Dev/GPstuff-4.6/SuiteSparse/metis-4.0/Lib  -I"/usr/local/MATLAB/R2016a/extern/include" -I"/usr/local/MATLAB/R2016a/simulink/include" -ansi -fexceptions -fPIC -fno-omit-frame-pointer -pthread -std=c++11 -O -DNDEBUG RecoverMoments.cpp
+
+imageviewer.o: imageviewer.cpp
+	g++ -c -D_GNU_SOURCE -L/home/tabuhashim/Dev/glfw-2.7.7/lib/x11 -I/home/tabuhashim/Dev/glfw-2.7.7/include imageviewer.cpp
+
+clean:
+	rm -r *o PwgOptimiser ImageViewer

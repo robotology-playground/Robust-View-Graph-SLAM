@@ -2,7 +2,7 @@
 #include <iostream> // std::cout
 #include <string>
 
-#include "../src/PwgOptimiser.cpp"
+#include "../src/PwgOptimiser.h"
 
 /*  the gateway routine.  */
 void mexFunction( int nlhs, mxArray *plhs[],
@@ -14,16 +14,17 @@ void mexFunction( int nlhs, mxArray *plhs[],
     mwSize NStructElems = mxGetNumberOfElements(prhs[0]); // number of constraints
     const char **fnames = (const char **)mxCalloc(nfields, sizeof(*fnames)); /* pointers to field names */
     double *xs = mxGetPr(prhs[1]); /* linearisation point */
+    long unsigned int nrow = mxGetM(prhs[1]);
     double *ncams = mxGetPr(prhs[2]);
     
     /* initialise a PwgOptimiser object */
     PwgOptimiser *Object; // pointer initialisation
-    Object = new PwgOptimiser; // pointer initialisation
+    Object = new PwgOptimiser ((int)ncams[0], (int)nrow-6*ncams[0]) ; // pointer initialisation
     
     /* get constraints from Matlab to C++ and initialise a constraint */
     double *pr;
     mxArray *tmp;
-    int cam, kpt;
+    int cam, kpt, sw = 0;
     std::vector<double> p1(2), z(2), R(4,0.0);//, Y(49,0.0), y(7,0.0);
     std::string str1 ("cam");
     std::string str2 ("kpt");
@@ -50,11 +51,11 @@ void mexFunction( int nlhs, mxArray *plhs[],
             if (str5.compare(fnames[ifield]) == 0){ // R
                 R[0] = pr[0]; R[3] = pr[3];}
         } // end of nfields loop
-        Object->initialise_a_constraint(cam, kpt, p1, z, R, Yz, yz); // using pointer to object
+        Object->initialise_a_constraint(cam, kpt, p1, z, R, Yz, yz, sw); // using pointer to object
     } // end of NStructElems loop
     
     // initialise constraints information
-    Object->generate_constraints_info_Mviews(xs, ncams[0]);
+    Object->generate_constraints_info_Mviews( xs );
     
     // pull-out constraints (Only to use private constraints in Matlab)
     std::vector<PwgOptimiser::pulled_constraint> C;

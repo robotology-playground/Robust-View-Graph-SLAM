@@ -1,0 +1,7 @@
+in terminal: yarpserver
+in terminal: yarpdataplayer --withExtraTimeCol 1
+
+# fixes a QT bug that supresses the main menu in yarpdataplayer
+sudo apt-get remove appmenu-qt5
+
+
