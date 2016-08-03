@@ -1,45 +1,56 @@
-# Robust-View-Graph-SLAM
-C++ implementation of view-graph SLAM using nonlinear least-squares
 
-Code structure tree to be converted from Matlab to C++:
+- Low-level vision
+- 
+- [ ] get aligned point matches
+    - [ ] get image
+    - [ ] get features
+        - [ ] get sift
+        - [ ] get fast
+        - [ ] get kaze
+    - [ ] track features
+        - [ ] track sift
+        - [ ] track fast
+        - [ ] track kaze
+        - [ ] remove points_at_infinity
+    - [ ] calibrate image_points
+        - [ ] get intrinsics
+        - [ ] remove lens distortion
+- [ ] initialise linearisation point
+    - [ ] essential matrix with RANSAC
+        - [ ] bucketing.
+        - [ ] five-Points Algorithm.
+        - [ ] compute R and T.
+        - [ ] triangulate inverse depth
+        - [ ] resolve ambiguities.
+    - [ ] kinematics
+    - [ ] update visibilities
+    - [ ] build the state vector (\mathbf{x}_c \mathbf{x}_f)^\top
+- [ ] integrate Ceres-Solver.
 
-- batch_motion_and_map_inverse_depth
-    - get_aligned_point_matches
-        - get_bundle_images
-            - demosaic (Bayer decoding, possibly using OpenCV)
-        - initialise_keyframe
-            - test_triangulate_inverse_depth
-            - test_triangulate_jacobian_inverse_depth
-            - get_scan_from_range
-        - track_bundle_points
-            - calcOpticalFlowPyrLK (done, already in OpenCV)
-            - remove_points_at_infinity
-        - calibrate_bundle_points
-            - get_intrinsics
-            - remove_lens_distortion
-            - pextend
-    - initialise_inverse_depth
-    - optimise_constraint_image_inverse_depth
-        - generate_constraints_info_Mviews................ DONE !!!
-        - initialise_info_matrix
-        - generate_constraints_info_Mviews................ DONE !!!
-        - update_info_matrix_Mviews
-        - constraints_addition_inverse_depth
-        - constraints_removal_inverse_depth
-        - compute_gate_inverse_depth_Mviews............... DONE !!!
+- RecoverMoments
+- 
+
+- PwgOptimiser
+-
+- [x] initialise_info_matrix.
+- [x] generate_constraints_info_Mviews.
+- [x] update_info_matrix_Mviews.
+- [x] constraints_addition_inverse_depth.
+- [x] constraints_removal_inverse_depth.
+- [x] compute_gate_inverse_depth_Mviews.
+- [ ] solving and inversion (RecoverMoments).
     
-- assign_constraint_weight
-
-- run_pose_graph_estimation
-    - initialise
-        - pose_generate_spanning_tree
-        - pose_generate_sequential
-        - initialise_info_matrix
-        - generate_joint_info_matrix
-    - optimise_constraint_graph
-        - generate_constraint_info_pose
-        - constraint_graph_add
-        - constraint_graph_subtract
-        - compute_gate_graph............................. DONE !!!
-        
-- recover_moments
+- GraphOptimiser
+- 
+- [ ] assign_constraint_weight
+- [ ] run_pose_graph_estimation
+    - [ ] initialise
+        - [ ] pose_generate_spanning_tree
+        - [ ] pose_generate_sequential
+        - [ ] initialise_info_matrix
+        - [ ] generate_joint_info_matrix
+    - [ ] optimise_constraint_graph
+        - [ ] generate_constraint_info_pose
+        - [ ] constraint_graph_add
+        - [ ] constraint_graph_subtract
+        - [ ] compute_gate_graph
