@@ -68,8 +68,7 @@ struct point_2d {
 };
 
 /* generate image points */
-std::vector<point_2d> generate_point_tracks ( int ncams ) {
-    std::vector<point_2d> impoints;
+void generate_point_tracks (std::vector<point_2d>& impoints, int ncams ) {
     std::vector<double> x, y ;
     std::vector<int> status ;
     
@@ -99,7 +98,6 @@ std::vector<point_2d> generate_point_tracks ( int ncams ) {
         status.clear() ;
     }
     
-    return impoints ;
 }
 
 /* generates linearisation point */
@@ -155,7 +153,7 @@ void process (int ncams) {
      *      4- Temporary/Real-time VO/kinematics solution ?
      */
     std::vector<point_2d> p ;
-    p = generate_point_tracks ( ncams ) ; // thread safe
+    generate_point_tracks (p,ncams ) ; // thread safe
     ncams = p.size() ;
     int npts = p[0].x.size() ;
     //for (int i=0; i<ncams; i++)
