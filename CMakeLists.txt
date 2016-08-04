@@ -270,14 +270,16 @@ endif(EXISTS ${AMD_LIB})
 
 # MATLAB
 #find_package( matlab )
-find_path(MATLAB_INCLUDE_DIRS NAMES extern PATHS /usr/local/MATLAB/R2016a/extern/include)
+#find_path(MATLAB_INCLUDE_DIRS NAMES extern PATHS /usr/local/MATLAB/R2016a/extern/include)
+find_path(MATLAB_INCLUDE_DIRS NAMES extern PATHS ./include/matlab)
 if(NOT EXISTS ${MATLAB_INCLUDE_DIRS})
 	message( "could not find MATLAB." )
 else(NOT EXISTS ${MATLAB_INCLUDE_DIRS})
 	message("-- Found MATLAB: ${MATLAB_INCLUDE_DIRS}")
 	include_directories(${MATLAB_INCLUDE_DIRS})
 endif(NOT EXISTS ${MATLAB_INCLUDE_DIRS})
-set(MATLAB_EXTERN /usr/local/MATLAB/R2016a/extern/include)
+#set(MATLAB_EXTERN /usr/local/MATLAB/R2016a/extern/include)
+set(MATLAB_EXTERN ./include/matlab)
 message("-- Using MATLAB_EXTERN: ${MATLAB_EXTERN}")
 include_directories(${MATLAB_EXTERN})
 
