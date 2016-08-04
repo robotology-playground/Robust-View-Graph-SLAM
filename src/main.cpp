@@ -130,7 +130,7 @@ void generate_constraints_image_inverse_depth_Mviews(PwgOptimiser *Object,
     int cam, kpt, sw=0;
     std::vector<double> p1(2), z(2), R(4,0.0) ;
     Eigen::MatrixXd yz = Eigen::MatrixXd::Zero(7,1) ;
-    Eigen::VectorXd Yz = Eigen::MatrixXd::Zero(7,7) ;
+    Eigen::MatrixXd Yz = Eigen::MatrixXd::Zero(7,7) ;
     for (int i=0; i<ncams; i++)
         for (int j=0; j<npts; j++) {
             if (p[i].status[j]==1) {
@@ -176,17 +176,17 @@ void process (int ncams) {
     double *xs, *Pkin ;
     xs = generate_linearisation_point ( p, Pkin ) ;
     //for (int i=0; i<6*ncams+npts; i++) std::cout << xs[i] << std::endl ;
-    
+
     /* initialise a PwgOptimiser object */
     PwgOptimiser *Object ; // pointer initialisation
     Object = new PwgOptimiser ( ncams, npts ) ; // pointer initialisation
     
     /* generate constraints */
     generate_constraints_image_inverse_depth_Mviews( Object, p ) ;
-    
+
     /* optimise constraints information */
     Object->optimise_constraints_image_inverse_depth_Mviews( xs ) ;
-    
+
     /* free memory */
     delete[] xs ;
     delete[] Pkin ;
@@ -341,7 +341,7 @@ int main (int argc, char** argv) {
     }
     
     // run the process
-    //process( ncams ) ;
+    process( ncams ) ;
     
     return 0 ;
 }
