@@ -57,18 +57,18 @@
     
 Compile vlFeat
 --------------
-First, in the makefile, comment out the line #include make/matlab.mak. Then, "make". 
+First, in the makefile, comment out the line #include make/matlab.mak. Then, "make". <br />
 To compule our code with vlFeat, in the CMakeLists.txt, update the path to where you compiled vlFeat:
 
-set(VLFEAT_INCLUDE_DIR /path/to/vlfeat)
-message("-- Using VLFeat: ${VLFEAT_INCLUDE_DIR}")
-include_directories(${VLFEAT_INCLUDE_DIR})
-find_library(VLFEAT_LIB NAMES vl PATHS /path/to/vlfeat/bin/glnxa64)
-if (EXISTS ${VLFEAT_LIB})
-	message("-- VLFEAT libs: ${VLFEAT_LIB}")
-endif(EXISTS ${VLFEAT_LIB})
+set(VLFEAT_INCLUDE_DIR /path/to/vlfeat)<br />
+message("-- Using VLFeat: ${VLFEAT_INCLUDE_DIR}")<br />
+include_directories(${VLFEAT_INCLUDE_DIR})<br />
+find_library(VLFEAT_LIB NAMES vl PATHS /path/to/vlfeat/bin/glnxa64)<br />
+if (EXISTS ${VLFEAT_LIB})<br />
+	message("-- VLFEAT libs: ${VLFEAT_LIB}")<br />
+endif(EXISTS ${VLFEAT_LIB})<br />
 
 Install libgsl: 
 --------------
-sudo apt-get update
-sudo apt-get install libgsl-dev
+sudo apt-get update<br />
+sudo apt-get install libgsl-dev<br />
