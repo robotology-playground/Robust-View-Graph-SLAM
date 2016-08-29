@@ -5,7 +5,7 @@
 
 cmake_minimum_required(VERSION 3.2.2)
 
-SET(PROJECTNAME vgslam)
+SET(PROJECTNAME vgSLAM)
 PROJECT(${PROJECTNAME})
 
 # Make CMake aware of the cmake folder for local FindXXX scripts,
@@ -283,6 +283,22 @@ set(MATLAB_EXTERN ./include/matlab)
 message("-- Using MATLAB_EXTERN: ${MATLAB_EXTERN}")
 include_directories(${MATLAB_EXTERN})
 
+# vlfeat.
+set(VLFEAT_INCLUDE_DIR /home/tabuhashim/Dev/vlfeat-0.9.20)
+message("-- Using VLFeat: ${VLFEAT_INCLUDE_DIR}")
+include_directories(${VLFEAT_INCLUDE_DIR})
+find_library(VLFEAT_LIB NAMES vl PATHS /home/tabuhashim/Dev/vlfeat-0.9.20/bin/glnxa64)
+#set(VLFEAT_LIB /home/tabuhashim/Dev/vlfeat-0.9.20/bin/glnxa64)
+if (EXISTS ${VLFEAT_LIB})
+	message("-- VLFEAT libs: ${VLFEAT_LIB}")
+endif(EXISTS ${VLFEAT_LIB})
+
+# GSL.
+#find_library(GSL_LIB NAMES gsl)
+#if (EXISTS ${GSL_LIB})
+#	message("-- GSL libs: ${GSL_LIB}")
+#endif(EXISTS ${GSL_LIB})
+
 # PwgOptimiser sources
 #set(Executable_SOURCES ./src/main.cpp ./src/PwgOptimiser.cpp ./src/RecoverMoments.cpp)
 #set(Executable_HEADERS ./include/PwgOptimiser.h ./include/RecoverMoments.h)
@@ -293,7 +309,7 @@ file(GLOB Executable_SOURCES ${SOURCE_DIR}/*.cpp)
 file(GLOB Executable_HEADERS ${INCLUDE_DIR}/*.h)
 add_executable(${PROJECTNAME} ${Executable_SOURCES})
 
-target_link_libraries(${PROJECTNAME} ${YARP_LIBRARIES} ${ICUB_LIBRARIES} ${OpenCV_LIBS} ${cholmod_LIB} ${COLAMD_LIB} ${AMD_LIB} ${SSC_LIB} ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
+target_link_libraries(${PROJECTNAME} ${YARP_LIBRARIES} ${ICUB_LIBRARIES} ${OpenCV_LIBS} ${cholmod_LIB} ${COLAMD_LIB} ${AMD_LIB} ${SSC_LIB} ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${VLFEAT_LIB})# ${GSL_LIB})
 
 if(${CMAKE_VERSION} VERSION_LESS 3.1)
   include(CheckCXXCompilerFlag)

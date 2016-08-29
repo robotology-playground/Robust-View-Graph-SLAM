@@ -54,3 +54,8 @@
         - [ ] constraint_graph_add
         - [ ] constraint_graph_subtract
         - [ ] compute_gate_graph
+    
+ 
+ Install libgsl: 
+ sudo apt-get update
+ sudo apt-get install libgsl-dev
