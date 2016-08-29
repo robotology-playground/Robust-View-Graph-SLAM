@@ -55,7 +55,20 @@
         - [ ] constraint_graph_subtract
         - [ ] compute_gate_graph
     
- 
- Install libgsl: 
- sudo apt-get update
- sudo apt-get install libgsl-dev
+Compile vlFeat
+--------------
+First, in the makefile, comment out the line #include make/matlab.mak. Then, "make". 
+To compule our code with vlFeat, in the CMakeLists.txt, update the path to where you compiled vlFeat:
+
+set(VLFEAT_INCLUDE_DIR /path/to/vlfeat)
+message("-- Using VLFeat: ${VLFEAT_INCLUDE_DIR}")
+include_directories(${VLFEAT_INCLUDE_DIR})
+find_library(VLFEAT_LIB NAMES vl PATHS /path/to/vlfeat/bin/glnxa64)
+if (EXISTS ${VLFEAT_LIB})
+	message("-- VLFEAT libs: ${VLFEAT_LIB}")
+endif(EXISTS ${VLFEAT_LIB})
+
+Install libgsl: 
+--------------
+sudo apt-get update
+sudo apt-get install libgsl-dev
