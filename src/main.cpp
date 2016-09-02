@@ -10,6 +10,20 @@
 //#include "Rpoly.cpp"
 
 # define	M_PI	3.14159265358979323846  /* pi */
+# define    vgSLAM_KAZE    0 //det
+# define    vgSLAM_FAST    1 //det
+# define    vgSLAM_SIFT    2 //det & desc
+# define    vgSLAM_GFTT    3 //det
+# define    vgSLAM_SURF    4 //det & desc
+# define    vgSLAM_BRIEF   5 //desc
+# define    vgSLAM_ORB     6 //det & desc
+# define    vgSLAM_BRISK   7 //det & desc
+# define    vgSLAM_FREAK   8 //desc
+# define    vgSLAM_FLANN   9 //matcher
+# define    vgSLAM_BRUTEFORCEL2   10 //matcher
+# define    vgSLAM_BRUTEFORCEL1 11 //matcher
+# define    vgSLAM_BRUTEFORCEHAMMING   12//matcher
+# define    vgSLAM_AKAZE    13 //det
 
 using namespace yarp::os;
 using namespace yarp::sig;
@@ -105,21 +119,114 @@ void generate_constraints_image_inverse_depth_Mviews(PwgOptimiser *Object, std::
 //	delete[] Pkin ;
 //	delete Object ; // delete class pointer
 //}
+int assignMethod(string str){
+    if (str.compare("KAZE")==0)
+        return vgSLAM_KAZE;
+    if (str.compare("FAST")==0)
+        return vgSLAM_FAST;
+    if (str.compare("SIFT")==0)
+        return vgSLAM_SIFT;
+    if (str.compare("GFTT")==0)
+        return vgSLAM_GFTT;
+    if (str.compare("SURF")==0)
+        return vgSLAM_SURF;
+    if (str.compare("BRIEF")==0)
+        return vgSLAM_BRIEF;
+    if (str.compare("ORB")==0)
+        return vgSLAM_ORB;
+    if (str.compare("BRISK")==0)
+        return vgSLAM_BRISK;
+    if (str.compare("FREAK")==0)
+        return vgSLAM_FREAK;
+    if (str.compare("FLANN")==0)
+        return vgSLAM_FLANN;
+    if (str.compare("BRUTEFORCEL1")==0)
+        return vgSLAM_BRUTEFORCEL1;
+    if (str.compare("BRUTEFORCEL2")==0)
+        return vgSLAM_BRUTEFORCEL2;
+    if (str.compare("BRUTEFORCEHAMMING")==0)
+        return vgSLAM_BRUTEFORCEHAMMING;
+    if (str.compare("AKAZE")==0)
+        return vgSLAM_AKAZE;
+    return -1;
+}
+bool checkDetector(string str){
+    if(str.compare("KAZE")!=0 && str.compare("AKAZE")!=0  && str.compare("FAST")!=0 && str.compare("SIFT")!=0
+            && str.compare("GFTT")!=0 && str.compare("SURF")!=0
+            && str.compare("ORB")!=0 && str.compare("BRISK")!=0){
+        cout<<"Wrong detector argument, available options are: KAZE, FAST, SIFT, GFTT, SURF, ORB, BRISK, AKAZE"<<endl;
+        return false;
+    }
+    else
+        return true;
+}
+bool checkDescriptor(string str){
+    if(str.compare("SIFT")!=0 && str.compare("SURF")!=0 && str.compare("BRIEF")!=0
+            && str.compare("ORB")!=0 && str.compare("BRISK")!=0 && str.compare("FREAK")!=0){
+        cout<<"Wrong descriptor argument, available options are: SIFT, SURF, BRIEF, ORB, BRISK, FREAK"<<endl;
+        return false;
+    }
+    else
+        return true;
+}
+bool checkMatcher(string str){
+    if(str.compare("FLANN")!=0 && str.compare("BRUTEFORCEL2")!=0
+            && str.compare("BRUTEFORCEL1")!=0 && str.compare("BRUTEFORCEHAMMING")!=0){
+        cout<<"Wrong matcher argument, available options are: FLANN, BRUTEFORCEL2, BRUTEFORCEL1, BRUTEFORCEHAMMING"<<endl;
+        return false;
+    }
+    else
+        return true;
+}
 
 /* main code */
 int main (int argc, char** argv) {
 	/* we need at least one input, ncams */
 	// argv[0] is the program name
-	// argv[1:n] are the program input arguments
+    // argv[1:n] are the program input arguments
+    int detID=vgSLAM_KAZE, descID=vgSLAM_SIFT, matchID=vgSLAM_FLANN; // default
 
 	if (argc<2) {
-		std::cerr << "Usage: ./vgSLAM (int)ncams int(versbose)" << std::endl;
+        std::cerr << "Usage: ./vgSLAM (int)ncams int(versbose) (string)detector (string)descriptor (string)matcher" << std::endl;
 		return 1;
 	}
 	int ncams = std::atoi ( argv[1] );
-	int VERBOSE = 0;
-	if (argc > 2)
-		VERBOSE = std::atoi ( argv[2] );
+    int VERBOSE = 0;
+    if (argc > 2){
+        VERBOSE = std::atoi ( argv[2] );
+        switch(argc){
+            case 3 : {cout<<"Default detector(KAZE), descriptor(SIFT) and matcher(FLANN)"; break;}//all default
+            case 4 : {
+                if(!checkDetector(argv[3]))
+                    return 1;
+                else{
+                    detID=assignMethod(argv[3]) ; descID=vgSLAM_SIFT; matchID=vgSLAM_FLANN;
+                break;}
+            }
+            case 5 : {
+                if(!checkDetector(argv[3]))
+                    return 1;
+                else if(!checkDescriptor(argv[4]))
+                    return 1;
+                else
+                {
+                    detID=assignMethod(argv[3]);descID=assignMethod(argv[4]);matchID=vgSLAM_FLANN;
+                break;}
+            }
+        case 6 : {
+            if(!checkDetector(argv[3]))
+                return 1;
+            else if(!checkDescriptor(argv[4]))
+                return 1;
+            else if(!checkMatcher(argv[5]))
+                return 1;
+            else
+            {
+                detID=assignMethod(argv[3]);descID=assignMethod(argv[4]);matchID=assignMethod(argv[5]);
+            break;}
+        }
+               }
+    }
 	//if (VERBOSE==2){
 	//	cvNamedWindow( "img_L", CV_WINDOW_AUTOSIZE );
 	//	cvNamedWindow( "img_R", CV_WINDOW_AUTOSIZE );
@@ -140,11 +247,96 @@ int main (int argc, char** argv) {
 
 	// initialise tracker
 	std::vector<Tracker::point_2d> p ;
-	Ptr<AKAZE> detector = AKAZE::create(); // features detector
-	detector->setThreshold(akaze_thresh);
-	Ptr<xfeatures2d::SIFT> descriptor = xfeatures2d::SIFT::create(); // features descriptor
-	//Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create("BruteForce-Hamming");
-	Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create("FlannBased"); // features matcher
+    // detector switch
+    Ptr<Feature2D> detector, descriptor;
+    switch (detID) {
+    case vgSLAM_KAZE : {
+        detector=KAZE::create();
+        break;
+    }
+    case vgSLAM_FAST : {
+        detector=FastFeatureDetector::create();
+        break;
+    }
+    case vgSLAM_SIFT : {
+        detector=xfeatures2d::SIFT::create();
+        break;
+    }
+    case vgSLAM_GFTT: {
+        detector=GFTTDetector::create();
+        break;
+    }
+    case vgSLAM_SURF : {
+        detector=xfeatures2d::SURF::create();
+        break;
+    }
+    case vgSLAM_ORB : {
+        detector=ORB::create();
+        break;
+    }
+    case vgSLAM_BRISK : {
+        detector=BRISK::create();
+        break;
+    }
+    case vgSLAM_AKAZE : {
+        detector=AKAZE::create();
+        break;
+    }
+    default:
+        break;
+    }
+    // descriptor switch
+    switch (descID) {
+    case vgSLAM_SIFT : {
+        descriptor=xfeatures2d::SIFT::create();
+        break;
+    }
+    case vgSLAM_SURF : {
+        descriptor=xfeatures2d::SURF::create();
+        break;
+    }
+    case vgSLAM_BRIEF : {
+        descriptor=xfeatures2d::BriefDescriptorExtractor::create();
+        break;
+    }
+    case vgSLAM_ORB : {
+        descriptor=ORB::create();
+        break;
+    }
+    case vgSLAM_BRISK : {
+        descriptor=BRISK::create();
+        break;
+    }
+    case vgSLAM_FREAK : {
+        descriptor=xfeatures2d::FREAK::create();
+        break;
+    }
+    default:
+        break;
+    }
+    // matcher switch
+    Ptr<DescriptorMatcher> matcher;
+    switch (matchID) {
+    case vgSLAM_FLANN:{
+        matcher=DescriptorMatcher::create("FlannBased");
+        break;
+    }
+    case vgSLAM_BRUTEFORCEL2:{
+        matcher=DescriptorMatcher::create("BruteForce");
+        break;
+    }
+    case vgSLAM_BRUTEFORCEL1:{
+        matcher=DescriptorMatcher::create("BruteForce-L1");
+        break;
+    }
+    case vgSLAM_BRUTEFORCEHAMMING:{
+        matcher=DescriptorMatcher::create("BruteForce-Hamming");
+        break;
+    }
+    default:
+        break;
+    }
+    //detector->setThreshold(akaze_thresh);//TODO how we manage different detector and different threshold and params
 
 	//int nimages = 2*5063;
 	while(i<ncams){ //i<nimages
@@ -176,14 +368,14 @@ int main (int argc, char** argv) {
 				cvtColor(image2_cv, image2_cv, COLOR_BGR2GRAY);
 
 				/* the tracker */
-				Tracker akaze_tracker(detector, descriptor, matcher); // a tracker for each key-frame
+                Tracker tracker(detector, descriptor, matcher); // a tracker for each key-frame
 				//if(first){
-				akaze_tracker.setFirstFrame(image1_cv);
+                tracker.setFirstFrame(image1_cv);
 				//	first = false;
 				//}
 				//else
-				//	akaze_tracker.process(image1_cv);
-				akaze_tracker.process(image2_cv);
+                //	tracker.process(image1_cv);
+                tracker.process(image2_cv);
 
 				//get_aligned_point_matches (p, ncams, image1_cv) ;// thread safe
 				//get_aligned_point_matches (p, ncams, image2_cv) ;// thread safe

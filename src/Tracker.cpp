@@ -16,6 +16,8 @@ extern "C" {
 using namespace std;
 using namespace cv;
 
+string FlannID="N2cv3PtrINS_17DescriptorMatcherEEE";
+
 Tracker::Tracker() {
 	// TODO Auto-generated constructor stub
 
@@ -723,9 +725,9 @@ Mat Tracker::process(const Mat frame){
 	vector<KeyPoint> kp;
 	Mat desc;
 	detector->detect(second_frame, kp, noArray());
-	cout << "Key-points : " << (int)kp.size() << ", " ;
+    cout << "Key-points : " << (int)kp.size() << ", " ;
 	descriptor->compute(second_frame, kp, desc);
-	cout << "Descriptors : " << (int)desc.rows << ", " << (int)desc.cols << endl;
+    cout << "Descriptors : " << (int)desc.rows << ", " << (int)desc.cols << endl;
 
 	/*
 	//-- Moves from vector<KeyPoint> to double*
@@ -768,7 +770,14 @@ Mat Tracker::process(const Mat frame){
 	//-- Opencv matching
 	vector<DMatch> matches;
 	Mat mask;
-	//matcher->knnMatch(first_desc, desc, matches, 2);
+    //matcher->knnMatch(first_desc, desc, matches, 2);
+    if(FlannID.compare(typeid(matcher).name())==0){// check if the matcher is flann based, in this case we need this conversion for using
+        if(first_desc.type()!=CV_32F && desc.type()!=CV_32F)// it with descriptors as ORB, FREAK, BRIEF, BRISK
+        {
+            first_desc.convertTo(first_desc, CV_32F);
+            desc.convertTo(desc, CV_32F);
+        }
+    }
 	matcher->match(first_desc, desc, matches, noArray());
 	cout << "OpenCV Matches : " << (int)matches.size() << endl;
 

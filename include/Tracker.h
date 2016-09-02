@@ -28,7 +28,7 @@ class Tracker {
 public:
 	Tracker();
 	virtual ~Tracker();
-	Tracker(cv::Ptr<cv::Feature2D> _detector, cv::Ptr<cv::xfeatures2d::SIFT> _descriptor, cv::Ptr<cv::DescriptorMatcher> _matcher) :
+    Tracker(cv::Ptr<cv::Feature2D> _detector, cv::Ptr<cv::Feature2D> _descriptor, cv::Ptr<cv::DescriptorMatcher> _matcher) :
 		detector(_detector), descriptor(_descriptor), matcher(_matcher) {}
 	void setFirstFrame(const cv::Mat frame);
 	cv::Mat process(const cv::Mat frame);
@@ -47,7 +47,7 @@ public:
 	};
 protected:
 	cv::Ptr<cv::Feature2D> detector;
-	cv::Ptr<cv::xfeatures2d::SIFT> descriptor;
+    cv::Ptr<cv::Feature2D> descriptor;
 	cv::Ptr<cv::DescriptorMatcher> matcher;
 	cv::Mat first_frame, first_desc;
 	std::vector<cv::KeyPoint> first_kp;

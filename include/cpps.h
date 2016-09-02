@@ -19,5 +19,6 @@
 #include <vector>
 #include <list>
 #include <cstdio>
+#include <typeinfo>
 
 #endif /* CPPS_H_ */
