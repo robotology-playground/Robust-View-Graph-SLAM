@@ -19,6 +19,13 @@
 *.autosave
 *Old.*
 
+# Cmake directory & files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+
+*.cbp
+
 # directories
 build*
 
