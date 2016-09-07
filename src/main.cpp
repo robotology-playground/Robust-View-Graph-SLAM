@@ -187,46 +187,34 @@ int main (int argc, char** argv) {
     int detID=vgSLAM_KAZE, descID=vgSLAM_SIFT, matchID=vgSLAM_FLANN; // default
 
 	if (argc<2) {
-        std::cerr << "Usage: ./vgSLAM (int)ncams int(versbose) (string)detector (string)descriptor (string)matcher" << std::endl;
+        std::cerr << "Usage: ./vgSLAM (int)ncams int(versbose)" << std::endl;
 		return 1;
 	}
 	int ncams = std::atoi ( argv[1] );
     int VERBOSE = 0;
+    ResourceFinder rf,rfdet,rfdesc,rfmatch;
+    if(!rf.setDefaultConfigFile("../../conf/vgSLAM.ini"))
+        return -1;
+    rf.configure(argc, argv);
+    rfdesc.configure(argc, argv);
+    rfmatch.configure(argc, argv);
+
     if (argc > 2){
         VERBOSE = std::atoi ( argv[2] );
-        switch(argc){
-            case 3 : {cout<<"Default detector(KAZE), descriptor(SIFT) and matcher(FLANN)"; break;}//all default
-            case 4 : {
-                if(!checkDetector(argv[3]))
-                    return 1;
-                else{
-                    detID=assignMethod(argv[3]) ; descID=vgSLAM_SIFT; matchID=vgSLAM_FLANN;
-                break;}
-            }
-            case 5 : {
-                if(!checkDetector(argv[3]))
-                    return 1;
-                else if(!checkDescriptor(argv[4]))
-                    return 1;
-                else
-                {
-                    detID=assignMethod(argv[3]);descID=assignMethod(argv[4]);matchID=vgSLAM_FLANN;
-                break;}
-            }
-        case 6 : {
-            if(!checkDetector(argv[3]))
-                return 1;
-            else if(!checkDescriptor(argv[4]))
-                return 1;
-            else if(!checkMatcher(argv[5]))
-                return 1;
-            else
-            {
-                detID=assignMethod(argv[3]);descID=assignMethod(argv[4]);matchID=assignMethod(argv[5]);
-            break;}
-        }
-               }
     }
+
+    if(checkDetector(rf.find("Detector").asString()))
+        detID=assignMethod(rf.find("Detector").asString());
+    else
+        cout<<"Error in vgSLAM.ini, setting default detector:KAZE"<<endl;
+    if(checkDescriptor(rf.find("Descriptor").asString()))
+        descID=assignMethod(rf.find("Descriptor").asString());
+    else
+        cout<<"Error in vgSLAM.ini, setting default descriptor:SIFT"<<endl;
+    if(checkMatcher(rf.find("Matcher").asString()))
+        matchID=assignMethod(rf.find("Matcher").asString());
+    else
+        cout<<"Error in vgSLAM.ini, setting default matcher:FLANN"<<endl;
 	//if (VERBOSE==2){
 	//	cvNamedWindow( "img_L", CV_WINDOW_AUTOSIZE );
 	//	cvNamedWindow( "img_R", CV_WINDOW_AUTOSIZE );
@@ -251,35 +239,71 @@ int main (int argc, char** argv) {
     Ptr<Feature2D> detector, descriptor;
     switch (detID) {
     case vgSLAM_KAZE : {
-        detector=KAZE::create();
+        rfdet.setDefaultConfigFile("../../conf/KAZE.ini");
+        rfdet.configure(argc, argv);
+        detector=KAZE::create(rfdet.find("extended").asBool(),rfdet.find("upright").asBool(),
+                                    (float) rfdet.find("threshold").asDouble(),
+                                    rfdet.find("nOctaves").asInt(),rfdet.find("nOctaveLayers").asInt());
+        //TODO MANCA LO Switch per l'ultimo argomento.
         break;
     }
     case vgSLAM_FAST : {
-        detector=FastFeatureDetector::create();
+        rfdet.setDefaultConfigFile("../../conf/FAST.ini");
+        rfdet.configure(argc, argv);
+        detector=FastFeatureDetector::create(rfdet.find("threshold").asInt(),rfdet.find("nonmaxSuppression").asBool());
+        //TODO manca lo switch dell'ultimo argomento
         break;
     }
     case vgSLAM_SIFT : {
-        detector=xfeatures2d::SIFT::create();
+        rfdet.setDefaultConfigFile("../../conf/SIFT.ini");
+        rfdet.configure(argc, argv);
+        detector=xfeatures2d::SIFT::create(rfdet.find("nfeatures").asInt(),rfdet.find("nOctaveLayers").asInt(),
+                                                              rfdet.find("contrastThreshold").asDouble(),
+                                                              rfdet.find("edgeThreshold").asDouble(),rfdet.find("sigma").asDouble());
         break;
     }
     case vgSLAM_GFTT: {
-        detector=GFTTDetector::create();
+        rfdet.setDefaultConfigFile("../../conf/GFTT.ini");
+        rfdet.configure(argc, argv);
+        detector=GFTTDetector::create(rfdet.find("maxCorners").asInt(),rfdet.find("qualityLevel").asDouble(),
+                                                    rfdet.find("minDistance").asDouble(),rfdet.find("blockSize").asInt(),
+                                                    rfdet.find("useHarrisDetector").asBool(),rfdet.find("k").asDouble());
+
+
         break;
     }
     case vgSLAM_SURF : {
-        detector=xfeatures2d::SURF::create();
+        rfdet.setDefaultConfigFile("../../conf/SURF.ini");
+        rfdet.configure(argc, argv);
+        detector=xfeatures2d::SURF::create(rfdet.find("hessianThreshold").asDouble(),rfdet.find("nOctaves").asInt(),
+                                                              rfdet.find("inOctaveLayers").asInt(),rfdet.find("extended").asBool(),
+                                                              rfdet.find("upright").asBool());
         break;
     }
     case vgSLAM_ORB : {
-        detector=ORB::create();
+        rfdet.setDefaultConfigFile("../../conf/ORB.ini");
+        rfdet.configure(argc, argv);
+        detector=ORB::create(rfdet.find("nfeatures").asInt(),rfdet.find("scaleFactor").asDouble(),
+                                 rfdet.find("nlevels").asInt(),rfdet.find("edgeThreshold").asInt(),
+                                 rfdet.find("firstLevel").asInt(),rfdet.find("WTA_K").asInt(),
+                                 ORB::HARRIS_SCORE,rfdet.find("patchSize").asInt(),
+                                 rfdet.find("fastThreshold").asInt());
+        //TODO Argomento
         break;
     }
     case vgSLAM_BRISK : {
-        detector=BRISK::create();
+        rfdet.setDefaultConfigFile("../../conf/BRISK.ini");
+        rfdet.configure(argc, argv);
+        detector=BRISK::create(rfdet.find("thresh").asInt(),rfdet.find("octaves").asInt(),rfdet.find("patternScale").asDouble());
         break;
     }
     case vgSLAM_AKAZE : {
-        detector=AKAZE::create();
+        rfdet.setDefaultConfigFile("../../conf/AKAZE.ini");
+        rfdet.configure(argc, argv);
+        detector=AKAZE::create(AKAZE::DESCRIPTOR_MLDB,rfdet.find("descriptor_size").asInt(),rfdet.find("descriptor_channels").asInt(),
+                               rfdet.find("threshold").asDouble(),rfdet.find("nOctaves").asInt(),rfdet.find("nOctaveLayers").asInt(),
+                               KAZE::DIFF_PM_G2);
+        //TODO primo e ultimo argomento
         break;
     }
     default:
