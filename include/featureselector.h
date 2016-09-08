@@ -32,6 +32,7 @@ public:
     FeatureSelector(int ac, char **av);
     bool process(cv::Ptr<cv::Feature2D> &detector, cv::Ptr<cv::Feature2D> &descriptor, cv::Ptr<cv::DescriptorMatcher> &matcher);
 protected:
+    int  parseMap(std::string value, std::map<std::string, int> &m);
     bool checkDetector(std::string str);
     bool checkDescriptor(std::string str);
     bool checkMatcher(std::string str);

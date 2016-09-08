@@ -3,6 +3,19 @@
 using namespace std;
 using namespace cv;
 
+map <string, int> kazeMap{{"DIFF_PM_G1", 0}, {"DIFF_PM_G2", 1}, {"DIFF_WEICKERT", 2}, {"DIFF_CHARBONNIER", 3}},
+                  akazeMap{{"DESCRIPTOR_KAZE", 3}, {"DESCRIPTOR_KAZE_UPRIGHT", 2}, {"DESCRIPTOR_MLDB", 4}, {"DESCRIPTOR_MLDB_UPRIGHT", 5}},
+                  fastMap{{"TYPE_5_8", 0}, {"TYPE_7_12", 1}, {"TYPE_9_16", 2}},
+                  orbMap{{"HARRIS_SCORE", 0}, {"FAST_SCORE", 1}};
+
+int FeatureSelector::parseMap(string value, map<string,int> &m){
+    map <string, int>::const_iterator iValue = m.find(value);
+            if (iValue  == m.end())
+                throw runtime_error("Check the .ini file, wrong enum");
+            return iValue->second;
+
+}
+
 FeatureSelector::FeatureSelector()
 {
 }
@@ -75,16 +88,15 @@ void FeatureSelector::switcher(int detID, int descID, int matchID, Ptr<Feature2D
         rfdet.setDefaultConfigFile("../../conf/KAZE.ini");
         rfdet.configure(argc, argv);
         detector=KAZE::create(rfdet.find("extended").asBool(),rfdet.find("upright").asBool(),
-                                    (float) rfdet.find("threshold").asDouble(),
-                                    rfdet.find("nOctaves").asInt(),rfdet.find("nOctaveLayers").asInt());
-        //TODO MANCA LO Switch per l'ultimo argomento.
+                                    (float) rfdet.find("threshold").asDouble(), rfdet.find("nOctaves").asInt(),
+                              rfdet.find("nOctaveLayers").asInt(), parseMap((string)rfdet.find("diffusivity").asString(),kazeMap));
         break;
     }
     case vgSLAM_FAST : {
         rfdet.setDefaultConfigFile("../../conf/FAST.ini");
         rfdet.configure(argc, argv);
-        detector=FastFeatureDetector::create(rfdet.find("threshold").asInt(),rfdet.find("nonmaxSuppression").asBool());
-        //TODO manca lo switch dell'ultimo argomento
+        detector=FastFeatureDetector::create(rfdet.find("threshold").asInt(),rfdet.find("nonmaxSuppression").asBool(),
+                                             parseMap((string)rfdet.find("type").asString(),fastMap));
         break;
     }
     case vgSLAM_SIFT : {
@@ -119,9 +131,8 @@ void FeatureSelector::switcher(int detID, int descID, int matchID, Ptr<Feature2D
         detector=ORB::create(rfdet.find("nfeatures").asInt(),rfdet.find("scaleFactor").asDouble(),
                                  rfdet.find("nlevels").asInt(),rfdet.find("edgeThreshold").asInt(),
                                  rfdet.find("firstLevel").asInt(),rfdet.find("WTA_K").asInt(),
-                                 ORB::HARRIS_SCORE,rfdet.find("patchSize").asInt(),
+                                 parseMap((string)rfdet.find("scoreType").asString(),orbMap),rfdet.find("patchSize").asInt(),
                                  rfdet.find("fastThreshold").asInt());
-        //TODO Argomento
         break;
     }
     case vgSLAM_BRISK : {
@@ -134,10 +145,10 @@ void FeatureSelector::switcher(int detID, int descID, int matchID, Ptr<Feature2D
         rfdet.setDefaultConfigFile("../../conf/AKAZE.ini");
 
         rfdet.configure(argc, argv);
-        detector=AKAZE::create(AKAZE::DESCRIPTOR_MLDB,rfdet.find("descriptor_size").asInt(),rfdet.find("descriptor_channels").asInt(),
+        detector=AKAZE::create(parseMap((string)rfdet.find("descriptor_type").asString(),akazeMap),rfdet.find("descriptor_size").asInt(),
+                               rfdet.find("descriptor_channels").asInt(),
                                rfdet.find("threshold").asDouble(),rfdet.find("nOctaves").asInt(),rfdet.find("nOctaveLayers").asInt(),
-                               KAZE::DIFF_PM_G2);
-        //TODO primo e ultimo argomento
+                               parseMap((string)rfdet.find("diffusivity").asString(),kazeMap));
         break;
     }
     default:
@@ -174,7 +185,7 @@ void FeatureSelector::switcher(int detID, int descID, int matchID, Ptr<Feature2D
         descriptor=ORB::create(rfdesc.find("nfeatures").asInt(),rfdesc.find("scaleFactor").asDouble(),
                                  rfdesc.find("nlevels").asInt(),rfdesc.find("edgeThreshold").asInt(),
                                  rfdesc.find("firstLevel").asInt(),rfdesc.find("WTA_K").asInt(),
-                                 ORB::HARRIS_SCORE,rfdesc.find("patchSize").asInt(),
+                                 parseMap((string)rfdet.find("scoreType").asString(),orbMap),rfdesc.find("patchSize").asInt(),
                                  rfdesc.find("fastThreshold").asInt());
         break;
     }
