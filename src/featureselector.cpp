@@ -185,7 +185,7 @@ void FeatureSelector::switcher(int detID, int descID, int matchID, Ptr<Feature2D
         descriptor=ORB::create(rfdesc.find("nfeatures").asInt(),rfdesc.find("scaleFactor").asDouble(),
                                  rfdesc.find("nlevels").asInt(),rfdesc.find("edgeThreshold").asInt(),
                                  rfdesc.find("firstLevel").asInt(),rfdesc.find("WTA_K").asInt(),
-                                 parseMap((string)rfdet.find("scoreType").asString(),orbMap),rfdesc.find("patchSize").asInt(),
+                                 parseMap((string)rfdesc.find("scoreType").asString(),orbMap),rfdesc.find("patchSize").asInt(),
                                  rfdesc.find("fastThreshold").asInt());
         break;
     }
