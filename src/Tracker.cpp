@@ -369,10 +369,10 @@ boost::dynamic_bitset<> Tracker::remove_points_at_infinity(vector<Point2f> match
 }
 
 void Tracker::setFirstFrame(const Mat frame) {
-	first_frame = frame.clone();
-	detector->detect(first_frame, first_kp, noArray());
-	cout << "Key-points : " << (int)first_kp.size() << ", " ;
-	descriptor->compute(first_frame, first_kp, first_desc);
+    first_frame = frame.clone();
+    detector->detect(first_frame, first_kp, noArray());
+    cout << "Key-points : " << (int)first_kp.size() << ", " ;
+    descriptor->compute(first_frame, first_kp, first_desc);//crash qui, se si usa orb con un det SIFT
 	cout << "Descriptors : " << (int)first_desc.rows << ", " << (int)first_desc.cols << endl;
 }
 
@@ -723,8 +723,8 @@ Mat Tracker::process(const Mat frame){
 	//-- Detect and compute
 	Mat second_frame = frame.clone();
 	vector<KeyPoint> kp;
-	Mat desc;
-	detector->detect(second_frame, kp, noArray());
+    Mat desc;
+    detector->detect(second_frame, kp, noArray());
     cout << "Key-points : " << (int)kp.size() << ", " ;
 	descriptor->compute(second_frame, kp, desc);
     cout << "Descriptors : " << (int)desc.rows << ", " << (int)desc.cols << endl;
@@ -827,11 +827,11 @@ Mat Tracker::process(const Mat frame){
 	cout << "Visible: " << (int)vis.count() << endl;
 
 	// drawing the results
-	namedWindow("matches", 1);
-	Mat img_matches;
-	drawMatches(first_frame, first_kp, frame, kp, good_matches, img_matches);
-	imshow("matches", img_matches);
-	waitKey(0);
+//	namedWindow("matches", 1);
+//	Mat img_matches;
+//	drawMatches(first_frame, first_kp, frame, kp, good_matches, img_matches);
+//	imshow("matches", img_matches);
+//	waitKey(0);
 
 	if (vis.count()>100){
 		//-- http://nghiaho.com/?p=1675
@@ -857,7 +857,7 @@ Mat Tracker::process(const Mat frame){
 
 		//-- Essential matrix with RANSAC
 		Mat E, R, t, mask;
-		E = findEssentialMat(vismatched2, vismatched1, 1.0, Point2d(0,0), RANSAC, 0.999, 0.0001, mask);
+        E = findEssentialMat(vismatched2, vismatched1, 1.0, Point2d(0,0), RANSAC, 0.999, 0.0001, mask);
 		//correctMatches(E, vismatched1, vismatched2, vismatched1, vismatched2);
 
 		//Mat F = findFundamentalMat(vismatched2_, vismatched1_, FM_RANSAC, 0.1, 0.99, mask);
@@ -875,15 +875,15 @@ Mat Tracker::process(const Mat frame){
 		//t = svd.u.col(2); //u3
 
 		//-- Pose recovery
-		undistortPoints(vismatched1, vismatched1_, K1, k1);
-		undistortPoints(vismatched2, vismatched2_, K2, k2);
+        undistortPoints(vismatched1, vismatched1_, K1, k1);
+        undistortPoints(vismatched2, vismatched2_, K2, k2);
 		recoverPose(E, vismatched2_, vismatched1_, R, t, 1.0, Point2d(0,0), noArray());
 
 		Mat a;
 		Rodrigues(R,a);
 		transpose(a,a);
 		transpose(t,t);
-		cout << t << " " << a*180/M_PI << endl ;
+//        cout << t << " " << a*180/M_PI << endl ;
 
 		//vector<Point2f> kp1, kp2;
 		//for (int i=0; i<5; i++){
@@ -904,7 +904,7 @@ Mat Tracker::process(const Mat frame){
 			for (int i=0; i<Evec.rows(); i++){
 				int l = floor(i/3);
 				int k = i - (l-1)*3 - 3;
-				cout << k << " " << l << endl;
+//				cout << k << " " << l << endl;
 				//E.at<double>(k,l) = Evec.coeffRef(i,j)/Evec.coeffRef(8,j); // normalise to force rank 2
 				E2.coeffRef(k,l) = Evec.coeffRef(i,j)/Evec.coeffRef(8,j);
 			}

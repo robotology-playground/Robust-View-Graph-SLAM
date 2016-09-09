@@ -1,6 +1,10 @@
 #include <cpps.h>
 #include <yarps.h>
 #include <icubs.h>
+#include <thread>
+#include <mutex>
+#include <ctime>
+
 //#include "Image.h"
 //#include "ImageViewer.h"
 #include "Tracker.h"
@@ -23,7 +27,9 @@ using namespace cv;
 const int num_ransac_itr = 300;
 const double akaze_thresh = 1e-4; // AKAZE detection threshold set to locate about 1000 keypoints
 const double ransac_thresh = 2.5f; // RANSAC inlier threshold
-
+Network yarpnet; // 64 bytes still reachable
+int i=0;
+std::mutex some_mutex;
 /*
  *you may use Valgrind to test for any memory leaks
  *Valgrind is available for download at http://valgrind.org/
@@ -56,6 +62,78 @@ void generate_constraints_image_inverse_depth_Mviews(PwgOptimiser *Object, std::
 				R[0] = 1 ; R[3] = 1 ;
 				Object->initialise_a_constraint(cam, kpt, p1, z, R, Yz, yz, sw) ;
 			}
+}
+
+bool acquireAndProcess2Images(Ptr<Feature2D> detector, Ptr<Feature2D> descriptor, Ptr<DescriptorMatcher> matcher, int j){
+    // YARP
+    BufferedPort<ImageOf<PixelRgb> > image1_port, image2_port;
+    int image1_start, image2_start;
+    image1_port.open("/vgSLAM/cam/left"+to_string(j));
+    image2_port.open("/vgSLAM/cam/right"+to_string(j));
+    yarpnet.connect("/icub/cam/left", image1_port.getName());
+    yarpnet.connect("/icub/cam/right",image2_port.getName());
+
+    // initialise tracker
+    std::vector<Tracker::point_2d> p ;
+
+    //int nimages = 2*5063;
+     //i<nimages
+
+        ImageOf<PixelRgb> *image1_yarp = image1_port.read();
+        ImageOf<PixelRgb> *image2_yarp = image2_port.read();
+        Stamp s1,s2;
+        if(image1_port.getEnvelope(s1) && image2_port.getEnvelope(s2)){
+            if(i==0){
+                image1_start = s1.getCount();
+                image2_start = s2.getCount();
+            }
+            if(abs(s1.getCount()-image1_start)>2 || abs(s2.getCount()-image2_start)>2
+                    || fabs((s1.getTime())-(s2.getTime()))>0.03){//0.03 is the half delta t
+                image1_start = s1.getCount();
+                image2_start = s2.getCount();
+                return false;
+            }
+            if (image1_yarp!=NULL && image2_yarp!=NULL){
+                std::cout << "[" << i << "," << i+1 << "]" << std::endl ;
+                /* the images */
+                Mat image1_cv = cvarrToMat(static_cast<IplImage*>(image1_yarp->getIplImage()));
+                cvtColor(image1_cv, image1_cv, CV_RGB2BGR);
+                cvtColor(image1_cv, image1_cv, COLOR_BGR2GRAY);
+                Mat image2_cv = cvarrToMat(static_cast<IplImage*>(image2_yarp->getIplImage()));
+                cvtColor(image2_cv, image2_cv, CV_RGB2BGR);
+                cvtColor(image2_cv, image2_cv, COLOR_BGR2GRAY);
+
+                /* the tracker */
+                Tracker tracker(detector, descriptor, matcher); // a tracker for each key-frame
+
+                //if(first){
+                tracker.setFirstFrame(image1_cv);//qui
+                //	first = false;
+                //}
+                //else
+                //	tracker.process(image1_cv);
+                tracker.process(image2_cv);
+
+                //get_aligned_point_matches (p, ncams, image1_cv) ;// thread safe
+                //get_aligned_point_matches (p, ncams, image2_cv) ;// thread safe
+
+                //ncams = p.size() ;
+                //int npts = p[0].x.size() ;
+
+                //if (VERBOSE==2){
+                    //cvShowImage( "img_L", image1_cv ); // Large memory leak
+                    //cvShowImage( "img_R", image2_cv ); // Large memory leak
+                    //cvWaitKey(1);                     // Large memory leak
+                    //cvDestroyWindow( "img_L" );
+                    //cvDestroyWindow( "img_R" );
+                //}
+
+                //cvReleaseImage( &cvImageL );
+                //cvReleaseImage( &cvImageR );
+            }
+            std::lock_guard<std::mutex> guard(some_mutex);
+            i = i + 2;
+        }
 }
 
 /* run the vision process */
@@ -113,6 +191,7 @@ int main (int argc, char** argv) {
 	/* we need at least one input, ncams */
 	// argv[0] is the program name
     // argv[1:n] are the program input arguments
+    clock_t begin = clock();
     int detID=vgSLAM_KAZE, descID=vgSLAM_SIFT, matchID=vgSLAM_FLANN; // default
 
 	if (argc<2) {
@@ -142,88 +221,23 @@ int main (int argc, char** argv) {
 	//	cvNamedWindow( "img_L", CV_WINDOW_AUTOSIZE );
 	//	cvNamedWindow( "img_R", CV_WINDOW_AUTOSIZE );
 	//}
-
-	int i=1;
-	bool res=false;
+    bool res=false;
 	bool first=true;
+    while(i<ncams){
+        for(int j=0; j < std::thread::hardware_concurrency(); j++ ){
+            cout << "main() : creating thread, " << j << endl;
+            thread t(acquireAndProcess2Images,detector,descriptor,matcher,j);
+            if(t.joinable())
+              t.join();
+      }
 
-	// YARP
-	Network yarp; // 64 bytes still reachable
-	BufferedPort<ImageOf<PixelRgb> > image1_port, image2_port;
-	int image1_start=0, image2_start=0;
-	image1_port.open("/vgSLAM/cam/left");
-	image2_port.open("/vgSLAM/cam/right");
-	yarp.connect("/icub/cam/left", image1_port.getName());
-	yarp.connect("/icub/cam/right",image2_port.getName());
-
-	// initialise tracker
-	std::vector<Tracker::point_2d> p ;
-
-	//int nimages = 2*5063;
-	while(i<ncams){ //i<nimages
-
-		ImageOf<PixelRgb> *image1_yarp = image1_port.read();
-		ImageOf<PixelRgb> *image2_yarp = image2_port.read();
-		Stamp s1,s2;
-
-		if(image1_port.getEnvelope(s1) && image2_port.getEnvelope(s2)){
-			if(i==1){
-				image1_start = s1.getCount();
-				image2_start = s2.getCount();
-			}
-			if(abs(s1.getCount()-image1_start)>2 || abs(s2.getCount()-image2_start)>2
-					|| fabs((s1.getTime())-(s2.getTime()))>0.03){//0.03 is the half delta t
-				image1_start = s1.getCount();
-				image2_start = s2.getCount();
-				continue;
-			}
-			if (image1_yarp!=NULL && image2_yarp!=NULL){
-				std::cout << "[" << i << "," << i+1 << "]" << std::endl ;
-
-				/* the images */
-				Mat image1_cv = cvarrToMat(static_cast<IplImage*>(image1_yarp->getIplImage()));
-				cvtColor(image1_cv, image1_cv, CV_RGB2BGR);
-				cvtColor(image1_cv, image1_cv, COLOR_BGR2GRAY);
-				Mat image2_cv = cvarrToMat(static_cast<IplImage*>(image2_yarp->getIplImage()));
-				cvtColor(image2_cv, image2_cv, CV_RGB2BGR);
-				cvtColor(image2_cv, image2_cv, COLOR_BGR2GRAY);
-
-				/* the tracker */
-                Tracker tracker(detector, descriptor, matcher); // a tracker for each key-frame
-
-                //if(first){
-                tracker.setFirstFrame(image1_cv);//qui
-                //	first = false;
-				//}
-				//else
-                //	tracker.process(image1_cv);
-                tracker.process(image2_cv);
-
-				//get_aligned_point_matches (p, ncams, image1_cv) ;// thread safe
-				//get_aligned_point_matches (p, ncams, image2_cv) ;// thread safe
-
-				//ncams = p.size() ;
-				//int npts = p[0].x.size() ;
-
-				if (VERBOSE==2){
-					//cvShowImage( "img_L", image1_cv ); // Large memory leak
-					//cvShowImage( "img_R", image2_cv ); // Large memory leak
-					//cvWaitKey(1);                     // Large memory leak
-					//cvDestroyWindow( "img_L" );
-					//cvDestroyWindow( "img_R" );
-				}
-
-				//cvReleaseImage( &cvImageL );
-				//cvReleaseImage( &cvImageR );
-			}
-
-			i = i + 2;
-		}
 	}
 
 	// run the process
 	//process( ncams ) ;
-
+    clock_t end = clock();
+    double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+    std::cout<<"Elapsed time: "<<elapsed_secs<<" seconds"<<endl;
 	return 0 ;
 }
 
