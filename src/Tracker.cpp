@@ -129,18 +129,18 @@ void Tracker::calibrated_fivepoint(Eigen::MatrixXd& Evec, const vector<Point2f>&
 	//cout << "A: " << A << endl; // 5x9
 	//cout << "U: " << U << endl; // 5x5
 	//cout << "S: " << S << endl; // 5x5
-	cout << "V: " << V << endl; // 9x9
+    //cout << "V: " << V << endl; // 9x9
 
 	SVD ssvd(AA);
 	//ssvd.FULL_UV;
 	ssvd.compute(AA, w, u, vt, SVD::FULL_UV);
 
 	mysvd(A, S, V);
-	cout << "V: " << V << endl;
+    //cout << "V: " << V << endl;
 
 	//cout << "AA: " << AA << endl; // 5x9
 	//cout << "u: " << u << endl;
-	cout << "vt: " << vt << endl;
+    //cout << "vt: " << vt << endl;
 	//cout << "w: " << w << endl;
 
 	//Mat E = Mat::zeros(9,4,CV_32FC2);
@@ -371,9 +371,9 @@ boost::dynamic_bitset<> Tracker::remove_points_at_infinity(vector<Point2f> match
 void Tracker::setFirstFrame(const Mat frame) {
     first_frame = frame.clone();
     detector->detect(first_frame, first_kp, noArray());
-    cout << "Key-points : " << (int)first_kp.size() << ", " ;
+    //cout << "Key-points : " << (int)first_kp.size() << ", " ;
     descriptor->compute(first_frame, first_kp, first_desc);//crash qui, se si usa orb con un det SIFT
-	cout << "Descriptors : " << (int)first_desc.rows << ", " << (int)first_desc.cols << endl;
+    //cout << "Descriptors : " << (int)first_desc.rows << ", " << (int)first_desc.cols << endl;
 }
 
 boost::dynamic_bitset<> Tracker::verify_point_track(vector<Point2f> matched1, vector<Point2f> matched2, vector<int> tracked, vector<double> error){
@@ -725,9 +725,9 @@ Mat Tracker::process(const Mat frame){
 	vector<KeyPoint> kp;
     Mat desc;
     detector->detect(second_frame, kp, noArray());
-    cout << "Key-points : " << (int)kp.size() << ", " ;
+    //cout << "Key-points : " << (int)kp.size() << ", " ;
 	descriptor->compute(second_frame, kp, desc);
-    cout << "Descriptors : " << (int)desc.rows << ", " << (int)desc.cols << endl;
+    //cout << "Descriptors : " << (int)desc.rows << ", " << (int)desc.cols << endl;
 
 	/*
 	//-- Moves from vector<KeyPoint> to double*
@@ -765,7 +765,7 @@ Mat Tracker::process(const Mat frame){
 	double* MATCHES=(double*)calloc(10000,sizeof(double));
 	VLMATCH(TDescr, QDescr, Tnframes, Qnframes, .85, &matchesFound, MATCHES);
 	MATCHES=(double*)realloc(MATCHES,sizeof(double)*matchesFound*2);
-	cout << "VLFEAT Matches : " << matchesFound << endl;
+    //cout << "VLFEAT Matches : " << matchesFound << endl;
 
 	//-- Opencv matching
 	vector<DMatch> matches;
@@ -779,7 +779,7 @@ Mat Tracker::process(const Mat frame){
         }
     }
 	matcher->match(first_desc, desc, matches, noArray());
-	cout << "OpenCV Matches : " << (int)matches.size() << endl;
+    //cout << "OpenCV Matches : " << (int)matches.size() << endl;
 
 	double max_dist = 0;
 	double min_dist = 100;
@@ -824,7 +824,7 @@ Mat Tracker::process(const Mat frame){
 			vismatched1.push_back(matched1[i]);
 			vismatched2.push_back(matched2[i]);
 		}
-	cout << "Visible: " << (int)vis.count() << endl;
+    //cout << "Visible: " << (int)vis.count() << endl;
 
 	// drawing the results
 //	namedWindow("matches", 1);

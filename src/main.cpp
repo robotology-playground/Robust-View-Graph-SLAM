@@ -2,6 +2,7 @@
 #include <yarps.h>
 #include <icubs.h>
 #include <thread>
+#include <atomic>
 #include <mutex>
 #include <ctime>
 
@@ -62,6 +63,16 @@ void generate_constraints_image_inverse_depth_Mviews(PwgOptimiser *Object, std::
 				R[0] = 1 ; R[3] = 1 ;
 				Object->initialise_a_constraint(cam, kpt, p1, z, R, Yz, yz, sw) ;
 			}
+}
+
+bool Process2Images(Ptr<Feature2D> detector, Ptr<Feature2D> descriptor, Ptr<DescriptorMatcher> matcher, Mat image1_cv, Mat image2_cv)
+{
+
+                /* the tracker */
+                Tracker tracker(detector, descriptor, matcher); // a tracker for each key-frame
+                tracker.setFirstFrame(image1_cv);
+                tracker.process(image2_cv);
+
 }
 
 bool acquireAndProcess2Images(Ptr<Feature2D> detector, Ptr<Feature2D> descriptor, Ptr<DescriptorMatcher> matcher, int j){
@@ -223,15 +234,59 @@ int main (int argc, char** argv) {
 	//}
     bool res=false;
 	bool first=true;
+    vector<Mat> imgvec(ncams);
     while(i<ncams){
-        for(int j=0; j < std::thread::hardware_concurrency(); j++ ){
-            cout << "main() : creating thread, " << j << endl;
-            thread t(acquireAndProcess2Images,detector,descriptor,matcher,j);
-            if(t.joinable())
-              t.join();
-      }
+        BufferedPort<ImageOf<PixelRgb> > image1_port, image2_port;
+        int image1_start, image2_start;
+        image1_port.open("/vgSLAM/cam/left");
+        image2_port.open("/vgSLAM/cam/right");
+        yarpnet.connect("/icub/cam/left", image1_port.getName());
+        yarpnet.connect("/icub/cam/right",image2_port.getName());
 
-	}
+        // initialise tracker
+        std::vector<Tracker::point_2d> p ;
+
+        //int nimages = 2*5063;
+         //i<nimages
+
+            ImageOf<PixelRgb> *image1_yarp = image1_port.read();
+            ImageOf<PixelRgb> *image2_yarp = image2_port.read();
+            Stamp s1,s2;
+            if(image1_port.getEnvelope(s1) && image2_port.getEnvelope(s2)){
+                if(i==0){
+                    image1_start = s1.getCount();
+                    image2_start = s2.getCount();
+                }
+                if(abs(s1.getCount()-image1_start)>2 || abs(s2.getCount()-image2_start)>2
+                        || fabs((s1.getTime())-(s2.getTime()))>0.03){//0.03 is the half delta t
+                    image1_start = s1.getCount();
+                    image2_start = s2.getCount();
+                    continue;
+                }
+                if (image1_yarp!=NULL && image2_yarp!=NULL){
+                    std::cout << "[" << i << "," << i+1 << "]" << std::endl ;
+                    /* the images */
+                    Mat image1_cv = cvarrToMat(static_cast<IplImage*>(image1_yarp->getIplImage()));
+                    cvtColor(image1_cv, image1_cv, CV_RGB2BGR);
+                    cvtColor(image1_cv, image1_cv, COLOR_BGR2GRAY);
+                    Mat image2_cv = cvarrToMat(static_cast<IplImage*>(image2_yarp->getIplImage()));
+                    cvtColor(image2_cv, image2_cv, CV_RGB2BGR);
+                    cvtColor(image2_cv, image2_cv, COLOR_BGR2GRAY);
+                    imgvec[i]=image1_cv;
+                    imgvec[i+1]=image2_cv;
+                    i=i+2;
+                }
+            }
+    }
+
+    std::cout<<"images acquired, now I analyse them 2by2 in parallel"<<endl;
+
+    for(int j=0; j < ncams; j=j+2 ){
+//        cout << "main() : creating thread, " << j << endl;
+        thread t(Process2Images,detector,descriptor,matcher,imgvec[j],imgvec[j+1]);
+        if(t.joinable())
+          t.join();
+  }
 
 	// run the process
 	//process( ncams ) ;
