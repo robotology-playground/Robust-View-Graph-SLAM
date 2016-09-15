@@ -6,6 +6,7 @@
 #include <mutex>
 #include <ctime>
 
+
 //#include "Image.h"
 //#include "ImageViewer.h"
 #include "Tracker.h"
@@ -36,7 +37,18 @@ std::mutex some_mutex;
  *Valgrind is available for download at http://valgrind.org/
  *after compiling and installation, run
  *          valgrind ./PwgOptimiser 2 2
- */
+ *///for(int j=0;j<ncams;j=j+2){
+//    cout<<"Serial version"<<endl;
+//    Process2Images(detector,descriptor,matcher,imgvec[j],imgvec[j+1]);
+//}
+//vector<thread> threads;
+//        for(int j=0; j < ncams; j=j+2 ){
+//            thread t(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j]),ref(imgvec[j+1]),j/2);
+////            cout << "main() : creating thread, " << j <<" with id: "<<t.get_id()<< endl;// qui l'id e' lo stesso. Quindi vuol dire che il thread e' uno e quindi no parallelismo.
+//            if(t.joinable())
+//                t.join();
+//     threads.push_back(move(t));
+//  }
 
 /* generates random double in the range ( fMin:fMax ) */
 double fRand(double fMin, double fMax) {
@@ -65,16 +77,18 @@ void generate_constraints_image_inverse_depth_Mviews(PwgOptimiser *Object, std::
 			}
 }
 
-bool Process2Images(Ptr<Feature2D> detector, Ptr<Feature2D> descriptor, Ptr<DescriptorMatcher> matcher, Mat image1_cv, Mat image2_cv)
+bool Process2Images(Ptr<Feature2D>& detector, Ptr<Feature2D>& descriptor, Ptr<DescriptorMatcher>& matcher, Mat& image1_cv, Mat& image2_cv, int num)
 {
 
                 /* the tracker */
+                cout<<"Starting the thread "<<num<<endl;
                 Tracker tracker(detector, descriptor, matcher); // a tracker for each key-frame
                 tracker.setFirstFrame(image1_cv);
                 tracker.process(image2_cv);
+                cout<<"Ending the thread "<<num<<endl;
 
 }
-
+//OLD deprecated
 bool acquireAndProcess2Images(Ptr<Feature2D> detector, Ptr<Feature2D> descriptor, Ptr<DescriptorMatcher> matcher, int j){
     // YARP
     BufferedPort<ImageOf<PixelRgb> > image1_port, image2_port;
@@ -202,15 +216,17 @@ int main (int argc, char** argv) {
 	/* we need at least one input, ncams */
 	// argv[0] is the program name
     // argv[1:n] are the program input arguments
-    clock_t begin = clock();
-    int detID=vgSLAM_KAZE, descID=vgSLAM_SIFT, matchID=vgSLAM_FLANN; // default
-
+    auto start=chrono::high_resolution_clock::now();
 	if (argc<2) {
         std::cerr << "Usage: ./vgSLAM (int)ncams int(versbose)" << std::endl;
 		return 1;
 	}
 	int ncams = std::atoi ( argv[1] );
     int VERBOSE = 0;
+    if(ncams%2==1){
+        cout<<"ncams can be only multiple of two"<<endl;
+        return 1;
+    }
 //    ResourceFinder rf,rfdet,rfdesc,rfmatch;
 //    if(!rf.setDefaultConfigFile("../../conf/vgSLAM.ini"))
 //        return -1;
@@ -280,19 +296,53 @@ int main (int argc, char** argv) {
     }
 
     std::cout<<"images acquired, now I analyse them 2by2 in parallel"<<endl;
+    // if ncams is multiple of four, use all the cpu power
+    if(ncams%8==0){
+        for(int j=0;j<ncams;j=j+8){
+            cout<<"eight by eight images"<<endl;
+            thread t1(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j]),ref(imgvec[j+1]),1);
+            thread t2(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j+2]),ref(imgvec[j+3]),2);
+            thread t3(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j+4]),ref(imgvec[j+5]),3);
+            thread t4(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j+6]),ref(imgvec[j+7]),4);
+            t1.join();t2.join();
+            t3.join();t4.join();
+        }
+    }
+    else if(ncams%4==0){
+        cout<<"four by four images"<<endl;
+        for(int j=0;j<ncams;j=j+4){
+            thread t1(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j]),ref(imgvec[j+1]),1);
+            thread t2(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j+2]),ref(imgvec[j+3]),2);
+            t1.join();t2.join();
+        }
+    }
+    else
+    {
+        cout<<"two by two images"<<endl;
+        for(int j=0;j<ncams;j=j+2){
+            thread t1(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j]),ref(imgvec[j+1]),1);
+            t1.join();
+        }
+    }
 
-    for(int j=0; j < ncams; j=j+2 ){
-//        cout << "main() : creating thread, " << j << endl;
-        thread t(Process2Images,detector,descriptor,matcher,imgvec[j],imgvec[j+1]);
-        if(t.joinable())
-          t.join();
-  }
+//    thread t1(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[0]),ref(imgvec[1]),1);
+//    //Process2Images(detector,descriptor,matcher,imgvec[2],imgvec[3],0); // neither main thread and child thread
+//    thread t2(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[2]),ref(imgvec[3]),2);
+//    //cout<<"hardware concurrency"<<t1.hardware_concurrency()<<end;
+//    //cout<<"t1id: "<<t1.get_id()<<" t2id: "<<t2.get_id()<<endl; //e' diverso
+//    thread t3(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[4]),ref(imgvec[5]),3);
+//    thread t4(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[6]),ref(imgvec[7]),4);
+//    t1.join();t2.join();
+//    t3.join();t4.join();
+//for(int j=0;j<ncams;j=j+2){
+//    cout<<"Serial version"<<endl;
+//    Process2Images(detector,descriptor,matcher,imgvec[j],imgvec[j+1],j/2);
+//}
 
 	// run the process
 	//process( ncams ) ;
-    clock_t end = clock();
-    double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-    std::cout<<"Elapsed time: "<<elapsed_secs<<" seconds"<<endl;
+    auto end = std::chrono::high_resolution_clock::now();
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count() << " ms" << std::endl;
 	return 0 ;
 }
 
