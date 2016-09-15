@@ -77,7 +77,14 @@ void generate_constraints_image_inverse_depth_Mviews(PwgOptimiser *Object, std::
 			}
 }
 
-bool Process2Images(Ptr<Feature2D>& detector, Ptr<Feature2D>& descriptor, Ptr<DescriptorMatcher>& matcher, Mat& image1_cv, Mat& image2_cv, int num)
+void AnalyzeImage(Tracker& tracker, Mat& image_cv, int num){
+    cout<<"Starting the thread "<<num<<endl;
+    tracker.process(image_cv);
+    cout<<"Ending the thread "<<num<<endl;
+}
+
+void Process2Images(Ptr<Feature2D>& detector, Ptr<Feature2D>& descriptor, Ptr<DescriptorMatcher>& matcher, Mat& image1_cv,
+                    Mat& image2_cv, int num)
 {
 
                 /* the tracker */
@@ -295,35 +302,54 @@ int main (int argc, char** argv) {
             }
     }
 
-    std::cout<<"images acquired, now I analyse them 2by2 in parallel"<<endl;
+    std::cout<<"images acquired, now I analyse them in parallel"<<endl;
     // if ncams is multiple of four, use all the cpu power
-    if(ncams%8==0){
-        for(int j=0;j<ncams;j=j+8){
-            cout<<"eight by eight images"<<endl;
-            thread t1(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j]),ref(imgvec[j+1]),1);
-            thread t2(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j+2]),ref(imgvec[j+3]),2);
-            thread t3(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j+4]),ref(imgvec[j+5]),3);
-            thread t4(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j+6]),ref(imgvec[j+7]),4);
-            t1.join();t2.join();
-            t3.join();t4.join();
-        }
-    }
-    else if(ncams%4==0){
-        cout<<"four by four images"<<endl;
+    bool changeReference=true;
+    Tracker tracker(detector,descriptor,matcher);
+    if(ncams%4==0){
         for(int j=0;j<ncams;j=j+4){
-            thread t1(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j]),ref(imgvec[j+1]),1);
-            thread t2(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j+2]),ref(imgvec[j+3]),2);
-            t1.join();t2.join();
+            if(j%20==0){
+                changeReference=true;//every 20 images change reference
+                cout<<"!! Change frame reference !!"<<endl;    }
+            if(changeReference){
+                tracker.setFirstFrame(imgvec[j]);
+                thread t1(AnalyzeImage,ref(tracker),ref(imgvec[j+1]),1);
+                thread t2(AnalyzeImage,ref(tracker),ref(imgvec[j+2]),2);
+                thread t3(AnalyzeImage,ref(tracker),ref(imgvec[j+3]),3);
+                t1.join();t2.join();
+                t3.join();
+                changeReference=false;
+            }
+            else{
+                thread t1(AnalyzeImage,ref(tracker),ref(imgvec[j]),1);
+                thread t2(AnalyzeImage,ref(tracker),ref(imgvec[j+1]),2);
+                thread t3(AnalyzeImage,ref(tracker),ref(imgvec[j+2]),3);
+                thread t4(AnalyzeImage,ref(tracker),ref(imgvec[j+3]),4);
+                t1.join();t2.join();
+                t3.join();t4.join();
+            }
         }
     }
-    else
-    {
-        cout<<"two by two images"<<endl;
+    //ncams only divisible by 2
+    else {
         for(int j=0;j<ncams;j=j+2){
-            thread t1(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j]),ref(imgvec[j+1]),1);
-            t1.join();
+            if(j%20==0){
+                changeReference=true;//every 20 images change reference
+                cout<<"!! Change frame reference !!"<<endl;    }
+            if(changeReference){
+                tracker.setFirstFrame(imgvec[j]);
+                thread t1(AnalyzeImage,ref(tracker),ref(imgvec[j+1]),1);
+                t1.join();
+                changeReference=false;
+            }
+            else{
+                thread t1(AnalyzeImage,ref(tracker),ref(imgvec[j]),1);
+                thread t2(AnalyzeImage,ref(tracker),ref(imgvec[j+1]),2);
+                t1.join();t2.join();
+            }
         }
     }
+
 
 //    thread t1(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[0]),ref(imgvec[1]),1);
 //    //Process2Images(detector,descriptor,matcher,imgvec[2],imgvec[3],0); // neither main thread and child thread
