@@ -121,6 +121,10 @@ int main (int argc, char** argv) {
 	}
 	int ncams = std::atoi ( argv[1] );
     int VERBOSE = 0;
+    if(ncams%2==1){
+        cout<<"ncams can be only multiple of two"<<endl;
+        return 1;
+    }
 //    ResourceFinder rf,rfdet,rfdesc,rfmatch;
 //    if(!rf.setDefaultConfigFile("../../conf/vgSLAM.ini"))
 //        return -1;
