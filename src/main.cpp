@@ -297,30 +297,53 @@ int main (int argc, char** argv) {
 
     std::cout<<"images acquired, now I analyse them 2by2 in parallel"<<endl;
     // if ncams is multiple of four, use all the cpu power
-    if(ncams%8==0){
-        for(int j=0;j<ncams;j=j+8){
+    vector<thread*> threads;
+    int cores=thread::hardware_concurrency();
+    if(ncams%(cores*2)==0){
+        for(int j=0;j<ncams;j=(j+cores*2)){
             cout<<"eight by eight images"<<endl;
-            thread t1(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j]),ref(imgvec[j+1]),1);
-            thread t2(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j+2]),ref(imgvec[j+3]),2);
-            thread t3(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j+4]),ref(imgvec[j+5]),3);
-            thread t4(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j+6]),ref(imgvec[j+7]),4);
-            t1.join();t2.join();
-            t3.join();t4.join();
+            for (int i = 0; i < cores*2; i=i+2)
+                threads.push_back(new thread(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j+i]),ref(imgvec[j+i+1]),i/2));
+            for (int i = 0; i < cores; ++i)
+            {
+                threads[i]->join();
+                delete threads[i];
+                threads.pop_back();
+
+            }
+
+//            thread t1(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j]),ref(imgvec[j+1]),1);
+//            thread t2(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j+2]),ref(imgvec[j+3]),2);
+//            thread t3(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j+4]),ref(imgvec[j+5]),3);
+//            thread t4(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j+6]),ref(imgvec[j+7]),4);
+//            t1.join();t2.join();
+//            t3.join();t4.join();
         }
     }
-    else if(ncams%4==0){
+    else if(ncams%cores==0){
         cout<<"four by four images"<<endl;
-        for(int j=0;j<ncams;j=j+4){
-            thread t1(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j]),ref(imgvec[j+1]),1);
-            thread t2(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j+2]),ref(imgvec[j+3]),2);
-            t1.join();t2.join();
+        for(int j=0;j<ncams;j=j+cores){
+            for (int i = 0; i < cores; i=i+2){
+
+                threads.push_back(new thread(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j+i]),ref(imgvec[j+i+1]),i/2));
+            }
+
+            for (int i = 0; i < cores/2 ;++i)
+            {
+                threads[i]->join();
+                delete threads[i];
+                threads.pop_back();
+            }
+//            thread t1(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j]),ref(imgvec[j+1]),1);
+//            thread t2(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j+2]),ref(imgvec[j+3]),2);
+//            t1.join();t2.join();
         }
     }
     else
     {
         cout<<"two by two images"<<endl;
         for(int j=0;j<ncams;j=j+2){
-            thread t1(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j]),ref(imgvec[j+1]),1);
+            thread t1(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j]),ref(imgvec[j+1]),0);
             t1.join();
         }
     }
@@ -400,7 +423,7 @@ int main (int argc, char** argv) {
 			//}
 		}
 		else {
-			cout << "Could not find a valid essential matrix" << endl;
+            cout << "Could not find a valid essential matrix" << endl;            cout<<"QUI! threads size: "<<threads.size()<<endl;
 		}
  */
 
