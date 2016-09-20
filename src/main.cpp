@@ -82,8 +82,7 @@ void generate_constraints_image_inverse_depth_Mviews(PwgOptimiser *Object, std::
 	 *      3- Possibly output a temporary solution before the batch one?
 	 *          for this one, generate_point_tracks and generate_linearisation_point
 	 *          need to be merged ?????
-     *          Then, generatgit commit -m "finished detector configuration part with ini files"
-e_point_tracks should be integrated into
+         *          Then, generate_point_tracks should be integrated into
 	 *          generate_linearisation_point ?????
 	 *          Then xs is accomulated incrementally rather than in one step
 	 *          OR, better leave generate_point_tracks do that stuff alone ?????
