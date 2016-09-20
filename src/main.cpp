@@ -1,10 +1,10 @@
 #include <cpps.h>
 #include <yarps.h>
 #include <icubs.h>
-#include <thread>
-#include <atomic>
-#include <mutex>
-#include <ctime>
+//#include <thread>
+//#include <atomic>
+//#include <mutex>
+//#include <ctime>
 
 
 //#include "Image.h"
@@ -13,6 +13,7 @@
 #include "PwgOptimiser.h"
 #include "GraphOptimiser.h"
 #include "featureselector.h"
+#include "mythread.h"
 //#include "5point.cpp"
 //#include "Rpoly.cpp"
 
@@ -31,7 +32,8 @@ const double akaze_thresh = 1e-4; // AKAZE detection threshold set to locate abo
 const double ransac_thresh = 2.5f; // RANSAC inlier threshold
 Network yarpnet; // 64 bytes still reachable
 int i=0;
-std::mutex some_mutex;
+//std::mutex some_mutex;
+yarp::os::Mutex some_mutex;
 /*
  *you may use Valgrind to test for any memory leaks
  *Valgrind is available for download at http://valgrind.org/
@@ -156,8 +158,9 @@ bool acquireAndProcess2Images(Ptr<Feature2D> detector, Ptr<Feature2D> descriptor
                 //cvReleaseImage( &cvImageL );
                 //cvReleaseImage( &cvImageR );
             }
-            std::lock_guard<std::mutex> guard(some_mutex);
+            some_mutex.lock();
             i = i + 2;
+            some_mutex.unlock();
         }
 }
 
@@ -216,7 +219,7 @@ int main (int argc, char** argv) {
 	/* we need at least one input, ncams */
 	// argv[0] is the program name
     // argv[1:n] are the program input arguments
-    auto start=chrono::high_resolution_clock::now();
+    double startTime=Time::now();
 	if (argc<2) {
         std::cerr << "Usage: ./vgSLAM (int)ncams int(versbose)" << std::endl;
 		return 1;
@@ -297,16 +300,18 @@ int main (int argc, char** argv) {
 
     std::cout<<"images acquired, now I analyse them 2by2 in parallel"<<endl;
     // if ncams is multiple of four, use all the cpu power
-    vector<thread*> threads;
-    int cores=thread::hardware_concurrency();
+    vector<MyThread*> threads;
+    int cores=4;
     if(ncams%(cores*2)==0){
         for(int j=0;j<ncams;j=(j+cores*2)){
             cout<<"eight by eight images"<<endl;
-            for (int i = 0; i < cores*2; i=i+2)
-                threads.push_back(new thread(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j+i]),ref(imgvec[j+i+1]),i/2));
+            for (int i = 0; i < cores*2; i=i+2){
+                threads.push_back(new MyThread(detector,descriptor,matcher,imgvec[j+i],imgvec[j+i+1],i/2));
+                threads[i]->start();
+            }
             for (int i = 0; i < cores; ++i)
             {
-                threads[i]->join();
+                threads[i]->stop();
                 delete threads[i];
                 threads.pop_back();
 
@@ -324,13 +329,13 @@ int main (int argc, char** argv) {
         cout<<"four by four images"<<endl;
         for(int j=0;j<ncams;j=j+cores){
             for (int i = 0; i < cores; i=i+2){
-
-                threads.push_back(new thread(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j+i]),ref(imgvec[j+i+1]),i/2));
+                threads.push_back(new MyThread(detector,descriptor,matcher,imgvec[j+i],imgvec[j+i+1],i/2));
+                threads[i]->start();
             }
 
             for (int i = 0; i < cores/2 ;++i)
             {
-                threads[i]->join();
+                threads[i]->stop();
                 delete threads[i];
                 threads.pop_back();
             }
@@ -343,8 +348,9 @@ int main (int argc, char** argv) {
     {
         cout<<"two by two images"<<endl;
         for(int j=0;j<ncams;j=j+2){
-            thread t1(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j]),ref(imgvec[j+1]),0);
-            t1.join();
+            MyThread t1(detector,descriptor,matcher,imgvec[j],imgvec[j+1],0);
+            t1.start();
+            t1.stop();
         }
     }
 
@@ -364,8 +370,8 @@ int main (int argc, char** argv) {
 
 	// run the process
 	//process( ncams ) ;
-    auto end = std::chrono::high_resolution_clock::now();
-    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count() << " ms" << std::endl;
+    double endTime=Time::now();
+    std::cout <<endTime-startTime<< " seconds" << std::endl;
 	return 0 ;
 }
 
