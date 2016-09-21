@@ -1,5 +1,6 @@
 #include "mythread.h"
 #include <iostream>
+#include <yarp/os/LogStream.h>
 
 using namespace std;
 
@@ -10,8 +11,10 @@ bool MyThread::threadInit(){
 }
 
 void MyThread::run(){
+    //yInfo()<<"Start run";
     t->setFirstFrame(image1_cv);
     t->process(image2_cv);
+    //yInfo()<<"End run";
 }
 
 void MyThread::threadRelease(){

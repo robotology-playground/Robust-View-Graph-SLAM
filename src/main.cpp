@@ -1,5 +1,6 @@
 #include <cpps.h>
 #include <yarps.h>
+#include <yarp/os/LogStream.h>
 #include <icubs.h>
 //#include <thread>
 //#include <atomic>
@@ -306,8 +307,9 @@ int main (int argc, char** argv) {
         for(int j=0;j<ncams;j=(j+cores*2)){
             cout<<"eight by eight images"<<endl;
             for (int i = 0; i < cores*2; i=i+2){
-                threads.push_back(new MyThread(detector,descriptor,matcher,imgvec[j+i],imgvec[j+i+1],i/2));
-                threads[i]->start();
+                MyThread* t=new MyThread(detector,descriptor,matcher,imgvec[j+i],imgvec[j+i+1],i/2);
+                t->start();
+                threads.push_back(t);
             }
             for (int i = 0; i < cores; ++i)
             {
@@ -329,10 +331,10 @@ int main (int argc, char** argv) {
         cout<<"four by four images"<<endl;
         for(int j=0;j<ncams;j=j+cores){
             for (int i = 0; i < cores; i=i+2){
-                threads.push_back(new MyThread(detector,descriptor,matcher,imgvec[j+i],imgvec[j+i+1],i/2));
-                threads[i]->start();
+                MyThread* t=new MyThread(detector,descriptor,matcher,imgvec[j+i],imgvec[j+i+1],i/2);
+                t->start();
+                threads.push_back(t);
             }
-
             for (int i = 0; i < cores/2 ;++i)
             {
                 threads[i]->stop();
