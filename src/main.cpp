@@ -65,6 +65,11 @@ void generate_constraints_image_inverse_depth_Mviews(PwgOptimiser *Object, std::
 			}
 }
 
+bool mainThread(Mat& im,Tracker& t){
+    t.setFirstFrame(im);
+    return true;
+}
+
 void AnalyzeImage(Tracker& tracker, Mat& image_cv, int num){
     cout<<"Starting the thread "<<num<<endl;
     tracker.process(image_cv);
@@ -284,10 +289,10 @@ int main (int argc, char** argv) {
     if(ncams%4==0){
         for(int j=0;j<ncams-3;j++){
             yInfo()<<"Matching "<<j<<" to "<<j+1<<","<<j+2<<","<<j+3;
-            MyThread t0(tracker,imgvec[j],0);
-            t0.start();
+//            MyThread t0(tracker,imgvec[j],0);
+//            t0.start();
             cout<<"Waiting the first thread"<<endl;
-            while(!t0.join())
+            while(!mainThread(imgvec[j],tracker))
             {
                 //do nothing.
             }
@@ -303,9 +308,7 @@ int main (int argc, char** argv) {
     else {
         for(int j=0;j<ncams-1;j++){
             yInfo()<<"Matching "<<j<<" to "<<j+1;
-            MyThread t0(tracker,imgvec[j],0);
-            t0.start();
-            while(!t0.join())
+            while(!mainThread(imgvec[j],tracker))
             {
                 //do nothing.
             }

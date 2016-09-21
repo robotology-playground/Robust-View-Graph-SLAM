@@ -12,10 +12,7 @@ bool MyThread::threadInit(){
 
 void MyThread::run(){
     //yInfo()<<"Start run";
-    if(id==0)
-        t.setFirstFrame(image_cv);
-    else
-        t.process(image_cv);
+    t.process(image_cv);
     //yInfo()<<"End run";
 }
 
