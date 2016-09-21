@@ -371,9 +371,9 @@ boost::dynamic_bitset<> Tracker::remove_points_at_infinity(vector<Point2f> match
 void Tracker::setFirstFrame(const Mat frame) {
     first_frame = frame.clone();
     detector->detect(first_frame, first_kp, noArray());
-    //cout << "Key-points : " << (int)first_kp.size() << ", " ;
+    cout << "Key-points : " << (int)first_kp.size() << ", " ;
     descriptor->compute(first_frame, first_kp, first_desc);//crash qui, se si usa orb con un det SIFT
-    //cout << "Descriptors : " << (int)first_desc.rows << ", " << (int)first_desc.cols << endl;
+    cout << "Descriptors : " << (int)first_desc.rows << ", " << (int)first_desc.cols << endl;
 }
 
 boost::dynamic_bitset<> Tracker::verify_point_track(vector<Point2f> matched1, vector<Point2f> matched2, vector<int> tracked, vector<double> error){
@@ -725,9 +725,9 @@ Mat Tracker::process(const Mat frame){
 	vector<KeyPoint> kp;
     Mat desc;
     detector->detect(second_frame, kp, noArray());
-    //cout << "Key-points : " << (int)kp.size() << ", " ;
+    cout << "Key-points : " << (int)kp.size() << ", " ;
 	descriptor->compute(second_frame, kp, desc);
-    //cout << "Descriptors : " << (int)desc.rows << ", " << (int)desc.cols << endl;
+    cout << "Descriptors : " << (int)desc.rows << ", " << (int)desc.cols << endl;
 
 	/*
 	//-- Moves from vector<KeyPoint> to double*
@@ -779,7 +779,7 @@ Mat Tracker::process(const Mat frame){
         }
     }
 	matcher->match(first_desc, desc, matches, noArray());
-    //cout << "OpenCV Matches : " << (int)matches.size() << endl;
+    cout << "OpenCV Matches : " << (int)matches.size() << endl;
 
 	double max_dist = 0;
 	double min_dist = 100;
@@ -827,11 +827,11 @@ Mat Tracker::process(const Mat frame){
     //cout << "Visible: " << (int)vis.count() << endl;
 
 	// drawing the results
-//	namedWindow("matches", 1);
-//	Mat img_matches;
-//	drawMatches(first_frame, first_kp, frame, kp, good_matches, img_matches);
-//	imshow("matches", img_matches);
-//	waitKey(0);
+//    namedWindow("matches", 1);
+//    Mat img_matches;
+//    drawMatches(first_frame, first_kp, frame, kp, good_matches, img_matches);
+//    imshow("matches", img_matches);
+//    waitKey(0);
 
 	if (vis.count()>100){
 		//-- http://nghiaho.com/?p=1675

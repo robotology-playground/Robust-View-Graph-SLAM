@@ -1,10 +1,7 @@
 #include <cpps.h>
 #include <yarps.h>
 #include <icubs.h>
-#include <thread>
-#include <atomic>
-#include <mutex>
-#include <ctime>
+
 
 
 //#include "Image.h"
@@ -13,6 +10,7 @@
 #include "PwgOptimiser.h"
 #include "GraphOptimiser.h"
 #include "featureselector.h"
+#include "mythread.h"
 //#include "5point.cpp"
 //#include "Rpoly.cpp"
 
@@ -31,24 +29,14 @@ const double akaze_thresh = 1e-4; // AKAZE detection threshold set to locate abo
 const double ransac_thresh = 2.5f; // RANSAC inlier threshold
 Network yarpnet; // 64 bytes still reachable
 int i=0;
-std::mutex some_mutex;
+
+yarp::os::Mutex some_mutex;
 /*
  *you may use Valgrind to test for any memory leaks
  *Valgrind is available for download at http://valgrind.org/
  *after compiling and installation, run
  *          valgrind ./PwgOptimiser 2 2
- *///for(int j=0;j<ncams;j=j+2){
-//    cout<<"Serial version"<<endl;
-//    Process2Images(detector,descriptor,matcher,imgvec[j],imgvec[j+1]);
-//}
-//vector<thread> threads;
-//        for(int j=0; j < ncams; j=j+2 ){
-//            thread t(Process2Images,ref(detector),ref(descriptor),ref(matcher),ref(imgvec[j]),ref(imgvec[j+1]),j/2);
-////            cout << "main() : creating thread, " << j <<" with id: "<<t.get_id()<< endl;// qui l'id e' lo stesso. Quindi vuol dire che il thread e' uno e quindi no parallelismo.
-//            if(t.joinable())
-//                t.join();
-//     threads.push_back(move(t));
-//  }
+ */
 
 /* generates random double in the range ( fMin:fMax ) */
 double fRand(double fMin, double fMax) {
@@ -81,19 +69,6 @@ void AnalyzeImage(Tracker& tracker, Mat& image_cv, int num){
     cout<<"Starting the thread "<<num<<endl;
     tracker.process(image_cv);
     cout<<"Ending the thread "<<num<<endl;
-}
-
-void Process2Images(Ptr<Feature2D>& detector, Ptr<Feature2D>& descriptor, Ptr<DescriptorMatcher>& matcher, Mat& image1_cv,
-                    Mat& image2_cv, int num)
-{
-
-                /* the tracker */
-                cout<<"Starting the thread "<<num<<endl;
-                Tracker tracker(detector, descriptor, matcher); // a tracker for each key-frame
-                tracker.setFirstFrame(image1_cv);
-                tracker.process(image2_cv);
-                cout<<"Ending the thread "<<num<<endl;
-
 }
 //OLD deprecated
 bool acquireAndProcess2Images(Ptr<Feature2D> detector, Ptr<Feature2D> descriptor, Ptr<DescriptorMatcher> matcher, int j){
@@ -163,8 +138,9 @@ bool acquireAndProcess2Images(Ptr<Feature2D> detector, Ptr<Feature2D> descriptor
                 //cvReleaseImage( &cvImageL );
                 //cvReleaseImage( &cvImageR );
             }
-            std::lock_guard<std::mutex> guard(some_mutex);
+            some_mutex.lock();
             i = i + 2;
+            some_mutex.unlock();
         }
 }
 
@@ -223,7 +199,7 @@ int main (int argc, char** argv) {
 	/* we need at least one input, ncams */
 	// argv[0] is the program name
     // argv[1:n] are the program input arguments
-    auto start=chrono::high_resolution_clock::now();
+    double startTime=Time::now();
 	if (argc<2) {
         std::cerr << "Usage: ./vgSLAM (int)ncams int(versbose)" << std::endl;
 		return 1;
@@ -304,49 +280,38 @@ int main (int argc, char** argv) {
 
     std::cout<<"images acquired, now I analyse them in parallel"<<endl;
     // if ncams is multiple of four, use all the cpu power
-    bool changeReference=true;
     Tracker tracker(detector,descriptor,matcher);
     if(ncams%4==0){
-        for(int j=0;j<ncams;j=j+4){
-            if(j%20==0){
-                changeReference=true;//every 20 images change reference
-                cout<<"!! Change frame reference !!"<<endl;    }
-            if(changeReference){
-                tracker.setFirstFrame(imgvec[j]);
-                thread t1(AnalyzeImage,ref(tracker),ref(imgvec[j+1]),1);
-                thread t2(AnalyzeImage,ref(tracker),ref(imgvec[j+2]),2);
-                thread t3(AnalyzeImage,ref(tracker),ref(imgvec[j+3]),3);
-                t1.join();t2.join();
-                t3.join();
-                changeReference=false;
+        for(int j=0;j<ncams-3;j++){
+            yInfo()<<"Matching "<<j<<" to "<<j+1<<","<<j+2<<","<<j+3;
+            MyThread t0(tracker,imgvec[j],0);
+            t0.start();
+            cout<<"Waiting the first thread"<<endl;
+            while(!t0.join())
+            {
+                //do nothing.
             }
-            else{
-                thread t1(AnalyzeImage,ref(tracker),ref(imgvec[j]),1);
-                thread t2(AnalyzeImage,ref(tracker),ref(imgvec[j+1]),2);
-                thread t3(AnalyzeImage,ref(tracker),ref(imgvec[j+2]),3);
-                thread t4(AnalyzeImage,ref(tracker),ref(imgvec[j+3]),4);
-                t1.join();t2.join();
-                t3.join();t4.join();
-            }
+            MyThread t1(tracker,imgvec[j+1],1);
+            MyThread t2(tracker,imgvec[j+2],2);
+            MyThread t3(tracker,imgvec[j+3],3);
+            t1.start();t2.start();t3.start();
+            t1.stop();t2.stop();t3.stop();
+
         }
     }
     //ncams only divisible by 2
     else {
-        for(int j=0;j<ncams;j=j+2){
-            if(j%20==0){
-                changeReference=true;//every 20 images change reference
-                cout<<"!! Change frame reference !!"<<endl;    }
-            if(changeReference){
-                tracker.setFirstFrame(imgvec[j]);
-                thread t1(AnalyzeImage,ref(tracker),ref(imgvec[j+1]),1);
-                t1.join();
-                changeReference=false;
+        for(int j=0;j<ncams-1;j++){
+            yInfo()<<"Matching "<<j<<" to "<<j+1;
+            MyThread t0(tracker,imgvec[j],0);
+            t0.start();
+            while(!t0.join())
+            {
+                //do nothing.
             }
-            else{
-                thread t1(AnalyzeImage,ref(tracker),ref(imgvec[j]),1);
-                thread t2(AnalyzeImage,ref(tracker),ref(imgvec[j+1]),2);
-                t1.join();t2.join();
-            }
+            MyThread t1(tracker,imgvec[j+1],1);
+            t1.start();
+            t1.stop();
         }
     }
 
@@ -367,8 +332,8 @@ int main (int argc, char** argv) {
 
 	// run the process
 	//process( ncams ) ;
-    auto end = std::chrono::high_resolution_clock::now();
-    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count() << " ms" << std::endl;
+    double endTime=Time::now();
+    std::cout <<endTime-startTime<< " seconds" << std::endl;
 	return 0 ;
 }
 
