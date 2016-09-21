@@ -284,10 +284,10 @@ message("-- Using MATLAB_EXTERN: ${MATLAB_EXTERN}")
 include_directories(${MATLAB_EXTERN})
 
 # vlfeat.
-set(VLFEAT_INCLUDE_DIR /home/tabuhashim/Dev/vlfeat-0.9.20)
+set(VLFEAT_INCLUDE_DIR /home/ngenesio/Downloads/vlfeat-0.9.20)
 message("-- Using VLFeat: ${VLFEAT_INCLUDE_DIR}")
 include_directories(${VLFEAT_INCLUDE_DIR})
-find_library(VLFEAT_LIB NAMES vl PATHS /home/tabuhashim/Dev/vlfeat-0.9.20/bin/glnxa64)
+find_library(VLFEAT_LIB NAMES vl PATHS /home/ngenesio/Downloads/vlfeat-0.9.20/bin/glnxa64)
 #set(VLFEAT_LIB /home/tabuhashim/Dev/vlfeat-0.9.20/bin/glnxa64)
 if (EXISTS ${VLFEAT_LIB})
 	message("-- VLFEAT libs: ${VLFEAT_LIB}")
