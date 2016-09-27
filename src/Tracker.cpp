@@ -904,7 +904,7 @@ Mat Tracker::process(const Mat frame){
 			for (int i=0; i<Evec.rows(); i++){
 				int l = floor(i/3);
 				int k = i - (l-1)*3 - 3;
-				cout << k << " " << l << endl;
+                //cout << k << " " << l << endl;
 				//E.at<double>(k,l) = Evec.coeffRef(i,j)/Evec.coeffRef(8,j); // normalise to force rank 2
 				E2.coeffRef(k,l) = Evec.coeffRef(i,j)/Evec.coeffRef(8,j);
 			}

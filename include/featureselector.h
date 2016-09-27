@@ -1,3 +1,14 @@
+/*
+ * featureselector.h
+ *
+ *  Created on: Sept 7, 2016
+ *      Author: Nicolo' Genesio
+ * This class is designed to interface with the user through configuration files(.ini).
+ * The user can select the method for the detector,descriptor and matcher in conf/vgSLAM.ini
+ * and then tune the parameters of the method in the respective ini files contained in the conf
+ * folder.
+ */
+
 #ifndef FEATURESELECTOR_H
 #define FEATURESELECTOR_H
 
@@ -33,12 +44,13 @@ public:
     bool process(cv::Ptr<cv::Feature2D> &detector, cv::Ptr<cv::Feature2D> &descriptor, cv::Ptr<cv::DescriptorMatcher> &matcher);
 protected:
     int  parseMap(std::string value, std::map<std::string, int> &m);
-    bool checkDetector(std::string str);
-    bool checkDescriptor(std::string str);
-    bool checkMatcher(std::string str);
+    bool checkDetector(std::string str);//check if the method indicated in vgSLAM.ini is one of the available ones.
+    bool checkDescriptor(std::string str);//check if the method indicated in vgSLAM.ini is one of the available ones.
+    bool checkMatcher(std::string str);//check if the method indicated in vgSLAM.ini is one of the available ones.
     void switcher(int detID, int descID, int matchID,
                   cv::Ptr<cv::Feature2D> &detector, cv::Ptr<cv::Feature2D> &descriptor,cv::Ptr<cv::DescriptorMatcher> &matcher);
-    int assignMethod(std::string str);
+    //given the id for the detector,descriptor and matcher, create the objects with the parameters taken from respective ini files
+    int assignMethod(std::string str);//given the name of the method it returns the id specified by defines on the top.
 
 
 };
