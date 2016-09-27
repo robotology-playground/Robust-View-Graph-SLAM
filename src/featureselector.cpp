@@ -1,3 +1,13 @@
+/*
+ * featureselector.cpp
+ *
+ *  Created on: Sept 7, 2016
+ *      Author: Nicolo' Genesio
+ * This class is designed to interface with the user through configuration files(.ini).
+ * The user can select the method for the detector,descriptor and matcher in conf/vgSLAM.ini
+ * and then tune the parameters of the method in the respective ini files contained in the conf
+ * folder.
+ */
 #include "featureselector.h"
 
 using namespace std;

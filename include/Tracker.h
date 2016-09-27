@@ -32,7 +32,6 @@ public:
         detector(_detector), descriptor(_descriptor), matcher(_matcher) {}
 	void setFirstFrame(const cv::Mat frame);
     cv::Mat process(const cv::Mat frame, cv::Mat *ProjectionMatrix);
-//    void setProjMat(cv::Mat& Projmat){*ProjectionMatrix=Projmat;}
 	cv::Ptr<cv::Feature2D> getDetector() { return detector; }
 	struct point_2d { /* image points structure */
 		const std::vector<double> x ; /* x image coordinate */
@@ -47,7 +46,6 @@ public:
 			npts=x.size(); }
 	};
 protected:
-    //cv::Mat* ProjectionMatrix;
 	cv::Ptr<cv::Feature2D> detector;
     cv::Ptr<cv::Feature2D> descriptor;
 	cv::Ptr<cv::DescriptorMatcher> matcher;
