@@ -138,12 +138,6 @@ int main (int argc, char** argv) {
         cout<<"ncams must be two or four"<<endl;
         return 1;
     }
-//    ResourceFinder rf,rfdet,rfdesc,rfmatch;
-//    if(!rf.setDefaultConfigFile("../../conf/vgSLAM.ini"))
-//        return -1;
-//    rf.configure(argc, argv);
-//    rfdesc.configure(argc, argv);
-//    rfmatch.configure(argc, argv);
 
     if (argc > 2){
         VERBOSE = std::atoi ( argv[2] );
@@ -213,7 +207,7 @@ int main (int argc, char** argv) {
         PrMatSize=3*(numImgs-3);
     else
         PrMatSize=(numImgs-1);
-    vector<Mat> ProjectionMatrices(PrMatSize);//Fix the size
+    vector<Mat> ProjectionMatrices(PrMatSize);
     if(ncams==4){
         for(int j=0,i=0;j<numImgs-3;j++, i=i+3){
             yInfo()<<"Matching "<<j<<" to "<<j+1<<","<<j+2<<","<<j+3;
@@ -222,12 +216,11 @@ int main (int argc, char** argv) {
             {
                 //do nothing.
             }
-            MyThread t1(tracker,imgvec[j+1],ProjectionMatrices[i],1);//Fix the index
-            MyThread t2(tracker,imgvec[j+2],ProjectionMatrices[i+1],2);//Fix the index
-            MyThread t3(tracker,imgvec[j+3],ProjectionMatrices[i+2],3);//Fix the index
+            MyThread t1(tracker,imgvec[j+1],ProjectionMatrices[i],1);
+            MyThread t2(tracker,imgvec[j+2],ProjectionMatrices[i+1],2);
+            MyThread t3(tracker,imgvec[j+3],ProjectionMatrices[i+2],3);
             t1.start();t2.start();t3.start();
             t1.stop();t2.stop();t3.stop();
-            //cout<<ProjectionMatrices[j]<<endl;
 
         }
     }
