@@ -371,9 +371,9 @@ boost::dynamic_bitset<> Tracker::remove_points_at_infinity(vector<Point2f> match
 void Tracker::setFirstFrame(const Mat frame) {
     first_frame = frame.clone();
     detector->detect(first_frame, first_kp, noArray());
-    cout << "Key-points : " << (int)first_kp.size() << ", " ;
+    //cout << "Key-points : " << (int)first_kp.size() << ", " ;
     descriptor->compute(first_frame, first_kp, first_desc);//crash qui, se si usa orb con un det SIFT
-    cout << "Descriptors : " << (int)first_desc.rows << ", " << (int)first_desc.cols << endl;
+    //cout << "Descriptors : " << (int)first_desc.rows << ", " << (int)first_desc.cols << endl;
 }
 
 boost::dynamic_bitset<> Tracker::verify_point_track(vector<Point2f> matched1, vector<Point2f> matched2, vector<int> tracked, vector<double> error){
@@ -702,7 +702,7 @@ void Tracker::triangulate_inverse_depth(vector<double>& r, const Tracker::point_
     }
 }
 
-Mat Tracker::process(const Mat frame){
+Mat Tracker::process(const Mat frame, Mat* ProjectionMatrix){
 
 	/*
 	// VLSIFT
@@ -725,9 +725,9 @@ Mat Tracker::process(const Mat frame){
 	vector<KeyPoint> kp;
     Mat desc;
     detector->detect(second_frame, kp, noArray());
-    cout << "Key-points : " << (int)kp.size() << ", " ;
+    //cout << "Key-points : " << (int)kp.size() << ", " ;
 	descriptor->compute(second_frame, kp, desc);
-    cout << "Descriptors : " << (int)desc.rows << ", " << (int)desc.cols << endl;
+    //cout << "Descriptors : " << (int)desc.rows << ", " << (int)desc.cols << endl;
 
 	/*
 	//-- Moves from vector<KeyPoint> to double*
@@ -779,7 +779,7 @@ Mat Tracker::process(const Mat frame){
         }
     }
 	matcher->match(first_desc, desc, matches, noArray());
-    cout << "OpenCV Matches : " << (int)matches.size() << endl;
+    //cout << "OpenCV Matches : " << (int)matches.size() << endl;
 
 	double max_dist = 0;
 	double min_dist = 100;
@@ -882,8 +882,10 @@ Mat Tracker::process(const Mat frame){
 		Mat a;
 		Rodrigues(R,a);
 		transpose(a,a);
-		transpose(t,t);
-//        cout << t << " " << a*180/M_PI << endl ;
+        //transpose(t,t);
+        //ProjectionMatrix->create(3, 4, R.type());
+        hconcat(R,t,*ProjectionMatrix);
+        //        cout << t << " " << a*180/M_PI << endl ;
 
 		//vector<Point2f> kp1, kp2;
 		//for (int i=0; i<5; i++){

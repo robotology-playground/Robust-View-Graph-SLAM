@@ -11,11 +11,13 @@ class MyThread : public yarp::os::Thread
     Tracker t;
     int id;
     Mat image_cv;
+    Mat* ProjMat;
 
 public:
-    MyThread(Tracker& tracker, Mat& im,int num):yarp::os::Thread(){id=num;
+    MyThread(Tracker tracker, Mat& im, Mat& _ProjMat,int num):yarp::os::Thread(){id=num;
                                                             t=tracker;
                                                             image_cv=im;
+                                                            ProjMat=&_ProjMat;
                                                            }
 protected:
     bool threadInit();
