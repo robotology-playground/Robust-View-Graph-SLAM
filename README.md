@@ -4,11 +4,13 @@
 
 ## Installation
 
-1- Tested on Ubuntu 14.04.5 LTS (Trusty Tahr)
-`sudo apt-get install git`
-`sudo apt-get install cmake`
-`sudo apt-get install g++`
-`sudo apt-get install cmake-curses-gui`
+This implementation was tested on Ubuntu 14.04.5 LTS (Trusty Tahr)
+```
+sudo apt-get install git
+sudo apt-get install cmake
+sudo apt-get install g++
+sudo apt-get install cmake-curses-gui
+```
 
 2- OpenCV and OpenCV_Contrib
 git clone https://github.com/opencv/opencv.git
