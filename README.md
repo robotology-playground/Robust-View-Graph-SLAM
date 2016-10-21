@@ -1,4 +1,43 @@
 
+## Installation
+
+# Tested on Ubuntu 14.04.5 LTS (Trusty Tahr)
+`sudo apt-get install git`
+`sudo apt-get install cmake`
+`sudo apt-get install g++`
+`sudo apt-get install cmake-curses-gui`
+
+# OpenCV and OpenCV_Contrib
+git clone https://github.com/opencv/opencv.git
+git clone https://github.com/opencv/opencv_contrib.git
+mkdir opencv_build
+cd opencv_build
+cmake -DOPENCV_EXTRA_MODULES_PATH=../opencv_contrib/modules ../opencv
+make -j5
+sudo make install
+
+# Install Matlab:
+If using mex wrappers.
+
+# download VLFeat 0.9.20 binary package
+run <VLFEATROOT>/toolbox/vl_setup
+
+# SuiteSparse
+To download the most recent version:
+git clone https://github.com/jluttine/suitesparse.git
+However, our implementation of Takahashi's inverse (spinv) needs UFconfig, this is found in SuiteSparse-3.7.1.tar.gz
+cd suitesparse
+Also, need to install lapack, blas, openblas, metis, and parmetis (not really needed at the moment).
+sudo apt-get install liblapack-dev libblas-dev libopenblas-dev libmetis-dev libparmetis-dev
+Download matis-4.0, I downloaded metis-4.0.3, and rename the folder to matis-4.0.
+In the Makefile.in, update the following
+CC = gcc
+OPTFLAGS = -O3 
+COPTIONS = -fPIC
+Then;
+make
+sudo make install
+
 - Low-level vision
 - 
 - [ ] get aligned point matches
