@@ -44,11 +44,12 @@ Also, need to install lapack, blas, openblas, metis, and parmetis (not really ne
 ```
 sudo apt-get install liblapack-dev libblas-dev libopenblas-dev libmetis-dev libparmetis-dev
 ```
-Download matis-4.0, I downloaded metis-4.0.3, and rename the folder to matis-4.0.
-In the Makefile.in, update the following
+Download matis-4.0, I downloaded metis-4.0.3, and rename the folder to matis-4.0. In the Makefile.in, update the following:
+```
 CC = gcc
 OPTFLAGS = -O3 
 COPTIONS = -fPIC
+```
 Then;
 ```
 make
