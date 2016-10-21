@@ -1,13 +1,16 @@
+<snippet>
+  <content><![CDATA[
+# ${1:Project Name}
 
 ## Installation
 
-# Tested on Ubuntu 14.04.5 LTS (Trusty Tahr)
+1- Tested on Ubuntu 14.04.5 LTS (Trusty Tahr)
 `sudo apt-get install git`
 `sudo apt-get install cmake`
 `sudo apt-get install g++`
 `sudo apt-get install cmake-curses-gui`
 
-# OpenCV and OpenCV_Contrib
+2- OpenCV and OpenCV_Contrib
 git clone https://github.com/opencv/opencv.git
 git clone https://github.com/opencv/opencv_contrib.git
 mkdir opencv_build
@@ -16,13 +19,13 @@ cmake -DOPENCV_EXTRA_MODULES_PATH=../opencv_contrib/modules ../opencv
 make -j5
 sudo make install
 
-# Install Matlab:
+3- Install Matlab:
 If using mex wrappers.
 
-# download VLFeat 0.9.20 binary package
+4- download VLFeat 0.9.20 binary package
 run <VLFEATROOT>/toolbox/vl_setup
 
-# SuiteSparse
+5- SuiteSparse
 To download the most recent version:
 git clone https://github.com/jluttine/suitesparse.git
 However, our implementation of Takahashi's inverse (spinv) needs UFconfig, this is found in SuiteSparse-3.7.1.tar.gz
@@ -111,3 +114,8 @@ Install libgsl:
 --------------
 sudo apt-get update<br />
 sudo apt-get install libgsl-dev<br />
+
+TODO: Write license
+]]></content>
+  <tabTrigger>readme</tabTrigger>
+</snippet>
