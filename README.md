@@ -1,7 +1,3 @@
-<snippet>
-  <content><![CDATA[
-# ${1:Project Name}
-
 ## Installation
 
 This implementation was tested on Ubuntu 14.04.5 LTS (Trusty Tahr)
@@ -129,8 +125,3 @@ Install libgsl:
 --------------
 sudo apt-get update<br />
 sudo apt-get install libgsl-dev<br />
-
-TODO: Write license
-]]></content>
-  <tabTrigger>readme</tabTrigger>
-</snippet>
