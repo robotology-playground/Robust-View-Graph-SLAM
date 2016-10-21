@@ -22,7 +22,8 @@ sudo make install
 ### Install Matlab:
 If using mex wrappers.
 
-### download VLFeat 0.9.20 binary package
+### VLFeat
+Download [**VLFeat 0.9.20 binary package**] (http://www.vlfeat.org/download/vlfeat-0.9.20-bin.tar.gz)
 ```
 run <VLFEATROOT>/toolbox/vl_setup
 ```
