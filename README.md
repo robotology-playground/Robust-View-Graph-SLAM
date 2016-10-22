@@ -20,7 +20,7 @@ sudo make install
 ```
 
 ### Install Matlab:
-If using mex wrappers.
+If you are planning on using our mex wrapper, you need to download [**MATLAB**] (https://au.mathworks.com/downloads/)
 
 ### VLFeat
 Download [**VLFeat 0.9.20 binary package**] (http://www.vlfeat.org/download/vlfeat-0.9.20-bin.tar.gz)
