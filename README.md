@@ -19,8 +19,8 @@ make -j5
 sudo make install
 ```
 
-### Install Matlab:
-If you are planning on using our mex wrapper, you need to download [**MATLAB**] (https://au.mathworks.com/downloads/)
+### Install MATLAB:
+If you are planning on using our mex wrappers, you need to download and install [**MATLAB**] (https://au.mathworks.com/downloads/).
 
 ### VLFeat
 Download [**VLFeat 0.9.20 binary package**] (http://www.vlfeat.org/download/vlfeat-0.9.20-bin.tar.gz)
@@ -60,9 +60,15 @@ Then;
 make
 sudo make install
 ```
+### Eigen
+Download and compile [**Eigen**] (http://bitbucket.org/eigen/eigen/get/3.3-rc1.tar.bz2).
+```
+cd Eigen
+make
+```
 
-- Low-level vision
-- 
+### TODO Check-List
+1-  Low-level vision
 - [ ] get aligned point matches
     - [ ] get image
     - [ ] get features
@@ -89,11 +95,9 @@ sudo make install
     - [ ] build the state vector (\mathbf{x}_c \mathbf{x}_f)^\top
 - [ ] integrate Ceres-Solver.
 
-- RecoverMoments
-- 
+2- RecoverMoments
 
-- PwgOptimiser
--
+3- PwgOptimiser
 - [x] initialise_info_matrix.
 - [x] generate_constraints_info_Mviews.
 - [x] update_info_matrix_Mviews.
@@ -102,8 +106,7 @@ sudo make install
 - [x] compute_gate_inverse_depth_Mviews.
 - [ ] solving and inversion (RecoverMoments).
     
-- GraphOptimiser
-- 
+4- GraphOptimiser
 - [ ] assign_constraint_weight
 - [ ] run_pose_graph_estimation
     - [ ] initialise
@@ -116,9 +119,6 @@ sudo make install
         - [ ] constraint_graph_add
         - [ ] constraint_graph_subtract
         - [ ] compute_gate_graph
-
-
-
 
 Install libgsl: 
 --------------
