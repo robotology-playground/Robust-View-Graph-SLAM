@@ -33,8 +33,8 @@ If compiling without MATLAB, in the makefile, comment out the line
 ```
 To compile our code with vlFeat, in the CMakeLists.txt, update the paths in the following two lines to point to your vlFeat local copy:
 ```
-set(VLFEAT_INCLUDE_DIR /path/to/vlfeat)<br />
-find_library(VLFEAT_LIB NAMES vl PATHS /path/to/vlfeat/bin/glnxa64)<br />
+set(VLFEAT_INCLUDE_DIR /path/to/vlfeat)
+find_library(VLFEAT_LIB NAMES vl PATHS /path/to/vlfeat/bin/glnxa64)
 ```
 ### SuiteSparse
 To download the most recent version:
