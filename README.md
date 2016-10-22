@@ -27,7 +27,15 @@ Download [**VLFeat 0.9.20 binary package**] (http://www.vlfeat.org/download/vlfe
 ```
 run <VLFEATROOT>/toolbox/vl_setup
 ```
-
+If compiling without MATLAB, in the makefile, comment out the line
+```
+#include make/matlab.mak. Then, "make".
+```
+To compule our code with vlFeat, in the CMakeLists.txt, update the paths in the following two lines to point to your vlFeat local copy:
+```
+set(VLFEAT_INCLUDE_DIR /path/to/vlfeat)<br />
+find_library(VLFEAT_LIB NAMES vl PATHS /path/to/vlfeat/bin/glnxa64)<br />
+```
 ### SuiteSparse
 To download the most recent version:
 ```
@@ -108,19 +116,9 @@ sudo make install
         - [ ] constraint_graph_add
         - [ ] constraint_graph_subtract
         - [ ] compute_gate_graph
-    
-Compile vlFeat
---------------
-First, in the makefile, comment out the line #include make/matlab.mak. Then, "make". <br />
-To compule our code with vlFeat, in the CMakeLists.txt, update the path to where you compiled vlFeat:
 
-set(VLFEAT_INCLUDE_DIR /path/to/vlfeat)<br />
-message("-- Using VLFeat: ${VLFEAT_INCLUDE_DIR}")<br />
-include_directories(${VLFEAT_INCLUDE_DIR})<br />
-find_library(VLFEAT_LIB NAMES vl PATHS /path/to/vlfeat/bin/glnxa64)<br />
-if (EXISTS ${VLFEAT_LIB})<br />
-	message("-- VLFEAT libs: ${VLFEAT_LIB}")<br />
-endif(EXISTS ${VLFEAT_LIB})<br />
+
+
 
 Install libgsl: 
 --------------
