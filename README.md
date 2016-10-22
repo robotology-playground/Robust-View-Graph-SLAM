@@ -46,7 +46,7 @@ However, our implementation of Takahashi's inverse (spinv) needs UFconfig, this 
 sudo apt-get install liblapack-dev libblas-dev libopenblas-dev libmetis-dev libparmetis-dev
 cd SuiteSparse
 ```
-Downloaded [**metis-4.0.3**] (http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/OLD/metis-4.0.3.tar.gz), and rename the folder to matis-4.0. In the Makefile.in, update the following:
+Download [**metis-4.0.3**] (http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/OLD/metis-4.0.3.tar.gz), and rename the folder to matis-4.0. In the Makefile.in, update the following:
 ```
 CC = gcc
 OPTFLAGS = -O3 
