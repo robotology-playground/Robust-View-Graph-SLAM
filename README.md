@@ -19,7 +19,7 @@ make -j5
 sudo make install
 ```
 
-### Install MATLAB:
+### MATLAB:
 If you are planning on using our mex wrappers, you need to download and install [**MATLAB**] (https://au.mathworks.com/downloads/).
 
 ### VLFeat
