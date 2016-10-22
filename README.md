@@ -67,7 +67,15 @@ cd Eigen
 make
 ```
 
-### TODO Check-List
+## Compiling MEX functions in MATLAB
+Update all the related paths in `compile_PwgOptimiser.m` and `compile_GraphOptimiser.m`, then;
+```
+run compile_PwgOptimiser;
+run compile_GraphOptimiser;
+```
+This will compile and test against the MATLAB code (if this isn't needed, then comment out this comparison part).
+
+## TODO Check-List
 1-  Low-level vision
 - [ ] get aligned point matches
     - [ ] get image
