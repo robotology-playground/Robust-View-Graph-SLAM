@@ -31,7 +31,7 @@ If compiling without MATLAB, in the makefile, comment out the line
 ```
 #include make/matlab.mak. Then, "make".
 ```
-To compule our code with vlFeat, in the CMakeLists.txt, update the paths in the following two lines to point to your vlFeat local copy:
+To compile our code with vlFeat, in the CMakeLists.txt, update the paths in the following two lines to point to your vlFeat local copy:
 ```
 set(VLFEAT_INCLUDE_DIR /path/to/vlfeat)<br />
 find_library(VLFEAT_LIB NAMES vl PATHS /path/to/vlfeat/bin/glnxa64)<br />
@@ -41,13 +41,10 @@ To download the most recent version:
 ```
 git clone https://github.com/jluttine/suitesparse.git
 ```
-However, our implementation of Takahashi's inverse (spinv) needs UFconfig, this is found in [**SuiteSparse-3.7.1.tar.gz**] (http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-3.7.1.tar.gz)
-```
-cd suitesparse
-```
-Also, need to install lapack, blas, openblas, metis, and parmetis (not really needed at the moment).
+However, our implementation of Takahashi's inverse (spinv) needs UFconfig, this is found in [**SuiteSparse-3.7.1.tar.gz**] (http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-3.7.1.tar.gz). Also, need to install lapack, blas, openblas, metis, and parmetis (not really needed at the moment).
 ```
 sudo apt-get install liblapack-dev libblas-dev libopenblas-dev libmetis-dev libparmetis-dev
+cd SuiteSparse
 ```
 Downloaded [**metis-4.0.3**] (http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/OLD/metis-4.0.3.tar.gz), and rename the folder to matis-4.0. In the Makefile.in, update the following:
 ```
