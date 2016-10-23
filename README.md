@@ -18,9 +18,10 @@ cmake -DOPENCV_EXTRA_MODULES_PATH=../opencv_contrib/modules ../opencv
 make -j5
 sudo make install
 ```
-
-### MATLAB:
-If you are planning on using our mex wrappers, you need to download and install [**MATLAB**] (https://au.mathworks.com/downloads/).
+To check the currently installed version of opencv:
+```
+pkg-config --modversion opencv
+```
 
 ### VLFeat
 Download [**VLFeat 0.9.20 binary package**] (http://www.vlfeat.org/download/vlfeat-0.9.20-bin.tar.gz)
@@ -63,14 +64,40 @@ Download and compile [**Eigen**] (http://bitbucket.org/eigen/eigen/get/3.3-rc1.t
 cd Eigen
 make
 ```
+### libgsl: 
+```
+sudo apt-get update
+sudo apt-get install libgsl-dev
+```
 
 ## Compiling MEX functions in MATLAB
+If you are planning on using our mex wrappers, you need to download and install [**MATLAB**] (https://au.mathworks.com/downloads/).
 Update all the related paths in `compile_PwgOptimiser.m` and `compile_GraphOptimiser.m`, then;
 ```
 run compile_PwgOptimiser;
 run compile_GraphOptimiser;
 ```
 This will compile and test against the MATLAB code (if this isn't needed, then comment out this comparison part).
+
+## Running the MATLAB code
+The MATLAB code isn't yet available, but we will upload the code soon.
+In order to run our MATLAB implementation, you would need to install GP-stuff (we use their sparse inverse, if you have an alternative solution, then you may skip this step:
+```
+git clone https://github.com/gpstuff-dev/gpstuff
+```
+In MATLAB, navigate to the folder, then
+```
+run matlab_install('SuiteSparseOn')
+```
+There were two fixes. First, in `matlab_install.m`, replace `cd SuiteSparse` with `cd /your/path/to/suitesparse`. Second, in `SuiteSparse_install.m`, replace `function SuiteSparse_install(input)` with `function paths = SuiteSparse_install(input)`.
+
+You would also need to install mexopencv
+```
+git clone https://github.com/kyamagu/mexopencv.git
+cd mexopencv
+DIR_MATLAB=/usr/local/MATLAB/R2016b
+make all MATLABDIR=$DIR_MATLAB
+```
 
 ## TODO Check-List
 1-  Low-level vision
@@ -124,8 +151,3 @@ This will compile and test against the MATLAB code (if this isn't needed, then c
         - [ ] constraint_graph_add
         - [ ] constraint_graph_subtract
         - [ ] compute_gate_graph
-
-Install libgsl: 
---------------
-sudo apt-get update<br />
-sudo apt-get install libgsl-dev<br />
