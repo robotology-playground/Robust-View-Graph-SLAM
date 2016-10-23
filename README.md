@@ -24,7 +24,7 @@ pkg-config --modversion opencv
 ```
 
 ### VLFeat
-Download [**VLFeat 0.9.20 binary package**] (http://www.vlfeat.org/download/vlfeat-0.9.20-bin.tar.gz)
+Download [**VLFeat 0.9.20 binary package**](http://www.vlfeat.org/download/vlfeat-0.9.20-bin.tar.gz)
 ```
 run <VLFEATROOT>/toolbox/vl_setup
 ```
@@ -42,12 +42,12 @@ To download the most recent version:
 ```
 git clone https://github.com/jluttine/suitesparse.git
 ```
-However, our implementation of Takahashi's inverse (spinv) needs UFconfig, this is found in [**SuiteSparse-3.7.1.tar.gz**] (http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-3.7.1.tar.gz). Also, need to install lapack, blas, openblas, metis, and parmetis (not really needed at the moment).
+However, our implementation of Takahashi's inverse (spinv) needs UFconfig, this is found in [**SuiteSparse-3.7.1.tar.gz**](http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-3.7.1.tar.gz). Also, need to install lapack, blas, openblas, metis, and parmetis (not really needed at the moment).
 ```
 sudo apt-get install liblapack-dev libblas-dev libopenblas-dev libmetis-dev libparmetis-dev
 cd SuiteSparse
 ```
-Download [**metis-4.0.3**] (http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/OLD/metis-4.0.3.tar.gz), and rename the folder to matis-4.0. In the Makefile.in, update the following:
+Download [**metis-4.0.3**](http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/OLD/metis-4.0.3.tar.gz), and rename the folder to matis-4.0. In the Makefile.in, update the following:
 ```
 CC = gcc
 OPTFLAGS = -O3 
@@ -59,7 +59,7 @@ make
 sudo make install
 ```
 ### Eigen
-Download and compile [**Eigen**] (http://bitbucket.org/eigen/eigen/get/3.3-rc1.tar.bz2).
+Download and compile [**Eigen**](http://bitbucket.org/eigen/eigen/get/3.3-rc1.tar.bz2).
 ```
 cd Eigen
 make
@@ -71,7 +71,7 @@ sudo apt-get install libgsl-dev
 ```
 
 ## Compiling MEX functions in MATLAB
-If you are planning on using our mex wrappers, you need to download and install [**MATLAB**] (https://au.mathworks.com/downloads/).
+If you are planning on using our mex wrappers, you need to download and install [**MATLAB**](https://au.mathworks.com/downloads/).
 Update all the related paths in `compile_PwgOptimiser.m` and `compile_GraphOptimiser.m`, then;
 ```
 run compile_PwgOptimiser;
@@ -81,7 +81,7 @@ This will compile and test against the MATLAB code (if this isn't needed, then c
 
 ## Running the MATLAB code
 The MATLAB code isn't yet available, but we will upload the code soon.
-In order to run our MATLAB implementation, you would need to install GP-stuff (we use their sparse inverse, if you have an alternative solution, then you may skip this step:
+In order to run our MATLAB implementation, you would need to install [**GP-stuff**](http://research.cs.aalto.fi/pml/software/gpstuff/) (we use their sparse inverse, if you have an alternative solution, then you may skip this step):
 ```
 git clone https://github.com/gpstuff-dev/gpstuff
 ```
@@ -91,7 +91,7 @@ run matlab_install('SuiteSparseOn')
 ```
 There were two fixes. First, in `matlab_install.m`, replace `cd SuiteSparse` with `cd /your/path/to/suitesparse`. Second, in `SuiteSparse_install.m`, replace `function SuiteSparse_install(input)` with `function paths = SuiteSparse_install(input)`.
 
-You would also need to install mexopencv
+You would also need to install [**mexopencv**](http://vision.is.tohoku.ac.jp/~kyamagu/en/software/mexopencv/)
 ```
 git clone https://github.com/kyamagu/mexopencv.git
 cd mexopencv
