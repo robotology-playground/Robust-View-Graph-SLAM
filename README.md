@@ -1,4 +1,4 @@
-## Installation
+## Installation of the C++ implementation
 
 This implementation was tested on Ubuntu 14.04.5 LTS (Trusty Tahr)
 ```
