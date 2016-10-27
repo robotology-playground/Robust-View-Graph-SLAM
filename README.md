@@ -79,7 +79,7 @@ run compile_GraphOptimiser;
 ```
 This will compile and test against the MATLAB code (if this isn't needed, then comment out this comparison part).
 
-## Running the MATLAB code
+## Installing the MATLAB code dependencies
 The MATLAB code isn't yet available, but we will upload the code soon.
 In order to run our MATLAB implementation, you would need to install [**GP-stuff**](http://research.cs.aalto.fi/pml/software/gpstuff/) (we use their sparse inverse, if you have an alternative solution, then you may skip this step):
 ```
@@ -97,6 +97,12 @@ git clone https://github.com/kyamagu/mexopencv.git
 cd mexopencv
 DIR_MATLAB=/usr/local/MATLAB/R2016b
 make all MATLABDIR=$DIR_MATLAB
+```
+## C++ Development tools
+One example that runs on Ubuntu is [**Eclipse**](https://eclipse.org/downloads/). Notice that this requires to have [**JRE**](http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html), and optionally, [**JDK**](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) downloaded.
+```
+sudo apt-get update
+sudo apt-get install eclipse
 ```
 
 ## TODO Check-List
