@@ -1,11 +1,30 @@
 ## Installation of the C++ implementation
 
-This implementation was tested on Ubuntu 14.04.5 LTS (Trusty Tahr)
+This implementation was tested on Ubuntu 14.04.5 LTS (Trusty Tahr). Install all required tools:
 ```
 sudo apt-get install git
-sudo apt-get install cmake
 sudo apt-get install g++
+sudo apt-get install cmake
 sudo apt-get install cmake-curses-gui
+```
+Cmake 3.2.2 or higher is required, so:
+```
+sudo apt-get install software-properties-common
+sudo add-apt-repository ppa:george-edison55/cmake-3.x
+sudo apt-get update
+sudo apt-get upgrade
+```
+Then, check
+```
+cmake --version
+```
+In case of segmentation fault,
+```
+sudo apt-get install cmake
+```
+Then, check
+```
+cmake --version
 ```
 
 ### OpenCV and OpenCV_Contrib
