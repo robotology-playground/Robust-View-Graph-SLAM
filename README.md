@@ -42,6 +42,9 @@ To check the currently installed version of opencv:
 pkg-config --modversion opencv
 ```
 
+### YARP Network
+Our implementation uses [**YARP**](http://www.yarp.it/install.html) to replay data, implement multi-threading, and locate different resources. I personally install it from source. Also, if you are a fan of [**iCub**](http://wiki.icub.org/wiki/ICub_Software_Installation), you will find very useful tools and simulations.
+
 ### VLFeat
 Download [**VLFeat 0.9.20 binary package**](http://www.vlfeat.org/download/vlfeat-0.9.20-bin.tar.gz)
 ```
