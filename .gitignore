@@ -28,6 +28,7 @@ cmake_install.cmake
 
 # directories
 build*
+graph/build*
 
 
 # Documentation directory
