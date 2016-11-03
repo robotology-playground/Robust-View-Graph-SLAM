@@ -43,7 +43,10 @@ pkg-config --modversion opencv
 ```
 
 ### YARP Network
-Our implementation uses [**YARP**](http://www.yarp.it/install.html) to replay data, implement multi-threading, and locate different resources. I personally install it from source. Also, if you are a fan of [**iCub**](http://wiki.icub.org/wiki/ICub_Software_Installation), you will find very useful tools and simulations. You would need to install [**SDL**](http://askubuntu.com/questions/344512/what-is-the-general-procedure-to-install-development-libraries-in-ubuntu) though. We use iCub-main to compute the robot kinematics during initialisation.
+Our implementation uses [**YARP**](http://www.yarp.it/install.html) to replay data, implement multi-threading, and locate different resources. I personally install it from source. Also, if you are a fan of [**iCub**](http://wiki.icub.org/wiki/ICub_Software_Installation), you will find very useful tools and simulations. To run iCubSIM, you would need to install SDL, GLUT, and ODE:
+```
+sudo apt-get install libsdl1.2-dev freeglut3 freeglut3-dev libode1 libode-dev 
+```
 
 ### VLFeat
 Download [**VLFeat 0.9.20 binary package**](http://www.vlfeat.org/download/vlfeat-0.9.20-bin.tar.gz)
