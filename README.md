@@ -96,6 +96,11 @@ sudo apt-get update
 sudo apt-get install libgsl-dev
 ```
 
+### libboost
+```
+sudo apt-get install libboost-all-dev
+```
+
 ## Compiling MEX functions in MATLAB
 If you are planning on using our mex wrappers, you need to download and install [**MATLAB**](https://au.mathworks.com/downloads/).
 Update all the related paths in `compile_PwgOptimiser.m` and `compile_GraphOptimiser.m`, then;
