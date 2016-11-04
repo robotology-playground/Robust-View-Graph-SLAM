@@ -2,7 +2,7 @@
 #include <iostream> // std::cout
 #include <string>
 
-#include "../src/PwgOptimiser.h"
+#include "PwgOptimiser.h"
 
 /*  the gateway routine.  */
 void mexFunction( int nlhs, mxArray *plhs[],

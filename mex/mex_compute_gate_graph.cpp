@@ -1,7 +1,7 @@
 #include "mex.h"
 #include <iostream> // std::cout
 
-#include "../src/GraphOptimiser.cpp"
+#include "GraphOptimiser.cpp"
 
 /*  the gateway routine.  */
 void mexFunction( int nlhs, mxArray *plhs[],

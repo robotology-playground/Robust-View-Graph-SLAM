@@ -2,7 +2,7 @@
 #include <iostream> // std::cout
 #include <string>
 
-#include "../src/RecoverMoments.h"
+#include "RecoverMoments.h"
 
 /*  the gateway routine.  */
 void mexFunction( int nlhs, mxArray *plhs[],

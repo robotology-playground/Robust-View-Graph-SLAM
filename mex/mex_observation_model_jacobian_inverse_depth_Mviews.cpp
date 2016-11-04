@@ -1,5 +1,5 @@
 #include "mex.h"
-#include "../src/PwgOptimiser.h"
+#include "PwgOptimiser.h"
 
 /****************************/
 
