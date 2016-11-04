@@ -1,7 +1,7 @@
 #ifndef RECOVERMOMENTS_H
 #define RECOVERMOMENTS_H
 
-#include "mex.h"
+#include "matlab/mex.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream> // std::cout
@@ -10,8 +10,8 @@
 
 #include "Eigen/Sparse"
 typedef Eigen::Triplet<double> T;
-#include "lapack.h"
-#include "blas.h"
+#include "matlab/lapack.h"
+#include "matlab/blas.h"
 #include "cholmod.h"
 //#include "UFconfig.h" // GPStuff
 #include "SuiteSparse_config.h" // SuiteSparse
