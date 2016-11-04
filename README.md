@@ -134,6 +134,7 @@ One example that runs on Ubuntu is [**Eclipse**](https://eclipse.org/downloads/)
 ```
 sudo apt-get update
 sudo apt-get install eclipse
+sudo apt-get install eclipse eclipse-cdt
 ```
 
 ## TODO Check-List
