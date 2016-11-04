@@ -138,8 +138,7 @@ int main (int argc, char** argv) {
     FeatureSelector fs(argc,argv);
     Ptr<Feature2D> detector, descriptor;
     Ptr<DescriptorMatcher> matcher;
-
-    fs.process(detector,descriptor,matcher);
+    fs.process(detector, descriptor, matcher);
 
 	//if (VERBOSE==2){
 	//	cvNamedWindow( "img_L", CV_WINDOW_AUTOSIZE );
