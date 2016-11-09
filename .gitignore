@@ -25,10 +25,12 @@ CMakeCache.txt
 cmake_install.cmake
 
 *.cbp
+*.user
 
 # directories
 build*
 graph/build*
+graph/diagrams*
 
 
 # Documentation directory
