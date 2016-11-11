@@ -1,3 +1,9 @@
+/*
+ *  Created on: Nov 11, 2016
+ *      Author: Nicolo' Genesio
+ *      email:nicolo.genesio@iit.it
+ */
+
 #ifndef VGSLAMMODULE_H
 #define VGSLAMMODULE_H
 

@@ -1,3 +1,9 @@
+/*
+ *  Created on: Nov 11, 2016
+ *      Author: Nicolo' Genesio
+ *      email:nicolo.genesio@iit.it
+ */
+
 #ifndef VGSLAMTHREAD_H
 #define VGSLAMTHREAD_H
 #include "yarp/os/all.h"
