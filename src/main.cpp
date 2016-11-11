@@ -134,8 +134,11 @@ int main (int argc, char** argv) {
     if (argc > 2){
         VERBOSE = std::atoi ( argv[2] );
     }
+    yarp::os::ResourceFinder rf;
+    rf.setDefaultConfigFile("../../conf/vgSLAM.ini");
+    rf.configure(argc,argv);
 
-    FeatureSelector fs(argc,argv);
+    FeatureSelector fs(rf);
     Ptr<Feature2D> detector, descriptor;
     Ptr<DescriptorMatcher> matcher;
     fs.process(detector, descriptor, matcher);

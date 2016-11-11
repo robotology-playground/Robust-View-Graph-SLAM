@@ -1,7 +1,7 @@
 /*
  *  Created on: Nov 11, 2016
  *      Author: Nicolo' Genesio
- *      email:nicolo.genesio@iit.it
+ *      email: nicolo.genesio@iit.it
  */
 
 #ifndef VGSLAMBUFFER_H
@@ -54,6 +54,11 @@ public:
         interrupted = true;
         bufMutex.unlock();
         event.signal();
+    }
+    void clear(){
+        bufMutex.lock();
+        array.clear();
+        bufMutex.unlock();
     }
 };
 

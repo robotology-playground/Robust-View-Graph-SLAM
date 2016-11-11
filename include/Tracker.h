@@ -47,7 +47,7 @@ public:
 	};
 protected:
 	cv::Ptr<cv::Feature2D> detector;
-    cv::Ptr<cv::Feature2D> descriptor;
+        cv::Ptr<cv::Feature2D> descriptor;
 	cv::Ptr<cv::DescriptorMatcher> matcher;
 	cv::Mat first_frame, first_desc;
 	std::vector<cv::KeyPoint> first_kp;

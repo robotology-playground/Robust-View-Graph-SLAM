@@ -30,15 +30,12 @@ FeatureSelector::FeatureSelector()
 {
 }
 
-FeatureSelector::FeatureSelector(int ac, char** av){
-    rf.setDefaultConfigFile("../../conf/vgSLAM.ini");
-    argc=ac;
-    argv=av;
-    rf.configure(argc,argv);
+FeatureSelector::FeatureSelector(yarp::os::ResourceFinder _rf){
+    rf=_rf;
 }
 
 bool FeatureSelector::process(Ptr<Feature2D> &detector, Ptr<Feature2D> &descriptor, Ptr<DescriptorMatcher> &matcher){
-    int detID=vgSLAM_KAZE, descID=vgSLAM_SIFT, matchID=vgSLAM_FLANN; // default
+    int detID=vgSLAM_KAZE, descID=vgSLAM_SIFT, matchID=vgSLAM_BRUTEFORCEL1; // default
 
     if(checkDetector(rf.find("Detector").asString()))
         detID=assignMethod(rf.find("Detector").asString());
@@ -48,10 +45,10 @@ bool FeatureSelector::process(Ptr<Feature2D> &detector, Ptr<Feature2D> &descript
         descID=assignMethod(rf.find("Descriptor").asString());
     else
         cout<<"Error in vgSLAM.ini, setting default descriptor:SIFT"<<endl;
-    if(checkMatcher(rf.find("Matcher").asString()))
+    if(checkMatcher(rf.find("Matcher").asString(),descID))
         matchID=assignMethod(rf.find("Matcher").asString());
     else
-        cout<<"Error in vgSLAM.ini, setting default matcher:FLANN"<<endl;
+        cout<<"Error in vgSLAM.ini, setting default matcher:BRUTEFORCEL1"<<endl;
 
     switcher(detID,descID,matchID,detector,descriptor,matcher);
 
@@ -78,48 +75,56 @@ bool FeatureSelector::checkDescriptor(string str){
     else
         return true;
 }
-bool FeatureSelector::checkMatcher(string str){
-    if(str.compare("FLANN")!=0 && str.compare("BRUTEFORCEL2")!=0
-            && str.compare("BRUTEFORCEL1")!=0 && str.compare("BRUTEFORCEHAMMING")!=0){
-        cout<<"Wrong matcher argument, available options are: FLANN, BRUTEFORCEL2, BRUTEFORCEL1, BRUTEFORCEHAMMING"<<endl;
-        return false;
+bool FeatureSelector::checkMatcher(string str, int _descID){
+    if(_descID==vgSLAM_SIFT){
+        if(str.compare("FLANN")!=0 && str.compare("BRUTEFORCEL2")!=0
+                    && str.compare("BRUTEFORCEL1")!=0){
+            cout<<"Wrong matcher argument, available options with SIFT descriptor are: FLANN, BRUTEFORCEL2, BRUTEFORCEL1"<<endl;
+            return false;
+       }
+        else
+            return true;
     }
-    else
-        return true;
+    else {
+        if(str.compare("BRUTEFORCEL1")!=0 && str.compare("BRUTEFORCEL2")!=0
+                    && str.compare("BRUTEFORCEHAMMING")!=0){
+            cout<<"Wrong matcher argument, available options with binary descriptor are: BRUTEFORCEL2, BRUTEFORCEL1,BRUTEFORCEHAMMING"<<endl;
+            return false;
+       }
+        else
+            return true;
+
+    }
 }
 
 void FeatureSelector::switcher(int detID, int descID, int matchID, Ptr<Feature2D> &detector,
                                Ptr<Feature2D> &descriptor,Ptr<DescriptorMatcher> &matcher){
 
-    yarp::os::ResourceFinder rfdet, rfdesc, rfmatch;
+    yarp::os::Property rfdet, rfdesc, rfmatch;
     // detector switch
     switch (detID) {
     case vgSLAM_KAZE : {
-        rfdet.setDefaultConfigFile("../../conf/KAZE.ini");
-        rfdet.configure(argc, argv);
+        rfdet.fromConfigFile("../../conf/KAZE.ini");
         detector=KAZE::create(rfdet.find("extended").asBool(),rfdet.find("upright").asBool(),
                                     (float) rfdet.find("threshold").asDouble(), rfdet.find("nOctaves").asInt(),
                               rfdet.find("nOctaveLayers").asInt(), parseMap((string)rfdet.find("diffusivity").asString(),kazeMap));
         break;
     }
     case vgSLAM_FAST : {
-        rfdet.setDefaultConfigFile("../../conf/FAST.ini");
-        rfdet.configure(argc, argv);
+        rfdet.fromConfigFile("../../conf/FAST.ini");
         detector=FastFeatureDetector::create(rfdet.find("threshold").asInt(),rfdet.find("nonmaxSuppression").asBool(),
                                              parseMap((string)rfdet.find("type").asString(),fastMap));
         break;
     }
     case vgSLAM_SIFT : {
-        rfdet.setDefaultConfigFile("../../conf/SIFT.ini");
-        rfdet.configure(argc, argv);
+        rfdet.fromConfigFile("../../conf/SIFT.ini");
         detector=xfeatures2d::SIFT::create(rfdet.find("nfeatures").asInt(),rfdet.find("nOctaveLayers").asInt(),
                                                               rfdet.find("contrastThreshold").asDouble(),
                                                               rfdet.find("edgeThreshold").asDouble(),rfdet.find("sigma").asDouble());
         break;
     }
     case vgSLAM_GFTT: {
-        rfdet.setDefaultConfigFile("../../conf/GFTT.ini");
-        rfdet.configure(argc, argv);
+        rfdet.fromConfigFile("../../conf/GFTT.ini");
         detector=GFTTDetector::create(rfdet.find("maxCorners").asInt(),rfdet.find("qualityLevel").asDouble(),
                                                     rfdet.find("minDistance").asDouble(),rfdet.find("blockSize").asInt(),
                                                     rfdet.find("useHarrisDetector").asBool(),rfdet.find("k").asDouble());
@@ -128,16 +133,14 @@ void FeatureSelector::switcher(int detID, int descID, int matchID, Ptr<Feature2D
         break;
     }
     case vgSLAM_SURF : {
-        rfdet.setDefaultConfigFile("../../conf/SURF.ini");
-        rfdet.configure(argc, argv);
+        rfdet.fromConfigFile("../../conf/SURF.ini");
         detector=xfeatures2d::SURF::create(rfdet.find("hessianThreshold").asDouble(),rfdet.find("nOctaves").asInt(),
                                                               rfdet.find("inOctaveLayers").asInt(),rfdet.find("extended").asBool(),
                                                               rfdet.find("upright").asBool());
         break;
     }
     case vgSLAM_ORB : {
-        rfdet.setDefaultConfigFile("../../conf/ORB.ini");
-        rfdet.configure(argc, argv);
+        rfdet.fromConfigFile("../../conf/ORB.ini");
         detector=ORB::create(rfdet.find("nfeatures").asInt(),rfdet.find("scaleFactor").asDouble(),
                                  rfdet.find("nlevels").asInt(),rfdet.find("edgeThreshold").asInt(),
                                  rfdet.find("firstLevel").asInt(),rfdet.find("WTA_K").asInt(),
@@ -146,15 +149,12 @@ void FeatureSelector::switcher(int detID, int descID, int matchID, Ptr<Feature2D
         break;
     }
     case vgSLAM_BRISK : {
-        rfdet.setDefaultConfigFile("../../conf/BRISK.ini");
-        rfdet.configure(argc, argv);
+        rfdet.fromConfigFile("../../conf/BRISK.ini");
         detector=BRISK::create(rfdet.find("thresh").asInt(),rfdet.find("octaves").asInt(),rfdet.find("patternScale").asDouble());
         break;
     }
     case vgSLAM_AKAZE : {
-        rfdet.setDefaultConfigFile("../../conf/AKAZE.ini");
-
-        rfdet.configure(argc, argv);
+        rfdet.fromConfigFile("../../conf/AKAZE.ini");
         detector=AKAZE::create(parseMap((string)rfdet.find("descriptor_type").asString(),akazeMap),rfdet.find("descriptor_size").asInt(),
                                rfdet.find("descriptor_channels").asInt(),
                                rfdet.find("threshold").asDouble(),rfdet.find("nOctaves").asInt(),rfdet.find("nOctaveLayers").asInt(),
@@ -167,31 +167,27 @@ void FeatureSelector::switcher(int detID, int descID, int matchID, Ptr<Feature2D
     // descriptor switch
     switch (descID) {
     case vgSLAM_SIFT : {
-        rfdesc.setDefaultConfigFile("../../conf/SIFT.ini");
-        rfdesc.configure(argc, argv);
+        rfdesc.fromConfigFile("../../conf/SIFT.ini");
         descriptor=xfeatures2d::SIFT::create(rfdesc.find("nfeatures").asInt(),rfdesc.find("nOctaveLayers").asInt(),
                                                               rfdesc.find("contrastThreshold").asDouble(),
                                                               rfdesc.find("edgeThreshold").asDouble(),rfdesc.find("sigma").asDouble());
         break;
     }
     case vgSLAM_SURF : {
-        rfdesc.setDefaultConfigFile("../../conf/SURF.ini");
-        rfdesc.configure(argc, argv);
+        rfdesc.fromConfigFile("../../conf/SURF.ini");
         descriptor=xfeatures2d::SURF::create(rfdesc.find("hessianThreshold").asDouble(),rfdesc.find("nOctaves").asInt(),
                                                               rfdesc.find("inOctaveLayers").asInt(),rfdesc.find("extended").asBool(),
                                                               rfdesc.find("upright").asBool());
         break;
     }
     case vgSLAM_BRIEF : {
-        rfdesc.setDefaultConfigFile("../../conf/BRIEF.ini");
-        rfdesc.configure(argc, argv);
+        rfdesc.fromConfigFile("../../conf/BRIEF.ini");
         descriptor=xfeatures2d::BriefDescriptorExtractor::create(rfdesc.find("bytes").asInt(),
                                                                   rfdesc.find("use_orientation").asBool());
         break;
     }
     case vgSLAM_ORB : {
-        rfdesc.setDefaultConfigFile("../../conf/ORB.ini");
-        rfdesc.configure(argc, argv);
+        rfdesc.fromConfigFile("../../conf/ORB.ini");
         descriptor=ORB::create(rfdesc.find("nfeatures").asInt(),rfdesc.find("scaleFactor").asDouble(),
                                  rfdesc.find("nlevels").asInt(),rfdesc.find("edgeThreshold").asInt(),
                                  rfdesc.find("firstLevel").asInt(),rfdesc.find("WTA_K").asInt(),
@@ -200,14 +196,12 @@ void FeatureSelector::switcher(int detID, int descID, int matchID, Ptr<Feature2D
         break;
     }
     case vgSLAM_BRISK : {
-        rfdesc.setDefaultConfigFile("../../conf/BRISK.ini");
-        rfdesc.configure(argc, argv);
+        rfdesc.fromConfigFile("../../conf/BRISK.ini");
         descriptor=BRISK::create(rfdesc.find("thresh").asInt(),rfdesc.find("octaves").asInt(),rfdesc.find("patternScale").asDouble());
         break;
     }
     case vgSLAM_FREAK : {
-        rfdesc.setDefaultConfigFile("../../conf/FREAK.ini");
-        rfdesc.configure(argc, argv);
+        rfdesc.fromConfigFile("../../conf/FREAK.ini");
         descriptor=xfeatures2d::FREAK::create(rfdesc.find("orientationNormalized").asBool(),rfdesc.find("scaleNormalized").asBool(),
                                               rfdesc.find("patternScale").asDouble(),rfdesc.find("nOctaves").asInt());
         break;

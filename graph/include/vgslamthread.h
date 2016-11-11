@@ -1,7 +1,7 @@
 /*
  *  Created on: Nov 11, 2016
  *      Author: Nicolo' Genesio
- *      email:nicolo.genesio@iit.it
+ *      email: nicolo.genesio@iit.it
  */
 
 #ifndef VGSLAMTHREAD_H
@@ -17,7 +17,21 @@ class vgSLAMThread : public yarp::os::Thread
 
 public:
     vgSLAMThread() { }
-    virtual void run() { }
+    virtual void run() {
+        T1 dataIn;
+        T2 dataOut;
+        bufferIn.read(dataIn);
+        dataOut=dataOut+dataIn;
+        bufferOut.write(dataOut);
+    }
+    virtual void stop() {
+        bufferIn.clear();
+        bufferOut.clear();
+    }
+//    virtual void run()=0;
+//    virtual void process()=0; dovranno essere cosi', almeno uno no puo' usare la classe senza implementarla.
+//    virtual void stop()=0;
+
 
 };
 
