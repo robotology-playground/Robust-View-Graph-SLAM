@@ -19,11 +19,11 @@ class vgSLAMModule : public yarp::os::RFModule
 {
     int nCams;
     yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb> > imageR_port, imageL_port;
-    ThreadFeature threadFeatureR;
-    ThreadFeature threadFeatureL;
-    ThreadDescriptor threadDescriptorR;
-    ThreadDescriptor threadDescriptorL;
-    ThreadMatching threadMatching;
+    ThreadFeature* threadFeatureR;
+    ThreadFeature* threadFeatureL;
+    ThreadDescriptor* threadDescriptorR;
+    ThreadDescriptor* threadDescriptorL;
+    ThreadMatching* threadMatching;
     vgSLAMBuffer<cv::Mat> bufferOut;
 
 public:
