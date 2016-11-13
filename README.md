@@ -2,6 +2,7 @@
 
 This implementation was tested on Ubuntu 14.04.5 LTS (Trusty Tahr). Install all required tools:
 ```
+sudo apt-get install synaptic
 sudo apt-get install git
 sudo apt-get install g++
 sudo apt-get install cmake
@@ -17,7 +18,7 @@ sudo apt-get upgrade
 Then, check
 ```
 cmake --version
-```
+``` autoreconf -f
 In case of segmentation fault,
 ```
 sudo apt-get install cmake
@@ -45,9 +46,10 @@ pkg-config --modversion opencv
 ### YARP Network
 Our implementation uses [**YARP**](http://www.yarp.it/install.html) to replay data, implement multi-threading, and locate different resources. I personally install it from source. Also, if you are a fan of [**iCub**](http://wiki.icub.org/wiki/ICub_Software_Installation), you will find very useful tools and simulations. To run iCubSIM, you would need to install SDL, GLUT, ODE, IPOPT, and gfortran:
 ```
-sudo apt-get install libsdl1.2-dev freeglut3 freeglut3-dev libode1 libode-dev coinor-libipopt-dev
+sudo apt-get install libsdl1.2-dev freeglut3 freeglut3-dev libode3 libode-dev coinor-libipopt-dev aces3 libgsl2 libgsl-dev
 sudo apt-get update && sudo apt-get install gfortran -y
 ```
+
 
 ### VLFeat
 Download [**VLFeat 0.9.20 binary package**](http://www.vlfeat.org/download/vlfeat-0.9.20-bin.tar.gz)
