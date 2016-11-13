@@ -86,6 +86,10 @@ Additionally, for Ubuntu 16.04.01
 ```
 sudo apt-get install aces3 libghc-glut-dev 
 ```
+In addition to the installation instruction, if you like to install ICUB_SIM, then set:
+```
+ICUB_SHARED_LIBRARY = ON
+```
 
 ### VLFeat
 Download [**VLFeat 0.9.20 binary package**](http://www.vlfeat.org/download/vlfeat-0.9.20-bin.tar.gz)
