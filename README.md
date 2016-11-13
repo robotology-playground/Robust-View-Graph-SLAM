@@ -43,28 +43,6 @@ To check the currently installed version of opencv:
 pkg-config --modversion opencv
 ```
 
-### YARP Network
-Our implementation uses [**YARP**](http://www.yarp.it/install.html) to replay data, implement multi-threading, and locate different resources. I personally install it from source. Also, if you are a fan of [**iCub**](http://wiki.icub.org/wiki/ICub_Software_Installation), you will find very useful tools and simulations. To run iCubSIM, you would need to install SDL, GLUT, ODE, IPOPT, and gfortran:
-```
-sudo apt-get install libsdl1.2-dev freeglut3 freeglut3-dev libode3 libode-dev coinor-libipopt-dev aces3 libgsl2 libgsl-dev
-sudo apt-get update && sudo apt-get install gfortran -y
-```
-
-
-### VLFeat
-Download [**VLFeat 0.9.20 binary package**](http://www.vlfeat.org/download/vlfeat-0.9.20-bin.tar.gz)
-```
-run <VLFEATROOT>/toolbox/vl_setup
-```
-If compiling without MATLAB, in the makefile, comment out the line
-```
-#include make/matlab.mak. Then, "make".
-```
-To compile our code with vlFeat, in the CMakeLists.txt, update the paths in the following two lines to point to your vlFeat local copy:
-```
-set(VLFEAT_INCLUDE_DIR /path/to/vlfeat)
-find_library(VLFEAT_LIB NAMES vl PATHS /path/to/vlfeat/bin/glnxa64)
-```
 ### SuiteSparse
 To download the most recent version:
 ```
@@ -96,6 +74,29 @@ make
 ```
 sudo apt-get update
 sudo apt-get install libgsl-dev
+```
+
+### YARP Network and iCub
+Our implementation uses [**YARP**](http://www.yarp.it/install.html) to replay data, implement multi-threading, and locate different resources. I personally install it from source. Also, if you are a fan of [**iCub**](http://wiki.icub.org/wiki/ICub_Software_Installation), you will find very useful tools and simulations. To run iCubSIM, you would need to install SDL, GLUT, ODE, IPOPT, and gfortran:
+```
+sudo apt-get install libsdl1.2-dev freeglut3 freeglut3-dev libode3 libode-dev coinor-libipopt-dev aces3 libgsl2 libgsl-dev
+sudo apt-get update && sudo apt-get install gfortran -y
+```
+
+
+### VLFeat
+Download [**VLFeat 0.9.20 binary package**](http://www.vlfeat.org/download/vlfeat-0.9.20-bin.tar.gz)
+```
+run <VLFEATROOT>/toolbox/vl_setup
+```
+If compiling without MATLAB, in the makefile, comment out the line
+```
+#include make/matlab.mak. Then, "make".
+```
+To compile our code with vlFeat, in the CMakeLists.txt, update the paths in the following two lines to point to your vlFeat local copy:
+```
+set(VLFEAT_INCLUDE_DIR /path/to/vlfeat)
+find_library(VLFEAT_LIB NAMES vl PATHS /path/to/vlfeat/bin/glnxa64)
 ```
 
 ### libboost
