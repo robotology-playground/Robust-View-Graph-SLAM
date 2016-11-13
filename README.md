@@ -70,10 +70,10 @@ Download and compile [**Eigen**](http://bitbucket.org/eigen/eigen/get/3.3-rc1.ta
 cd Eigen
 make
 ```
-### libgsl: 
+
+### libboost
 ```
-sudo apt-get update
-sudo apt-get install libgsl-dev
+sudo apt-get install libboost-all-dev
 ```
 
 ### YARP Network and iCub
@@ -104,11 +104,6 @@ To compile our code with vlFeat, in the CMakeLists.txt, update the paths in the 
 ```
 set(VLFEAT_INCLUDE_DIR /path/to/vlfeat)
 find_library(VLFEAT_LIB NAMES vl PATHS /path/to/vlfeat/bin/glnxa64)
-```
-
-### libboost
-```
-sudo apt-get install libboost-all-dev
 ```
 
 ## Compiling MEX functions in MATLAB
