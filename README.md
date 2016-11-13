@@ -68,7 +68,10 @@ sudo make install
 Download and compile [**Eigen**](http://bitbucket.org/eigen/eigen/get/3.3-rc1.tar.bz2).
 ```
 cd Eigen
-make
+mkdir build
+cd build
+cmake ../
+sudo make install
 ```
 
 ### libboost
