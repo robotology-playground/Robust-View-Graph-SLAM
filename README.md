@@ -18,7 +18,7 @@ sudo apt-get upgrade
 Then, check
 ```
 cmake --version
-``` autoreconf -f
+``` 
 In case of segmentation fault,
 ```
 sudo apt-get install cmake
