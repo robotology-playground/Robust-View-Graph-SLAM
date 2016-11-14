@@ -9,43 +9,47 @@
 
 #include <stdio.h>
 #include <iostream>
-#include <vector>
+#include <queue>
 #include <yarp/os/all.h>
+
 template <class T>
 class vgSLAMBuffer
 {
 private:
     yarp::os::Mutex bufMutex;
-    yarp::os::Event event;
-    std::vector<T> array;
+    yarp::os::Semaphore semArray;
+    std::queue<T> array;
     bool interrupted;
 
 public:
-    vgSLAMBuffer() : interrupted(false) {}
+    vgSLAMBuffer() : interrupted(false), semArray(0){}
 
     bool read(T& data) {
-        bufMutex.lock();
-        bool empty = array.empty();
-        bufMutex.unlock();
 
-        if(empty && !interrupted)
-            event.wait();
+        //wait
+        semArray.wait();
+        //yDebug()<<"read() : unwait";
 
         if(interrupted) {
             return false;
         }
 
+        // read
         bufMutex.lock();
         data = array.front();
+        array.pop();
         bufMutex.unlock();
         return true;
     }
 
     bool write(T& data) {
+        //write
         bufMutex.lock();
-        array.push_back(data);
+        array.push(data);
+        //yDebug()<<"write() : signal";
         bufMutex.unlock();
-        event.signal();
+        //signal
+        semArray.post();
         return true;
     }
 
@@ -53,7 +57,7 @@ public:
         bufMutex.lock();
         interrupted = true;
         bufMutex.unlock();
-        event.signal();
+        semArray.post();
     }
     void clear(){
         bufMutex.lock();

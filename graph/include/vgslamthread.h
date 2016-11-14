@@ -8,30 +8,41 @@
 #define VGSLAMTHREAD_H
 #include "yarp/os/all.h"
 #include "vgslambuffer.h"
+
 template <class T1, class T2>
 class vgSLAMThread : public yarp::os::Thread
 {
-    vgSLAMBuffer<T1> bufferIn;
-    vgSLAMBuffer<T2> bufferOut;
-
 
 public:
-    vgSLAMThread() { }
-    virtual void run() {
-        T1 dataIn;
-        T2 dataOut;
-        bufferIn.read(dataIn);
-        dataOut=dataOut+dataIn;
-        bufferOut.write(dataOut);
+    vgSLAMThread(vgSLAMBuffer<T1> &bufferIn, vgSLAMBuffer<T2> &bufferOut)
+    {
+        interrupted = false;
+        countProcessed = 0;
+        vgSLAMThread::bufferIn = &bufferIn;
+        vgSLAMThread::bufferOut = &bufferOut;
     }
-    virtual void stop() {
-        bufferIn.clear();
-        bufferOut.clear();
-    }
-//    virtual void run()=0;
-//    virtual void process()=0; dovranno essere cosi', almeno uno no puo' usare la classe senza implementarla.
-//    virtual void stop()=0;
 
+    unsigned int getCountProcessed(){
+        return countProcessed;
+    }
+
+    void interrupt() {
+        interrupted = true;
+        bufferIn->interrupt();
+    }
+
+    void close() {
+        interrupt();
+        Thread::stop();
+        countProcessed = 0;
+        interrupted = false;
+    }
+
+protected:
+    unsigned int countProcessed;
+    bool interrupted;
+    vgSLAMBuffer<T1> *bufferIn;
+    vgSLAMBuffer<T2> *bufferOut;
 
 };
 

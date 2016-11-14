@@ -5,12 +5,15 @@
  */
 
 #include "threaddescriptor.h"
-
-ThreadDescriptor::ThreadDescriptor()
+/*
+ThreadDescriptor::ThreadDescriptor(vgSLAMBuffer<int> &bufferIn, vgSLAMBuffer<int> &bufferOut)
+    : vgSLAMThread(bufferIn, bufferOut)
 {
 
 }
+
+/*
 ThreadDescriptor::ThreadDescriptor(cv::Ptr<cv::Feature2D> _descriptor):descriptor(_descriptor){
 
 }
-
+*/

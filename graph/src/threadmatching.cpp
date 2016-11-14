@@ -5,7 +5,7 @@
  */
 
 #include "threadmatching.h"
-
+/*
 ThreadMatching::ThreadMatching()
 {
 
@@ -14,3 +14,4 @@ ThreadMatching::ThreadMatching()
 ThreadMatching::ThreadMatching(cv::Ptr<cv::DescriptorMatcher> _matcher):matcher(_matcher){
 
 }
+*/

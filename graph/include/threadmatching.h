@@ -10,6 +10,7 @@
 #include "vgslamthread.h"
 #include "opencvs.h"
 
+/*
 class ThreadMatching : public vgSLAMThread<int,int>
 {
 private:
@@ -18,5 +19,5 @@ public:
     ThreadMatching();
     ThreadMatching(cv::Ptr<cv::DescriptorMatcher> _matcher);
 };
-
+*/
 #endif // THREADMATCHING_H

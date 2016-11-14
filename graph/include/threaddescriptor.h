@@ -9,14 +9,14 @@
 
 #include "vgslamthread.h"
 #include "opencvs.h"
-
+/*
 class ThreadDescriptor : public vgSLAMThread<int,int>
 {
 private:
     cv::Ptr<cv::Feature2D> descriptor;
 public:
-    ThreadDescriptor();
-    ThreadDescriptor(cv::Ptr<cv::Feature2D> _descriptor);
+    ThreadDescriptor(vgSLAMBuffer<int> &bufferIn, vgSLAMBuffer<int> &bufferOut);
+    //ThreadDescriptor(cv::Ptr<cv::Feature2D> _descriptor);
 };
-
+*/
 #endif // THREADDESCRIPTOR_H

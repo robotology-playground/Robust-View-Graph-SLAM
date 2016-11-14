@@ -14,23 +14,34 @@
 #include "threaddescriptor.h"
 #include "threadmatching.h"
 #include "opencv2/core.hpp"
+#include "slamtype.h"
 
 class vgSLAMModule : public yarp::os::RFModule
 {
     int nCams;
     yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb> > imageR_port, imageL_port;
-    ThreadFeature* threadFeatureR;
+    //ThreadFeature* threadFeatureR;
     ThreadFeature* threadFeatureL;
-    ThreadDescriptor* threadDescriptorR;
-    ThreadDescriptor* threadDescriptorL;
-    ThreadMatching* threadMatching;
-    vgSLAMBuffer<cv::Mat> bufferOut;
+    //ThreadDescriptor* threadDescriptorR;
+    //ThreadDescriptor* threadDescriptorL;
+    //ThreadMatching* threadMatching;
+
+    vgSLAMBuffer<SlamType> bufferImageR;
+    vgSLAMBuffer<SlamType> bufferImageL;
+    vgSLAMBuffer<SlamType> bufferFeatureR;
+    vgSLAMBuffer<SlamType> bufferFeatureL;
+    vgSLAMBuffer<SlamType> bufferDescriptorR;
+    vgSLAMBuffer<SlamType> bufferDescriptorL;
+    vgSLAMBuffer<SlamType> bufferMatching;
+
+
 
 public:
     vgSLAMModule();
     vgSLAMModule(int _nCams);
    bool configure(yarp::os::ResourceFinder &rf);
    bool updateModule();
+   double getPeriod();
    bool interruptModule();
    bool close();
 };

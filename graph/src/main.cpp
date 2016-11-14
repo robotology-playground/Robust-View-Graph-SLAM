@@ -15,11 +15,11 @@ using namespace yarp::math;
 
 int main (int argc, char** argv) {
     yarp::os::Network yarp;
-    vgSLAMModule module;
+    vgSLAMModule module(10);
     yarp::os::ResourceFinder rf;
     rf.setDefaultConfigFile("../../conf/vgSLAM.ini");
     rf.configure(argc,argv);
-    module.configure(rf);
+    module.runModule(rf);
 
     return 0;
 
