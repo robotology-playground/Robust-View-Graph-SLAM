@@ -18,8 +18,6 @@ private:
 
 public:
     ThreadFeature(vgSLAMBuffer<SlamType> &bufferIn, vgSLAMBuffer<SlamType> &bufferOut,cv::Ptr<cv::Feature2D> _detector);
-
-    //ThreadFeature(cv::Ptr<cv::Feature2D> _detector);
     void run ();
 };
 

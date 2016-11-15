@@ -8,7 +8,9 @@
 #include <yarp/os/LogStream.h>
 #include <yarp/os/Time.h>
 
+
 using namespace yarp::os;
+using namespace cv;
 
 ThreadFeature::ThreadFeature(vgSLAMBuffer<SlamType> &bufferIn, vgSLAMBuffer<SlamType> &bufferOut, cv::Ptr<cv::Feature2D> _detector)
     : vgSLAMThread(bufferIn, bufferOut),detector(_detector)
@@ -16,18 +18,19 @@ ThreadFeature::ThreadFeature(vgSLAMBuffer<SlamType> &bufferIn, vgSLAMBuffer<Slam
 
 }
 
-//ThreadFeature::ThreadFeature(cv::Ptr<cv::Feature2D> _detector):detector(_detector){
-//}
 
 void ThreadFeature::run(){
     while(!interrupted) {
         SlamType data;
-        if(bufferIn->read(data))
-            yInfo()<<"ThreadFeature read:";
+        yInfo()<<"ThreadFeature:Reading buffer";
+        if(bufferIn->read(data)){
+            data.feature = new KeyPointsVector;
+            detector->detect(*data.image, *data.feature, noArray());
+            yInfo()<<"ThreadFeature read: Number of keypoints="<<data.feature->size();
+            bufferOut->write(data);
+        }
         else
-            yWarning()<<"ThreadFeature has been interrupted on read";
-        //Time::delay(0.001);
-        //data.free();//lo deve fare l'ultimo thread
-        countProcessed++;
+            yInfo()<<"ThreadFeature has been interrupted on read";
+
     }
 }

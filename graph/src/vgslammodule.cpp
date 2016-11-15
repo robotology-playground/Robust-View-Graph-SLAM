@@ -10,6 +10,8 @@
 
 
 using namespace yarp::os;
+using namespace yarp::sig;
+using namespace  cv;
 
 vgSLAMModule::vgSLAMModule():nCams(-1)
 {
@@ -18,54 +20,114 @@ vgSLAMModule::vgSLAMModule():nCams(-1)
 
 vgSLAMModule::vgSLAMModule(int _nCams){
     nCams=_nCams;
+    configured = false;
 }
 
-bool vgSLAMModule::configure(yarp::os::ResourceFinder &rf){
+bool vgSLAMModule::configure(ResourceFinder &rf){
     //Open ports
     imageR_port.open("/vgSLAM/cam/left");
     imageL_port.open("/vgSLAM/cam/right");
-//    yarp::os::NetworkBase::connect("/icub/cam/left", imageR_port.getName());
-//    yarp::os::NetworkBase::connect("/icub/cam/right",imageL_port.getName());
-
+    bool ret = NetworkBase::connect("/icub/cam/left", imageR_port.getName());
+    ret &= NetworkBase::connect("/icub/cam/right",imageL_port.getName());
+    if(!ret) {
+        yError()<<"Could not connect to some of the ports";
+        return configured;
+    }
     //configure threads
-    cv::Ptr<cv::Feature2D> detector;
-    cv::Ptr<cv::Feature2D> descriptor;
-    cv::Ptr<cv::DescriptorMatcher> matcher;
+    Ptr<Feature2D> detector;
+    Ptr<Feature2D> descriptor;
+    Ptr<DescriptorMatcher> matcher;
     FeatureSelector selector(rf);
     selector.process(detector,descriptor,matcher);
     threadFeatureL = new ThreadFeature(bufferImageL, bufferFeatureL,detector);
-    //threadFeatureR=new ThreadFeature(detector);
-//    threadDescriptorL=new ThreadDescriptor(descriptor);
-//    threadDescriptorR=new ThreadDescriptor(descriptor);
+    threadFeatureR = new ThreadFeature(bufferImageR, bufferFeatureR,detector);
+    threadDescriptorL=new ThreadDescriptor(bufferFeatureL,bufferMatching,descriptor);
+    threadDescriptorR=new ThreadDescriptor(bufferFeatureR,bufferMatching,descriptor);
 //    threadMatching=new ThreadMatching(matcher);
 
     //start threads
     threadFeatureL->start();
-    //threadFeatureR->start();
-//    threadDescriptorL->start();
-//    threadDescriptorR->start();
+    threadFeatureR->start();
+    threadDescriptorL->start();
+    threadDescriptorR->start();
     //threadMatching->start();
 
-    return true;
+    configured = true;
+    return configured;
 }
 
 bool vgSLAMModule::updateModule(){
+    static int count = nCams;
+    if(count<=0) {
+        yDebug()<<"finishing acquisition...";
+        return false;
+    }
 
     // read port
-    SlamType data;
-    data.image = new cv::Mat();
-    bufferImageL.write(data);
+    SlamType dataL,dataR;
+
+    yInfo() <<"vgSLAMModule:acquiring images...";
+    ImageOf<PixelRgb> *imageL_yarp = imageL_port.read();
+    ImageOf<PixelRgb> *imageR_yarp = imageR_port.read();
+
+    if (!imageL_yarp || !imageR_yarp) {
+        configured = false;
+        return false;
+    }
+
+    yInfo() <<"vgSLAMModule:acquiring images [done]";
+
+    Stamp s1,s2;
+    if(imageL_port.getEnvelope(s1) && imageR_port.getEnvelope(s2)){
+        if(first){
+            imageL_start = s1.getCount();
+            imageR_start = s2.getCount();
+            first=false;
+        }
+        if(abs(s1.getCount()-imageL_start)>2 || abs(s2.getCount()-imageR_start)>2
+                || fabs((s1.getTime())-(s2.getTime()))>0.03){//0.03 is the half delta t
+            imageL_start = s1.getCount();
+            imageR_start = s2.getCount();
+            yWarning()<<"Left-Right de-synchronized, time difference:"<<fabs((s1.getTime())-(s2.getTime()));
+            return true;
+        }
+
+        /* the images */
+        Mat imageL_cv = cvarrToMat(static_cast<IplImage*>(imageL_yarp->getIplImage()));
+        cvtColor(imageL_cv, imageL_cv, CV_RGB2BGR);
+        cvtColor(imageL_cv, imageL_cv, COLOR_BGR2GRAY);
+        Mat imageR_cv = cvarrToMat(static_cast<IplImage*>(imageR_yarp->getIplImage()));
+        cvtColor(imageR_cv, imageR_cv, CV_RGB2BGR);
+        cvtColor(imageR_cv, imageR_cv, COLOR_BGR2GRAY);
+
+        dataL.image = new cv::Mat(imageL_cv);
+        dataR.image = new cv::Mat(imageR_cv);
+
+        //imshow("prova",dataL.image);
+        count -= 2;
+
+        yInfo() <<"vgSLAMModule:writing images to buffers...";
+        bufferImageL.write(dataL);
+        bufferImageR.write(dataR);
+
+    }
     return true;
 }
 
 bool vgSLAMModule::close(){
+
+    if(configured) {
+        yInfo()<<"Waiting for worker thread...";
+        while((threadDescriptorL->getCountProcessed() + threadDescriptorR->getCountProcessed()) < nCams)
+            yarp::os::Time::delay(0.5);
+    }
+
     //stop threads
     threadFeatureL->close();
-
-    //threadFeatureR->stop();
-//    threadDescriptorL->stop();
-//    threadDescriptorR->stop();
-//    threadMatching->stop();
+    threadFeatureR->close();
+    threadDescriptorL->close();
+    threadDescriptorR->close();
+//    threadMatching->close();
 
     //close ports
     imageR_port.close();
@@ -73,7 +135,7 @@ bool vgSLAMModule::close(){
 
     //deallocate memory
     delete threadFeatureL;
-    //delete threadFeatureR;
+    delete threadFeatureR;
 //    delete threadDescriptorL;
 //    delete threadDescriptorR;
 //    delete threadMatching;

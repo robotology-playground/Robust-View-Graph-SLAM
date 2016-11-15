@@ -10,20 +10,37 @@
 
 #include "opencvs.h"
 
+typedef std::vector<cv::KeyPoint> KeyPointsVector;
+
 class SlamType {
 public:
-    SlamType() : image(NULL), feature(NULL) { }
-    virtual ~SlamType() { free(); }
+    SlamType() : image(NULL), feature(NULL), descriptor(NULL),
+    matching(NULL) { }
+    virtual ~SlamType() {}
     void free() {
-        if(image)
+        if(image) {
             delete image;
-        if(feature)
+            image = NULL;
+        }
+        if(feature) {
             delete feature;
+            feature = NULL;
+        }
+        if(descriptor) {
+            delete descriptor;
+            descriptor = NULL;
+        }
+        if(matching) {
+            delete matching;
+            matching = NULL;
+        }
     }
 
 public:
     cv::Mat *image;
-    cv::Point2f *feature;
+    KeyPointsVector *feature;
+    cv::Mat *descriptor;
+    cv::DMatch *matching;
 };
 
 #endif // SLAMTYPE
