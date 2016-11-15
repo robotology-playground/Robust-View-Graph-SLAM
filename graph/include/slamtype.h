@@ -9,18 +9,19 @@
 #define SLAMTYPE
 
 #include "opencvs.h"
+#include "yarp/os/all.h"
 
 typedef std::vector<cv::KeyPoint> KeyPointsVector;
 
 class SlamType {
 public:
     SlamType() : image(NULL), feature(NULL), descriptor(NULL),
-    matching(NULL) { }
+    matching(NULL), stamp(NULL) { }
     virtual ~SlamType() {}
     void free() {
         if(image) {
             delete image;
-            image = NULL;
+            image = NULL;//prevent double call of free()
         }
         if(feature) {
             delete feature;
@@ -34,6 +35,10 @@ public:
             delete matching;
             matching = NULL;
         }
+        if(stamp){
+            delete stamp;
+            stamp=NULL;
+        }
     }
 
 public:
@@ -41,6 +46,8 @@ public:
     KeyPointsVector *feature;
     cv::Mat *descriptor;
     cv::DMatch *matching;
+    yarp::os::Stamp *stamp;
+
 };
 
 #endif // SLAMTYPE

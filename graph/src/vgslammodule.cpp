@@ -77,18 +77,18 @@ bool vgSLAMModule::updateModule(){
 
     yInfo() <<"vgSLAMModule:acquiring images [done]";
 
-    Stamp s1,s2;
-    if(imageL_port.getEnvelope(s1) && imageR_port.getEnvelope(s2)){
+    Stamp sL,sR;
+    if(imageL_port.getEnvelope(sL) && imageR_port.getEnvelope(sR)){
         if(first){
-            imageL_start = s1.getCount();
-            imageR_start = s2.getCount();
+            imageL_start = sL.getCount();
+            imageR_start = sR.getCount();
             first=false;
         }
-        if(abs(s1.getCount()-imageL_start)>2 || abs(s2.getCount()-imageR_start)>2
-                || fabs((s1.getTime())-(s2.getTime()))>0.03){//0.03 is the half delta t
-            imageL_start = s1.getCount();
-            imageR_start = s2.getCount();
-            yWarning()<<"Left-Right de-synchronized, time difference:"<<fabs((s1.getTime())-(s2.getTime()));
+        if(abs(sL.getCount()-imageL_start)>2 || abs(sR.getCount()-imageR_start)>2
+                || fabs((sL.getTime())-(sR.getTime()))>0.03){//0.03 is the half delta t
+            imageL_start = sL.getCount();
+            imageR_start = sR.getCount();
+            yWarning()<<"Left-Right de-synchronized, time difference:"<<fabs((sL.getTime())-(sR.getTime()));
             return true;
         }
 
@@ -100,8 +100,11 @@ bool vgSLAMModule::updateModule(){
         cvtColor(imageR_cv, imageR_cv, CV_RGB2BGR);
         cvtColor(imageR_cv, imageR_cv, COLOR_BGR2GRAY);
 
-        dataL.image = new cv::Mat(imageL_cv);
-        dataR.image = new cv::Mat(imageR_cv);
+        dataL.image = new Mat(imageL_cv);
+        dataR.image = new Mat(imageR_cv);
+
+        dataL.stamp =new Stamp(sL);
+        dataR.stamp =new Stamp(sR);
 
         //imshow("prova",dataL.image);
         count -= 2;
