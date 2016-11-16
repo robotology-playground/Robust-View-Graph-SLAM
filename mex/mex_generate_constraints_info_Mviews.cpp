@@ -33,8 +33,8 @@ void mexFunction( int nlhs, mxArray *plhs[],
     std::string str5 ("R");
     std::string str6 ("y");
     std::string str7 ("Y");
-    Eigen::MatrixXd yz = Eigen::MatrixXd::Zero(7,1);
-    Eigen::VectorXd Yz = Eigen::MatrixXd::Zero(7,7);
+    Eigen::VectorXd yz = Eigen::MatrixXd::Zero(7,1);
+    Eigen::MatrixXd Yz = Eigen::MatrixXd::Zero(7,7);
     for (mwIndex jstruct = 0; jstruct < NStructElems; jstruct++) { /* loop the constraints */
         for (int ifield = 0; ifield < nfields; ifield++) {  /* loop the fields */
             fnames[ifield] = mxGetFieldNameByNumber(prhs[0],ifield); // get field name

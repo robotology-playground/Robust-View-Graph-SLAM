@@ -8,6 +8,10 @@ cmake_minimum_required(VERSION 3.2.2)
 SET(PROJECTNAME vgSLAM)
 PROJECT(${PROJECTNAME})
 
+SET(suitesparse /home/tariq/Dev/suitesparse)
+SET(vlfeat /home/tariq/Dev/vlfeat-0.9.20)
+SET(matlab /home/tariq/Dev/matlab)
+
 # Make CMake aware of the cmake folder for local FindXXX scripts,
 # append rather than set in case the user has passed their own
 # additional paths via -D.
@@ -290,12 +294,15 @@ endif(EXISTS ${CAMD_LIB})
 #	message("-- METIS libs: ${METIS_LIB}")
 #endif(EXISTS ${METIS_LIB})
 # metis-4.0
-find_library(METIS_LIB NAMES metis PATHS /home/tariq/Downloads/SuiteSparse/metis-4.0)
-#set(METIS_LIB /home/tariq/Downloads/SuiteSparse/metis-4.0)
-#link_directories(${METIS_LIB})
+find_library(METIS_LIB NAMES metis)# PATHS /home/tariq/Dev/suitesparse/metis-4.0)
 if (EXISTS ${METIS_LIB})
 	message("-- METIS libs: ${METIS_LIB}")
 endif(EXISTS ${METIS_LIB})
+set(METIS4_LIB ${suitesparse}/metis-4.0)
+link_directories(${METIS4_LIB})
+if (EXISTS ${METIS4_LIB})
+	message("-- METIS-4.0 libs: ${METIS4_LIB}")
+endif(EXISTS ${METIS4_LIB})
 # parmetis
 #find_library(PARMETIS_LIB NAMES parmetis)
 #if (EXISTS ${PARMETIS_LIB})
@@ -311,7 +318,7 @@ endif(EXISTS ${GSL_LIB})
 #-lgfortran -lceres -lcholmod -lcolamd -lamd -lcamd -lcxsparse -lsuitesparseconfig -lgomp -lglog -lpthread
 
 # MATLAB
-set(MATLAB_INCLUDE_DIR ~/Downloads/matlab) ####################################### change this path
+set(MATLAB_INCLUDE_DIR ${matlab})
 message("-- Using MATLAB: ${MATLAB_INCLUDE_DIR}")
 include_directories(${MATLAB_INCLUDE_DIR})
 
@@ -328,7 +335,7 @@ include_directories(${MATLAB_INCLUDE_DIR})
 #include_directories(${MATLAB_EXTERN})
 
 # vlfeat.
-set(VLFEAT_INCLUDE_DIR ~/Downloads/vlfeat-0.9.20) ####################################### change this path
+set(VLFEAT_INCLUDE_DIR ${vlfeat})
 message("-- Using VLFEAT: ${VLFEAT_INCLUDE_DIR}")
 include_directories(${VLFEAT_INCLUDE_DIR})
 find_library(VLFEAT_LIB NAMES vl PATHS ${VLFEAT_INCLUDE_DIR}/bin/glnxa64)
