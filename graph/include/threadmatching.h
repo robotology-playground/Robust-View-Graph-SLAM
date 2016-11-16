@@ -9,15 +9,16 @@
 
 #include "vgslamthread.h"
 #include "opencvs.h"
+#include "slamtype.h"
 
-/*
-class ThreadMatching : public vgSLAMThread<int,int>
+
+class ThreadMatching : public vgSLAMThread<SlamType,SlamType>
 {
 private:
     cv::Ptr<cv::DescriptorMatcher> matcher;
 public:
-    ThreadMatching();
-    ThreadMatching(cv::Ptr<cv::DescriptorMatcher> _matcher);
+    ThreadMatching(vgSLAMBuffer<SlamType> &bufferIn, vgSLAMBuffer<SlamType> &bufferOut,cv::Ptr<cv::DescriptorMatcher> _matcher);
+    void run ();
 };
-*/
+
 #endif // THREADMATCHING_H

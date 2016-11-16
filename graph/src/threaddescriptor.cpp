@@ -23,9 +23,7 @@ void ThreadDescriptor::run(){
             data.descriptor= new Mat();
             descriptor->compute(*data.image, *data.feature, *data.descriptor);
             yInfo()<<"Descriptors:" << (int)data.descriptor->rows << ", " << (int)data.descriptor->cols;
-            //bufferOut->write(data);
-            data.free();
-            countProcessed++;
+            bufferOut->write(data);
 
         }
         else

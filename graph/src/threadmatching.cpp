@@ -5,13 +5,30 @@
  */
 
 #include "threadmatching.h"
-/*
-ThreadMatching::ThreadMatching()
-{
+
+#include <stdio.h>
+
+ThreadMatching::ThreadMatching(vgSLAMBuffer<SlamType> &bufferIn, vgSLAMBuffer<SlamType> &bufferOut,
+                               cv::Ptr<cv::DescriptorMatcher> _matcher): vgSLAMThread(bufferIn, bufferOut),matcher(_matcher){
 
 }
+void ThreadMatching::run (){
+    while(!interrupted) {
+        SlamType data;
+        yInfo()<<"ThreadMatching:Reading buffer";
+        if(bufferIn->read(data)){
+            char str[255];
+            //sprintf(str, "%.6f", data.stamp->getTime());
+            //yDebug()<<"ThreadMatching:           "<<data.stamp->getCount();
+            //bufferOut->write(data);
+            data.free();
+            countProcessed++;
 
-ThreadMatching::ThreadMatching(cv::Ptr<cv::DescriptorMatcher> _matcher):matcher(_matcher){
+        }
+        else
+            yInfo()<<"ThreadMatching has been interrupted on read";
+
+
+    }
 
 }
-*/

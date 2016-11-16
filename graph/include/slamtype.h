@@ -16,7 +16,7 @@ typedef std::vector<cv::KeyPoint> KeyPointsVector;
 class SlamType {
 public:
     SlamType() : image(NULL), feature(NULL), descriptor(NULL),
-    matching(NULL), stamp(NULL) { }
+    matching(NULL), stamp(NULL), relative(NULL) { }
     virtual ~SlamType() {}
     void free() {
         if(image) {
@@ -35,19 +35,45 @@ public:
             delete matching;
             matching = NULL;
         }
+        if(relative) {
+            delete relative;
+            relative = NULL;
+        }
         if(stamp){
             delete stamp;
-            stamp=NULL;
+            stamp = NULL;
         }
     }
+//    bool operator<(const SlamType& rhs)
+//    {
+//      return this->stamp->getTime() < rhs.stamp->getTime();
+//    }
 
 public:
     cv::Mat *image;
     KeyPointsVector *feature;
     cv::Mat *descriptor;
     cv::DMatch *matching;
+    cv::Mat  *relative;
     yarp::os::Stamp *stamp;
 
+};
+
+/*
+static bool  operator<(const SlamType& lhs, const SlamType& rhs)
+{
+    yDebug()<<__LINE__;
+    return lhs.stamp->getCount() < rhs.stamp->getCount();
+}
+*/
+
+class SlamTypeComparison
+{
+public:
+    bool operator() (const SlamType& lhs, const SlamType& rhs) const
+    {
+      return lhs.stamp->getTime() < rhs.stamp->getTime();
+    }
 };
 
 #endif // SLAMTYPE

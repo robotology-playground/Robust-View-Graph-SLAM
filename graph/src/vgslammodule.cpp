@@ -13,12 +13,12 @@ using namespace yarp::os;
 using namespace yarp::sig;
 using namespace  cv;
 
-vgSLAMModule::vgSLAMModule():nCams(-1)
+vgSLAMModule::vgSLAMModule():nCams(-1),  bufferDescriptor()
 {
 
 }
 
-vgSLAMModule::vgSLAMModule(int _nCams){
+vgSLAMModule::vgSLAMModule(int _nCams) :  bufferDescriptor(){
     nCams=_nCams;
     configured = false;
 }
@@ -41,16 +41,16 @@ bool vgSLAMModule::configure(ResourceFinder &rf){
     selector.process(detector,descriptor,matcher);
     threadFeatureL = new ThreadFeature(bufferImageL, bufferFeatureL,detector);
     threadFeatureR = new ThreadFeature(bufferImageR, bufferFeatureR,detector);
-    threadDescriptorL=new ThreadDescriptor(bufferFeatureL,bufferMatching,descriptor);
-    threadDescriptorR=new ThreadDescriptor(bufferFeatureR,bufferMatching,descriptor);
-//    threadMatching=new ThreadMatching(matcher);
+    threadDescriptorL = new ThreadDescriptor(bufferFeatureL,bufferDescriptor,descriptor);
+    threadDescriptorR = new ThreadDescriptor(bufferFeatureR,bufferDescriptor,descriptor);
+    threadMatching=new ThreadMatching(bufferDescriptor,bufferMatching,matcher);
 
     //start threads
     threadFeatureL->start();
     threadFeatureR->start();
     threadDescriptorL->start();
     threadDescriptorR->start();
-    //threadMatching->start();
+    threadMatching->start();
 
     configured = true;
     return configured;
@@ -84,13 +84,14 @@ bool vgSLAMModule::updateModule(){
             imageR_start = sR.getCount();
             first=false;
         }
-        if(abs(sL.getCount()-imageL_start)>2 || abs(sR.getCount()-imageR_start)>2
-                || fabs((sL.getTime())-(sR.getTime()))>0.03){//0.03 is the half delta t
-            imageL_start = sL.getCount();
-            imageR_start = sR.getCount();
-            yWarning()<<"Left-Right de-synchronized, time difference:"<<fabs((sL.getTime())-(sR.getTime()));
-            return true;
-        }
+// syncronization ask to Alberto for syncronizer
+//        if(abs(sL.getCount()-imageL_start)>2 || abs(sR.getCount()-imageR_start)>2
+//                || fabs((sL.getTime())-(sR.getTime()))>0.06){//0.03 is the half deltat (30hz) but it is more likely 15 hz
+//            imageL_start = sL.getCount();
+//            imageR_start = sR.getCount();
+//            yWarning()<<"Left-Right de-synchronized, time difference:"<<fabs((sL.getTime())-(sR.getTime()));
+//            return true;
+//        }
 
         /* the images */
         Mat imageL_cv = cvarrToMat(static_cast<IplImage*>(imageL_yarp->getIplImage()));
@@ -121,7 +122,7 @@ bool vgSLAMModule::close(){
 
     if(configured) {
         yInfo()<<"Waiting for worker thread...";
-        while((threadDescriptorL->getCountProcessed() + threadDescriptorR->getCountProcessed()) < nCams)
+        while(threadMatching->getCountProcessed() < nCams)
             yarp::os::Time::delay(0.5);
     }
 
@@ -130,7 +131,7 @@ bool vgSLAMModule::close(){
     threadFeatureR->close();
     threadDescriptorL->close();
     threadDescriptorR->close();
-//    threadMatching->close();
+    threadMatching->close();
 
     //close ports
     imageR_port.close();
@@ -139,9 +140,9 @@ bool vgSLAMModule::close(){
     //deallocate memory
     delete threadFeatureL;
     delete threadFeatureR;
-//    delete threadDescriptorL;
-//    delete threadDescriptorR;
-//    delete threadMatching;
+    delete threadDescriptorL;
+    delete threadDescriptorR;
+    delete threadMatching;
     return true;
 }
 

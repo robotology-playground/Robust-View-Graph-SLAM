@@ -27,16 +27,14 @@ class vgSLAMModule : public yarp::os::RFModule
     ThreadFeature* threadFeatureL;
     ThreadDescriptor* threadDescriptorR;
     ThreadDescriptor* threadDescriptorL;
-    //ThreadMatching* threadMatching;
+    ThreadMatching* threadMatching;
 
     vgSLAMBuffer<SlamType> bufferImageR;
     vgSLAMBuffer<SlamType> bufferImageL;
     vgSLAMBuffer<SlamType> bufferFeatureR;
     vgSLAMBuffer<SlamType> bufferFeatureL;
-    vgSLAMBuffer<SlamType> bufferDescriptorR;
-    vgSLAMBuffer<SlamType> bufferDescriptorL;
+    vgSLAMPriorityBuffer<SlamType, SlamTypeComparison> bufferDescriptor;
     vgSLAMBuffer<SlamType> bufferMatching;
-
 
 
 public:

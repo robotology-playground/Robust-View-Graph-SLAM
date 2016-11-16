@@ -11,20 +11,23 @@
 #include <iostream>
 #include <queue>
 #include <yarp/os/all.h>
+#include <functional>
+
+#include <slamtype.h>
 
 template <class T>
 class vgSLAMBuffer
 {
-private:
+protected:
     yarp::os::Mutex bufMutex;
     yarp::os::Semaphore semArray;
     std::queue<T> array;
     bool interrupted;
 
 public:
-    vgSLAMBuffer() : interrupted(false), semArray(0){}
+    vgSLAMBuffer() : interrupted(false), semArray(0) {}
 
-    bool read(T& data) {
+    virtual bool read(T& data) {
 
         //wait
         semArray.wait();
@@ -36,13 +39,13 @@ public:
 
         // read
         bufMutex.lock();
-        data = array.front();
+        data=array.front();
         array.pop();
         bufMutex.unlock();
         return true;
     }
 
-    bool write(T& data) {
+    virtual bool write(T& data) {
         //write
         bufMutex.lock();
         array.push(data);
@@ -59,10 +62,47 @@ public:
         bufMutex.unlock();
         semArray.post();
     }
-    void clear(){
-        bufMutex.lock();
-        array.clear();
-        bufMutex.unlock();
+
+};
+
+
+
+template <class T, class TComparison>
+class vgSLAMPriorityBuffer : public vgSLAMBuffer<T> {
+
+    typedef std::priority_queue<T, std::vector<T>, TComparison> mypq_type;
+
+private:
+    mypq_type p_array;
+
+public:
+    vgSLAMPriorityBuffer() : p_array(TComparison()) {}
+
+    virtual bool read(T& data) {
+
+        //wait
+        vgSLAMBuffer<T>::semArray.wait();
+        if(vgSLAMBuffer<T>::interrupted) {
+            return false;
+        }
+
+        // read
+        vgSLAMBuffer<T>::bufMutex.lock();
+        data = p_array.top();
+//        yDebug()<<"Priority access";//ok
+        p_array.pop();
+        vgSLAMBuffer<T>::bufMutex.unlock();
+        return true;
+    }
+
+    virtual bool write(T& data) {
+        //write
+        vgSLAMBuffer<T>::bufMutex.lock();
+        p_array.push(data);
+        vgSLAMBuffer<T>::bufMutex.unlock();
+        //signal
+        vgSLAMBuffer<T>::semArray.post();
+        return true;
     }
 };
 
