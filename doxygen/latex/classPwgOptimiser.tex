@@ -1,0 +1,54 @@
+\hypertarget{classPwgOptimiser}{}\section{Pwg\+Optimiser Class Reference}
+\label{classPwgOptimiser}\index{Pwg\+Optimiser@{Pwg\+Optimiser}}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structPwgOptimiser_1_1pulled__constraint}{pulled\+\_\+constraint}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries Pwg\+Optimiser} (int M, int N)\hypertarget{classPwgOptimiser_ab082a4335ae1d71677b4098a3ca6e94b}{}\label{classPwgOptimiser_ab082a4335ae1d71677b4098a3ca6e94b}
+
+\item 
+void {\bfseries set\+\_\+information\+\_\+matrix\+\_\+and\+\_\+vector} (Eigen\+::\+Vector\+Xd \&yin, Eigen\+::\+Sparse\+Matrix$<$ double $>$ \&Yin)\hypertarget{classPwgOptimiser_a00fef5371d6840b4c3443ca7daf62672}{}\label{classPwgOptimiser_a00fef5371d6840b4c3443ca7daf62672}
+
+\item 
+void {\bfseries get\+\_\+information\+\_\+matrix\+\_\+and\+\_\+vector} (Eigen\+::\+Vector\+Xd \&yout, Eigen\+::\+Sparse\+Matrix$<$ double $>$ \&Yout)\hypertarget{classPwgOptimiser_a210b49d192ca7d98fadb2fa495d07212}{}\label{classPwgOptimiser_a210b49d192ca7d98fadb2fa495d07212}
+
+\item 
+void {\bfseries get\+\_\+switch\+\_\+vector} (int $\ast$sw)\hypertarget{classPwgOptimiser_a7bc7c631a1c763a5d1f8896641ca4928}{}\label{classPwgOptimiser_a7bc7c631a1c763a5d1f8896641ca4928}
+
+\item 
+void {\bfseries initialise\+\_\+a\+\_\+constraint} (const int \&cam, const int \&kpt, const std\+::vector$<$ double $>$ \&p1, const std\+::vector$<$ double $>$ \&z, const std\+::vector$<$ double $>$ \&R, Eigen\+::\+Matrix\+Xd Y, Eigen\+::\+Vector\+Xd y, const int \&sw)\hypertarget{classPwgOptimiser_a8d775b7dcc5930aa9a0f318e5d1753c2}{}\label{classPwgOptimiser_a8d775b7dcc5930aa9a0f318e5d1753c2}
+
+\item 
+void {\bfseries generate\+\_\+constraints\+\_\+info\+\_\+\+Mviews} (const double $\ast$xs)\hypertarget{classPwgOptimiser_aa7755f3adb3807a1a0c4f2aca738e71c}{}\label{classPwgOptimiser_aa7755f3adb3807a1a0c4f2aca738e71c}
+
+\item 
+void {\bfseries optimise\+\_\+constraints\+\_\+image\+\_\+inverse\+\_\+depth\+\_\+\+Mviews} (const double $\ast$xs)\hypertarget{classPwgOptimiser_acb4d7544d9e43b0fe51a7c9ec7f1ee1a}{}\label{classPwgOptimiser_acb4d7544d9e43b0fe51a7c9ec7f1ee1a}
+
+\item 
+void {\bfseries pull\+\_\+constraints\+\_\+\+Mviews} (std\+::vector$<$ \hyperlink{structPwgOptimiser_1_1pulled__constraint}{pulled\+\_\+constraint} $>$ \&C)\hypertarget{classPwgOptimiser_ac4df16773850e8c9d58a6f5c0a178197}{}\label{classPwgOptimiser_ac4df16773850e8c9d58a6f5c0a178197}
+
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+Eigen\+::\+Sparse\+Matrix$<$ double $>$ {\bfseries Phat}\hypertarget{classPwgOptimiser_a4cae98998f37bc2806cfd8718b8c01cf}{}\label{classPwgOptimiser_a4cae98998f37bc2806cfd8718b8c01cf}
+
+\item 
+Eigen\+::\+Vector\+Xd {\bfseries xhat}\hypertarget{classPwgOptimiser_afb15930580a6bec1b31dd986120c825a}{}\label{classPwgOptimiser_afb15930580a6bec1b31dd986120c825a}
+
+\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries mex\+Function} (int nlhs, mx\+Array $\ast$plhs\mbox{[}$\,$\mbox{]}, int nrhs, const mx\+Array $\ast$prhs\mbox{[}$\,$\mbox{]})\hypertarget{classPwgOptimiser_a6a215cbfde54f82a3ce599228fc3fce5}{}\label{classPwgOptimiser_a6a215cbfde54f82a3ce599228fc3fce5}
+
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/tariq/\+Documents/\+M\+A\+T\+L\+A\+B/\+Robust-\/\+View-\/\+Graph-\/\+S\+L\+A\+M/include/Pwg\+Optimiser.\+h\end{DoxyCompactItemize}

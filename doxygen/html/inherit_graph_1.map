@@ -1,0 +1,5 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node2" href="$classException.html" title="Exception base class. " alt="" coords="132,31,212,57"/>
+<area shape="rect" id="node3" href="$classInvalidOperationException.html" title="Invalid operation exception. " alt="" coords="260,5,435,32"/>
+<area shape="rect" id="node4" href="$classNullPointerException.html" title="Null pointer exception. " alt="" coords="275,56,419,83"/>
+</map>

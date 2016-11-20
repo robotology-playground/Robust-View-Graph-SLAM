@@ -1,0 +1,85 @@
+\hypertarget{classException}{}\section{Exception Class Reference}
+\label{classException}\index{Exception@{Exception}}
+
+
+\hyperlink{classException}{Exception} base class.  
+
+
+
+
+{\ttfamily \#include $<$Exception.\+h$>$}
+
+
+
+Inheritance diagram for Exception\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=338pt]{classException__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Exception\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=158pt]{classException__coll__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{Indent}{\bf Constructors/\+Destructor}\par
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classException_a3b39c4d55202aea6be3247793e46e2b0}{Exception} (const std\+::string \&msg=\char`\"{}\char`\"{}, const std\+::string \&filename=\char`\"{} \char`\"{}, size\+\_\+t line=0, const std\+::string \&function=\char`\"{} \char`\"{})\hypertarget{classException_a3b39c4d55202aea6be3247793e46e2b0}{}\label{classException_a3b39c4d55202aea6be3247793e46e2b0}
+
+\begin{DoxyCompactList}\small\item\em Constructs exception from message. \end{DoxyCompactList}\item 
+\hyperlink{classException_ae0fd52e62283ee92c085d767d0aab736}{Exception} (const \hyperlink{classException}{Exception} \&other)  throw ()\hypertarget{classException_ae0fd52e62283ee92c085d767d0aab736}{}\label{classException_ae0fd52e62283ee92c085d767d0aab736}
+
+\begin{DoxyCompactList}\small\item\em Copy constructor. \end{DoxyCompactList}\item 
+\hyperlink{classException}{Exception} \& \hyperlink{classException_a71c844ee3ac32b7656c24386e9ab60a0}{operator=} (const \hyperlink{classException}{Exception} \&other)  throw ()\hypertarget{classException_a71c844ee3ac32b7656c24386e9ab60a0}{}\label{classException_a71c844ee3ac32b7656c24386e9ab60a0}
+
+\begin{DoxyCompactList}\small\item\em Assignment operator. \end{DoxyCompactList}\item 
+virtual \hyperlink{classException_ad1ba411de295ef2eeb02ba26284a829a}{$\sim$\+Exception} ()  throw ()\hypertarget{classException_ad1ba411de295ef2eeb02ba26284a829a}{}\label{classException_ad1ba411de295ef2eeb02ba26284a829a}
+
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\begin{Indent}{\bf Accessors}\par
+\begin{DoxyCompactItemize}
+\item 
+virtual const char $\ast$ \hyperlink{classException_a78154a31544a609cbd226d32574f52cd}{what} () const   throw ()\hypertarget{classException_a78154a31544a609cbd226d32574f52cd}{}\label{classException_a78154a31544a609cbd226d32574f52cd}
+
+\begin{DoxyCompactList}\small\item\em Access the exception string. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+\subsection*{Protected Attributes}
+\begin{Indent}{\bf Protected members}\par
+\begin{DoxyCompactItemize}
+\item 
+std\+::string \hyperlink{classException_a9141b17564f091623cf5a3928e0e0ab3}{m\+Msg}\hypertarget{classException_a9141b17564f091623cf5a3928e0e0ab3}{}\label{classException_a9141b17564f091623cf5a3928e0e0ab3}
+
+\begin{DoxyCompactList}\small\item\em Message in the exception. \end{DoxyCompactList}\item 
+std\+::string \hyperlink{classException_a04156475e91fe60dc071c292cf5e2354}{m\+Filename}\hypertarget{classException_a04156475e91fe60dc071c292cf5e2354}{}\label{classException_a04156475e91fe60dc071c292cf5e2354}
+
+\begin{DoxyCompactList}\small\item\em Filename where the exception occurs. \end{DoxyCompactList}\item 
+std\+::string \hyperlink{classException_a9eb42c5d2040a0fb75af4d69efa657a1}{m\+Function}\hypertarget{classException_a9eb42c5d2040a0fb75af4d69efa657a1}{}\label{classException_a9eb42c5d2040a0fb75af4d69efa657a1}
+
+\begin{DoxyCompactList}\small\item\em Function where the exception occurs. \end{DoxyCompactList}\item 
+size\+\_\+t \hyperlink{classException_a2ece5a599bfb85307da33e61192feddf}{m\+Line}\hypertarget{classException_a2ece5a599bfb85307da33e61192feddf}{}\label{classException_a2ece5a599bfb85307da33e61192feddf}
+
+\begin{DoxyCompactList}\small\item\em Line number where the exception occurs. \end{DoxyCompactList}\item 
+std\+::string \hyperlink{classException_a1a8fc6e1adf85832d1dcb253cb5c6329}{m\+Output\+Message}\hypertarget{classException_a1a8fc6e1adf85832d1dcb253cb5c6329}{}\label{classException_a1a8fc6e1adf85832d1dcb253cb5c6329}
+
+\begin{DoxyCompactList}\small\item\em Output message. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\end{Indent}
+
+
+\subsection{Detailed Description}
+\hyperlink{classException}{Exception} base class. 
+
+The class \hyperlink{classException}{Exception} represents the base class for all exceptions. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/tariq/\+Documents/\+M\+A\+T\+L\+A\+B/\+Robust-\/\+View-\/\+Graph-\/\+S\+L\+A\+M/include/\hyperlink{Exception_8h}{Exception.\+h}\end{DoxyCompactItemize}
