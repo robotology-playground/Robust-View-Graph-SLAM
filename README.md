@@ -1,6 +1,6 @@
 ## Installation of the C++ implementation
 
-This implementation was tested on Ubuntu 14.04.5 LTS (Trusty Tahr). Install all required tools:
+This implementation was tested on Ubuntu Trusty Tahr (14.04.5 LTS) and Kylin (16.04.1 LTS). Install all required tools:
 ```
 sudo apt-get install synaptic
 sudo apt-get install git
