@@ -12,6 +12,7 @@
 #include "yarp/os/all.h"
 
 typedef std::vector<cv::KeyPoint> KeyPointsVector;
+typedef std::vector<cv::DMatch> MatchesVector;
 
 class SlamType {
 public:
@@ -53,7 +54,7 @@ public:
     cv::Mat *image;
     KeyPointsVector *feature;
     cv::Mat *descriptor;
-    cv::DMatch *matching;
+    MatchesVector *matching;
     cv::Mat  *relative;
     yarp::os::Stamp *stamp;
 

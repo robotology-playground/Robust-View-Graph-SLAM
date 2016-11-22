@@ -6,29 +6,67 @@
 
 #include "threadmatching.h"
 
-#include <stdio.h>
+
 
 ThreadMatching::ThreadMatching(vgSLAMBuffer<SlamType> &bufferIn, vgSLAMBuffer<SlamType> &bufferOut,
                                cv::Ptr<cv::DescriptorMatcher> _matcher): vgSLAMThread(bufferIn, bufferOut),matcher(_matcher){
+    first = second = NULL;
 
 }
-void ThreadMatching::run (){
-    while(!interrupted) {
-        SlamType data;
-        yInfo()<<"ThreadMatching:Reading buffer";
-        if(bufferIn->read(data)){
-            char str[255];
-            //sprintf(str, "%.6f", data.stamp->getTime());
-            //yDebug()<<"ThreadMatching:           "<<data.stamp->getCount();
-            //bufferOut->write(data);
-            data.free();
-            countProcessed++;
-
-        }
-        else
-            yInfo()<<"ThreadMatching has been interrupted on read";
-
-
+ThreadMatching::~ThreadMatching(){
+    if(first) {
+        first->free();
+        delete first;
     }
 
+    if(second) {
+        second->free();
+        delete second;
+    }
+}
+
+void ThreadMatching::run (){
+
+    while(!interrupted) {
+        yInfo()<<"ThreadMatching:Reading buffer";
+        SlamType* data = new SlamType();
+        MatchesVector mv;
+        if(!bufferIn->read(*data)) {
+            delete data;
+            continue;
+        }
+
+        if(!first) {
+            first = data;
+            continue;
+        }
+
+        if(!second) {
+            second = data;
+            data->matching=new MatchesVector;
+            matcher->match(*first->descriptor,*second->descriptor,mv,cv::noArray());
+            yDebug()<<"ThreadMatching first->second: size matching"<<mv.size();
+            continue;
+        }
+
+        // processing
+        yDebug()<<"ThreadMatching: first:"<<first->stamp->getCount()<<"second:"<<second->stamp->getCount()<<"third:"<<data->stamp->getCount();//tested ok
+        // ...
+        matcher->match(*second->descriptor,*data->descriptor,mv,cv::noArray());
+        yDebug()<<"ThreadMatching second->third: size matching"<<mv.size();
+        matcher->match(*first->descriptor,*data->descriptor,mv,cv::noArray());
+        yDebug()<<"ThreadMatching first->third: size matching"<<mv.size();
+
+
+        //substitution
+        first->free();
+        delete first;
+        first = second;
+        second = data;
+
+        yDebug()<<"ThreadMatching:count="<<countProcessed;
+
+        countProcessed++;
+
+    } //end while
 }
