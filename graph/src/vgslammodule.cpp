@@ -125,8 +125,6 @@ bool vgSLAMModule::close(){
         while(threadMatching->getCountProcessed() < (nCams-3))//3->thickness
             yarp::os::Time::delay(0.5);
     }
-    yDebug()<<"FINE"<<threadMatching->getCountProcessed();
-
     //stop threads
     threadFeatureL->close();
     threadFeatureR->close();
