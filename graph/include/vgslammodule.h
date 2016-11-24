@@ -23,17 +23,17 @@ class vgSLAMModule : public yarp::os::RFModule
     yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb> > imageR_port, imageL_port;
     int imageL_start=0, imageR_start=0;
     bool first=true;
-    ThreadFeature* threadFeatureR;
-    ThreadFeature* threadFeatureL;
-    ThreadDescriptor* threadDescriptorR;
-    ThreadDescriptor* threadDescriptorL;
-    ThreadMatching* threadMatching;
+    ThreadFeature* threadFeatureR; //thread that reads from a buffer of R images and writes to a buffer of R features
+    ThreadFeature* threadFeatureL; //thread that reads from a buffer of L images and writes to a buffer of L features
+    ThreadDescriptor* threadDescriptorR; //thread that reads from a buffer of R features and writes to a prioritybuffer(*) of descriptors
+    ThreadDescriptor* threadDescriptorL; //thread that reads from a buffer of L features and writes to a prioritybuffer(*) of descriptors
+    ThreadMatching* threadMatching; //thread that reads from a prioritybuffer of descriptors, does matching and compute R&t
 
     vgSLAMBuffer<SlamType> bufferImageR;
     vgSLAMBuffer<SlamType> bufferImageL;
     vgSLAMBuffer<SlamType> bufferFeatureR;
     vgSLAMBuffer<SlamType> bufferFeatureL;
-    vgSLAMPriorityBuffer<SlamType, SlamTypeComparison> bufferDescriptor;
+    vgSLAMPriorityBuffer<SlamType, SlamTypeComparison> bufferDescriptor;//prioritybuffer(*)
     vgSLAMBuffer<SlamType> bufferMatching;
 
 

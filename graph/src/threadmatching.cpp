@@ -110,14 +110,24 @@ cv::Mat ThreadMatching::getProjMat(MatchesVector &matches, SlamType* data1, Slam
         transpose(a,a);
         //std::cout<<"ThreadMatching: translation "<< t <<"angle"<< a*180/M_PI<<std::endl;
         hconcat(R,t,Proj);
-        std::cout<<R<<std::endl<<t<<std::endl<<Proj<<std::endl;
+        std::cout<</*R<<std::endl<<t<<std::endl<<*/Proj<<std::endl;
+    }
+    else{
+        //in case we have only few good matches we compute Proj using kinematics.
+        //kinematics
+        return Proj;
     }
     return Proj;
 }
 
 void ThreadMatching::run (){
-
+    //We continue to read, process and write data while it is not interrupted and there is data to process.
+    //The interrupted flag is setted to true in the function interrupt() of the parent class "vgSLAMThread".
+    //interrupt() is called by thread.close() when we close the module.
     while(!interrupted) {
+        //The thickness now is 3, we have bundles of 3 frames, at first loop we compute 1-2,2-3,1-3
+        //then in the others we discard the first data(1), we take a new one(3) and we compute only 1-3 and 2-3
+        //because 1-2 was already computed in the previous step(in the previous was 2-3).
         yInfo()<<"ThreadMatching:Reading buffer";
         SlamType* data = new SlamType();
         MatchesVector mv;

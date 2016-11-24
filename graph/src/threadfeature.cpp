@@ -20,11 +20,15 @@ ThreadFeature::ThreadFeature(vgSLAMBuffer<SlamType> &bufferIn, vgSLAMBuffer<Slam
 
 
 void ThreadFeature::run(){
+    //We continue to read, process and write data while it is not interrupted and there is data to process.
+    //The interrupted flag is setted to true in the function interrupt() of the parent class "vgSLAMThread".
+    //interrupt() is called by thread.close() when we close the module.
     while(!interrupted) {
         SlamType data;
         yInfo()<<"ThreadFeature:Reading buffer";
         if(bufferIn->read(data)){
             data.feature = new KeyPointsVector;
+            //We compute features and we write in the bufferOut
             detector->detect(*data.image, *data.feature, noArray());
             yInfo()<<"ThreadFeature read: Number of keypoints="<<data.feature->size();
             bufferOut->write(data);

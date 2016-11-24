@@ -33,7 +33,7 @@ bool vgSLAMModule::configure(ResourceFinder &rf){
         yError()<<"Could not connect to some of the ports";
         return configured;
     }
-    //configure threads
+    //configure threads and select detector, descriptor and matcher
     Ptr<Feature2D> detector;
     Ptr<Feature2D> descriptor;
     Ptr<DescriptorMatcher> matcher;
@@ -56,6 +56,7 @@ bool vgSLAMModule::configure(ResourceFinder &rf){
     return configured;
 }
 
+//It is called while it returns true
 bool vgSLAMModule::updateModule(){
     static int count = nCams;
     if(count<=0) {
@@ -84,7 +85,7 @@ bool vgSLAMModule::updateModule(){
             imageR_start = sR.getCount();
             first=false;
         }
-// syncronization ask to Alberto for syncronizer
+// syncronization: ask to Alberto for syncronizer
 //        if(abs(sL.getCount()-imageL_start)>2 || abs(sR.getCount()-imageR_start)>2
 //                || fabs((sL.getTime())-(sR.getTime()))>0.06){//0.03 is the half deltat (30hz) but it is more likely 15 hz
 //            imageL_start = sL.getCount();
@@ -119,7 +120,8 @@ bool vgSLAMModule::updateModule(){
 }
 
 bool vgSLAMModule::close(){
-
+//Once all the images are acquired the module will be closed, but first it waits that all the threads
+//finish their work. We are checking how many frames has been processed by the last thread(matching)
     if(configured) {
         yInfo()<<"Waiting for worker thread...";
         while(threadMatching->getCountProcessed() < (nCams-3))//3->thickness
@@ -146,7 +148,8 @@ bool vgSLAMModule::close(){
 }
 
 double vgSLAMModule::getPeriod(){
-    return 0.0;//fa un loop infinito
+    //This method is defined in order to call updateModule in an infinite loop while it returns true.
+    return 0.0;
 }
 
 bool vgSLAMModule::interruptModule(){

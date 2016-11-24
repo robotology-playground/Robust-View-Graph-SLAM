@@ -19,6 +19,7 @@ int main (int argc, char** argv) {
     yarp::os::ResourceFinder rf;
     rf.setDefaultConfigFile("../../conf/vgSLAM.ini");
     rf.configure(argc,argv);
+    //it calls .configure and then .updateModule
     module.runModule(rf);
 
     return 0;

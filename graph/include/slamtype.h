@@ -14,6 +14,7 @@
 typedef std::vector<cv::KeyPoint> KeyPointsVector;
 typedef std::vector<cv::DMatch> MatchesVector;
 
+//Class that includes all the types of data that threads will manage
 class SlamType {
 public:
     SlamType() : image(NULL), feature(NULL), descriptor(NULL),
@@ -67,7 +68,8 @@ static bool  operator<(const SlamType& lhs, const SlamType& rhs)
     return lhs.stamp->getCount() < rhs.stamp->getCount();
 }
 */
-
+// We define this class for using the priority_queue of the vgSLAMPriorityBuffer, in this way in this kind of buffer the elements
+// are pushed ordered by the timestamp.
 class SlamTypeComparison
 {
 public:
