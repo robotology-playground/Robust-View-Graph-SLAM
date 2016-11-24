@@ -21,6 +21,7 @@ class vgSLAMModule : public yarp::os::RFModule
     bool configured;
     int nCams;
     yarp::os::BufferedPort<yarp::sig::ImageOf<yarp::sig::PixelRgb> > imageR_port, imageL_port;
+    yarp::os::BufferedPort<yarp::os::Bottle> encHeadPort, encTorsoPort;
     int imageL_start=0, imageR_start=0;
     bool first=true;
     ThreadFeature* threadFeatureR; //thread that reads from a buffer of R images and writes to a buffer of R features

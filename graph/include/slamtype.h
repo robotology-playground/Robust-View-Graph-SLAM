@@ -45,6 +45,14 @@ public:
             delete stamp;
             stamp = NULL;
         }
+        if(anglesHead){
+            delete anglesHead;
+            anglesHead = NULL;
+        }
+        if(anglesTorso){
+            delete anglesTorso;
+            anglesTorso = NULL;
+        }
     }
 //    bool operator<(const SlamType& rhs)
 //    {
@@ -53,6 +61,8 @@ public:
 
 public:
     cv::Mat *image;
+    std::vector<double> *anglesHead;
+    std::vector<double> *anglesTorso;
     KeyPointsVector *feature;
     cv::Mat *descriptor;
     MatchesVector *matching;

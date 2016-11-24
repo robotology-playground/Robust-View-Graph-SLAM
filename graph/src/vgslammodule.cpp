@@ -22,13 +22,20 @@ vgSLAMModule::vgSLAMModule(int _nCams) :  bufferDescriptor(){
     nCams=_nCams;
     configured = false;
 }
-
+//double anglesHead[6], anglesTorso[3];
+//Bottle  *headBottle, *torsoBottle;
+//BufferedPort<Bottle> encHeadPort, encTorsoPort;
 bool vgSLAMModule::configure(ResourceFinder &rf){
     //Open ports
     imageR_port.open("/vgSLAM/cam/left");
     imageL_port.open("/vgSLAM/cam/right");
+    encHeadPort.open("/vgSLAM/head/state:i");
+    encTorsoPort.open("/vgSLAM/torso/state:i");
+    //Connect ports
     bool ret = NetworkBase::connect("/icub/cam/left", imageR_port.getName());
     ret &= NetworkBase::connect("/icub/cam/right",imageL_port.getName());
+    ret &= NetworkBase::connect("/icub/head/state:o",encHeadPort.getName());
+    ret &= NetworkBase::connect("/icub/torso/state:o",encTorsoPort.getName());
     if(!ret) {
         yError()<<"Could not connect to some of the ports";
         return configured;
@@ -67,9 +74,51 @@ bool vgSLAMModule::updateModule(){
     // read port
     SlamType dataL,dataR;
 
+
     yInfo() <<"vgSLAMModule:acquiring images...";
     ImageOf<PixelRgb> *imageL_yarp = imageL_port.read();
     ImageOf<PixelRgb> *imageR_yarp = imageR_port.read();
+    Bottle  *headBottle=encHeadPort.read();
+    Bottle  *torsoBottle=encTorsoPort.read();
+    dataL.anglesHead=new std::vector<double>(6);
+    dataR.anglesHead=new std::vector<double>(6);
+    dataL.anglesTorso=new std::vector<double>(6);
+    dataR.anglesTorso=new std::vector<double>(6);
+    yDebug()<<dataL.anglesTorso->size()<<dataL.anglesHead->size();
+    yDebug()<<dataR.anglesTorso->size()<<dataR.anglesHead->size();
+    //Il problema non e' nelle bottles.
+    dataL.anglesHead->at(0)=headBottle->get(0).asDouble();
+    dataL.anglesHead->at(1)=headBottle->get(1).asDouble();
+    dataL.anglesHead->at(2)=headBottle->get(2).asDouble();
+    dataL.anglesHead->at(3)=headBottle->get(3).asDouble();
+    dataL.anglesHead->at(4)=headBottle->get(4).asDouble();
+    dataL.anglesHead->at(5)=headBottle->get(5).asDouble();
+
+    dataR.anglesHead->at(0)=headBottle->get(0).asDouble();
+    dataR.anglesHead->at(1)=headBottle->get(1).asDouble();
+    dataR.anglesHead->at(2)=headBottle->get(2).asDouble();
+    dataR.anglesHead->at(3)=headBottle->get(3).asDouble();
+    dataR.anglesHead->at(4)=headBottle->get(4).asDouble();
+    dataR.anglesHead->at(5)=headBottle->get(5).asDouble();
+
+    dataL.anglesTorso->at(0)=torsoBottle->get(0).asDouble();
+    dataL.anglesTorso->at(1)=torsoBottle->get(1).asDouble();
+    dataL.anglesTorso->at(2)=torsoBottle->get(2).asDouble();
+    dataL.anglesTorso->at(3)=torsoBottle->get(3).asDouble();
+    dataL.anglesTorso->at(4)=torsoBottle->get(4).asDouble();
+    dataL.anglesTorso->at(5)=torsoBottle->get(5).asDouble();
+
+    dataR.anglesTorso->at(0)=torsoBottle->get(0).asDouble();
+    dataR.anglesTorso->at(1)=torsoBottle->get(1).asDouble();
+    dataR.anglesTorso->at(2)=torsoBottle->get(2).asDouble();
+    dataR.anglesTorso->at(3)=torsoBottle->get(3).asDouble();
+    dataR.anglesTorso->at(4)=torsoBottle->get(4).asDouble();
+    dataR.anglesTorso->at(5)=torsoBottle->get(5).asDouble();
+// Tested
+//    yDebug()<<"TorsoR:"<<dataR.anglesTorso->at(0)<<dataR.anglesTorso->at(1)<<dataR.anglesTorso->at(2)<<dataR.anglesTorso->at(3)<<dataR.anglesTorso->at(4)<<dataR.anglesTorso->at(5);
+//    yDebug()<<"TorsoL:"<<dataL.anglesTorso->at(0)<<dataL.anglesTorso->at(1)<<dataL.anglesTorso->at(2)<<dataL.anglesTorso->at(3)<<dataL.anglesTorso->at(4)<<dataL.anglesTorso->at(5);
+//    yDebug()<<"HeadR:"<<dataR.anglesHead->at(0)<<dataR.anglesHead->at(1)<<dataR.anglesHead->at(2)<<dataR.anglesHead->at(3)<<dataR.anglesHead->at(4)<<dataR.anglesHead->at(5);
+//    yDebug()<<"HeadL:"<<dataL.anglesHead->at(0)<<dataL.anglesHead->at(1)<<dataL.anglesHead->at(2)<<dataL.anglesHead->at(3)<<dataL.anglesHead->at(4)<<dataL.anglesTorso->at(5);
 
     if (!imageL_yarp || !imageR_yarp) {
         configured = false;
