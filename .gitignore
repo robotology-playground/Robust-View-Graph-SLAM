@@ -30,7 +30,6 @@ cmake_install.cmake
 # directories
 build*
 graph/build*
-graph/diagrams*
 
 
 # Documentation directory
