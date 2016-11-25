@@ -22,6 +22,7 @@ ThreadMatching::ThreadMatching(vgSLAMBuffer<SlamType> &bufferIn, vgSLAMBuffer<Sl
 
 }
 ThreadMatching::~ThreadMatching(){
+    sampler.save("./TimeStamp.log");
     if(first) {
         first->free();
         delete first;
@@ -53,9 +54,9 @@ boost::dynamic_bitset<> ThreadMatching::remove_points_at_infinity(std::vector<Po
 void ThreadMatching::getKinTransformationsToRoot(Mat &ProjectionMatrix,SlamType* data){
     std::string str="";
     if(data->right){
-        str="right";yError()<<"RIGHT";}
+        str="right";}
     else{
-        str="left";yError()<<"LEFT";}
+        str="left";}
     iCubEye eye(str);
     Vector q0,qf,qhat,xf,xhat;
 
@@ -107,6 +108,16 @@ cv::Mat ThreadMatching::getProjMat(MatchesVector &matches, SlamType* data1, Slam
     double max_dist = 0;
     double min_dist = 100;
     double mil_dist = 5;
+//    if(data1->right){
+//        yError()<<"data1:RIGHT";}
+//    else{
+//        yError()<<"data1:LEFT";}
+
+//    if(data2->right){
+//        yError()<<"data2:RIGHT";}
+//    else{
+//        yError()<<"data2:LEFT";}
+
     //-- Quick calculation of max and min distances between keypoints
     // http://docs.opencv.org/3.1.0/d5/d6f/tutorial_feature_flann_matcher.html#gsc.tab=0
     for(int i = 0;i<matches.size();i++){
@@ -205,7 +216,7 @@ void ThreadMatching::run (){
             delete data;
             continue;
         }
-
+        sampler.add(data->stamp->getTime());
         if(!first) {
             first = data;
             continue;

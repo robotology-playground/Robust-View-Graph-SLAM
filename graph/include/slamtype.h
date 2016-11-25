@@ -87,7 +87,8 @@ class SlamTypeComparison
 public:
     bool operator() (const SlamType& lhs, const SlamType& rhs) const
     {
-      return lhs.stamp->getTime() < rhs.stamp->getTime();
+        //printf("\n%.6f\t%.6f\t%d\n\n", lhs.stamp->getTime(), rhs.stamp->getTime(), (lhs.stamp->getTime() < rhs.stamp->getTime()));
+        return lhs.stamp->getTime() < rhs.stamp->getTime();
     }
 };
 

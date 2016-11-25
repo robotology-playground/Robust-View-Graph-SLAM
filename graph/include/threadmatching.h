@@ -11,7 +11,7 @@
 #include "opencvs.h"
 #include "slamtype.h"
 #include "boost/dynamic_bitset.hpp"
-
+#include "Sampling.h"
 
 class ThreadMatching : public vgSLAMThread<SlamType,SlamType>
 {
@@ -19,6 +19,7 @@ private:
     cv::Ptr<cv::DescriptorMatcher> matcher;
     SlamType *first;
     SlamType *second;
+    Sampling sampler;//for testing
 public:
     ThreadMatching(vgSLAMBuffer<SlamType> &bufferIn, vgSLAMBuffer<SlamType> &bufferOut,cv::Ptr<cv::DescriptorMatcher> _matcher);
     virtual ~ThreadMatching();
