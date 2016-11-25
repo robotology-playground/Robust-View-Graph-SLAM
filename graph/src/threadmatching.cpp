@@ -16,9 +16,11 @@ using namespace yarp::sig;
 
 using namespace cv;
 
-ThreadMatching::ThreadMatching(vgSLAMBuffer<SlamType> &bufferIn, vgSLAMBuffer<SlamType> &bufferOut,
-                               cv::Ptr<cv::DescriptorMatcher> _matcher): vgSLAMThread(bufferIn, bufferOut),matcher(_matcher){
+ThreadMatching::ThreadMatching(vgSLAMBuffer<SlamType> &bufferIn1, vgSLAMBuffer<SlamType> &bufferIn2, vgSLAMBuffer<SlamType> &bufferOut,
+                               cv::Ptr<cv::DescriptorMatcher> _matcher): vgSLAMThread(bufferIn1, bufferOut),matcher(_matcher){
     first = second = NULL;
+    ThreadMatching::bufferIn2 = &bufferIn2;
+    ThreadMatching::bufferIn1 = &bufferIn1;
 
 }
 ThreadMatching::~ThreadMatching(){
@@ -33,6 +35,12 @@ ThreadMatching::~ThreadMatching(){
         delete second;
     }
 }
+
+void ThreadMatching::interrupt() {
+    bufferIn2->interrupt();
+    vgSLAMThread::interrupt();
+}
+
 
 boost::dynamic_bitset<> ThreadMatching::remove_points_at_infinity(std::vector<Point2f>  matched1, std::vector<Point2f>  matched2, double thres) {
     /* matches should move at least pixel_disparity pixels
@@ -51,6 +59,7 @@ boost::dynamic_bitset<> ThreadMatching::remove_points_at_infinity(std::vector<Po
     return vis;
 }
 
+//it computes the projection matrix using the angles of the encoders read from the ports.
 void ThreadMatching::getKinTransformationsToRoot(Mat &ProjectionMatrix,SlamType* data){
     std::string str="";
     if(data->right){
@@ -108,6 +117,7 @@ cv::Mat ThreadMatching::getProjMat(MatchesVector &matches, SlamType* data1, Slam
     double max_dist = 0;
     double min_dist = 100;
     double mil_dist = 5;
+    //TESTED it works, correct order.
 //    if(data1->right){
 //        yError()<<"data1:RIGHT";}
 //    else{
@@ -187,10 +197,10 @@ cv::Mat ThreadMatching::getProjMat(MatchesVector &matches, SlamType* data1, Slam
         std::cout<</*R<<std::endl<<t<<std::endl<<*/Proj<<std::endl;
         return Proj;
     }
+        //in case we have only few good matches we compute Proj using kinematics.
     else{
         Mat Proj1(4,4,CV_64F),Proj2(4,4,CV_64F);
         yInfo()<<"ThreadMatching::I'm using kinematics for the projection matrix";
-        //in case we have only few good matches we compute Proj using kinematics.
         //kinematics
         getKinTransformationsToRoot(Proj1,data1);
         getKinTransformationsToRoot(Proj2,data2);
@@ -202,6 +212,7 @@ cv::Mat ThreadMatching::getProjMat(MatchesVector &matches, SlamType* data1, Slam
 }
 
 void ThreadMatching::run (){
+    bool change=false;
     //We continue to read, process and write data while it is not interrupted and there is data to process.
     //The interrupted flag is setted to true in the function interrupt() of the parent class "vgSLAMThread".
     //interrupt() is called by thread.close() when we close the module.
@@ -212,9 +223,20 @@ void ThreadMatching::run (){
         yInfo()<<"ThreadMatching:Reading buffer";
         SlamType* data = new SlamType();
         MatchesVector mv;
-        if(!bufferIn->read(*data)) {
-            delete data;
-            continue;
+        //Every loop it reads a new frame, one time from the L buffer, one time from R buffer alternatively
+        if (change){
+            change=false;
+            if(!bufferIn2->read(*data)) {
+                delete data;
+                continue;
+            }
+        }
+        else {
+            change=true;
+            if(!bufferIn1->read(*data)) {
+                delete data;
+                continue;
+            }
         }
         sampler.add(data->stamp->getTime());
         if(!first) {

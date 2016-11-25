@@ -26,12 +26,12 @@ public:
         return countProcessed;
     }
 
-    void interrupt() {
+    virtual void interrupt() {
         interrupted = true;
         bufferIn->interrupt();
     }
 
-    void close() {
+    virtual void close() {
         interrupt();
         Thread::stop();
         countProcessed = 0;

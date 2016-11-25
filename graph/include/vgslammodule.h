@@ -34,7 +34,8 @@ class vgSLAMModule : public yarp::os::RFModule
     vgSLAMBuffer<SlamType> bufferImageL;
     vgSLAMBuffer<SlamType> bufferFeatureR;
     vgSLAMBuffer<SlamType> bufferFeatureL;
-    vgSLAMPriorityBuffer<SlamType, SlamTypeComparison> bufferDescriptor;//prioritybuffer(*)
+    vgSLAMBuffer<SlamType> bufferDescriptorR;
+    vgSLAMBuffer<SlamType> bufferDescriptorL;
     vgSLAMBuffer<SlamType> bufferMatching;
 
 

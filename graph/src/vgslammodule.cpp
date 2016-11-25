@@ -13,12 +13,13 @@ using namespace yarp::os;
 using namespace yarp::sig;
 using namespace  cv;
 
-vgSLAMModule::vgSLAMModule():nCams(-1),  bufferDescriptor()
+vgSLAMModule::vgSLAMModule():nCams(-1),  bufferDescriptorR(),bufferDescriptorL()
 {
 
 }
 
-vgSLAMModule::vgSLAMModule(int _nCams) :  bufferDescriptor(){
+vgSLAMModule::vgSLAMModule(int _nCams) :  bufferDescriptorR(),bufferDescriptorL()
+{
     nCams=_nCams;
     configured = false;
 }
@@ -48,9 +49,9 @@ bool vgSLAMModule::configure(ResourceFinder &rf){
     selector.process(detector,descriptor,matcher);
     threadFeatureL = new ThreadFeature(bufferImageL, bufferFeatureL,detector);
     threadFeatureR = new ThreadFeature(bufferImageR, bufferFeatureR,detector);
-    threadDescriptorL = new ThreadDescriptor(bufferFeatureL,bufferDescriptor,descriptor);
-    threadDescriptorR = new ThreadDescriptor(bufferFeatureR,bufferDescriptor,descriptor);
-    threadMatching=new ThreadMatching(bufferDescriptor,bufferMatching,matcher);
+    threadDescriptorL = new ThreadDescriptor(bufferFeatureL,bufferDescriptorL,descriptor);
+    threadDescriptorR = new ThreadDescriptor(bufferFeatureR,bufferDescriptorR,descriptor);
+    threadMatching=new ThreadMatching(bufferDescriptorL,bufferDescriptorR,bufferMatching,matcher);
 
     //start threads
     threadFeatureL->start();
@@ -84,9 +85,7 @@ bool vgSLAMModule::updateModule(){
     dataR.anglesHead=new std::vector<double>(6);
     dataL.anglesTorso=new std::vector<double>(6);
     dataR.anglesTorso=new std::vector<double>(6);
-//    yDebug()<<dataL.anglesTorso->size()<<dataL.anglesHead->size();
-//    yDebug()<<dataR.anglesTorso->size()<<dataR.anglesHead->size();
-    //Il problema non e' nelle bottles.
+
     dataL.anglesHead->at(0)=headBottle->get(0).asDouble();
     dataL.anglesHead->at(1)=headBottle->get(1).asDouble();
     dataL.anglesHead->at(2)=headBottle->get(2).asDouble();
