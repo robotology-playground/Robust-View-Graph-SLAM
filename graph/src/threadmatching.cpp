@@ -5,6 +5,14 @@
  */
 
 #include "threadmatching.h"
+#include <iCub/iKin/iKinFwd.h>
+#include <yarp/math/Math.h>
+#include <yarp/sig/Vector.h>
+
+using namespace iCub::ctrl;
+using namespace iCub::iKin;
+using namespace yarp::math;
+using namespace yarp::sig;
 
 using namespace cv;
 
@@ -42,8 +50,60 @@ boost::dynamic_bitset<> ThreadMatching::remove_points_at_infinity(std::vector<Po
     return vis;
 }
 
+void ThreadMatching::getKinTransformationsToRoot(Mat &ProjectionMatrix,SlamType* data){
+    std::string str="";
+    if(data->right){
+        str="right";yError()<<"RIGHT";}
+    else{
+        str="left";yError()<<"LEFT";}
+    iCubEye eye(str);
+    Vector q0,qf,qhat,xf,xhat;
+
+    Matrix trasf;
+
+    iKinChain *chain;
+
+    chain=eye.asChain();
+
+    chain->setAllConstraints(false);//Ugo suggest to drop the kinematics contraint because we are not connected to a robot for now
+
+    q0=chain->getAng();
+    std::cout << "Unblocking the torso joints... "<<std::endl;
+    chain->releaseLink(0);
+    chain->releaseLink(1);
+    chain->releaseLink(2);
+
+    std::cout << chain->getDOF() << " DOFs available" << std::endl;
+
+    qf.resize(chain->getDOF());
+    double version,vergence;
+
+    version=data->anglesHead->at(4)*CTRL_DEG2RAD;
+    vergence=data->anglesHead->at(5)*CTRL_DEG2RAD;
+
+    qf[0]=data->anglesTorso->at(2)*CTRL_DEG2RAD;//the torso angles are inverted
+    qf[1]=data->anglesTorso->at(1)*CTRL_DEG2RAD;
+    qf[2]=data->anglesTorso->at(0)*CTRL_DEG2RAD;
+    qf[3]=data->anglesHead->at(0)*CTRL_DEG2RAD;
+    qf[4]=data->anglesHead->at(1)*CTRL_DEG2RAD;
+    qf[5]=data->anglesHead->at(2)*CTRL_DEG2RAD;
+    qf[6]=data->anglesHead->at(3)*CTRL_DEG2RAD;//tilt, the eye have two DOF, tilt and pan
+    qf[7]=version - vergence/2;//pan
+
+    trasf=chain->getH(qf);
+
+    ProjectionMatrix = (cv::Mat_<double>(4,4) << trasf(0,0), trasf(0,1), trasf(0,2), trasf(0,3),
+                        trasf(1,0), trasf(1,1), trasf(1,2), trasf(1,3),
+                        trasf(2,0), trasf(2,1), trasf(2,2), trasf(2,3),
+                        trasf(3,0), trasf(3,1), trasf(3,2), trasf(3,3));
+
+
+
+
+}
+
 cv::Mat ThreadMatching::getProjMat(MatchesVector &matches, SlamType* data1, SlamType *data2){
-    Mat Proj(4,3,CV_64F);
+    Mat Proj(4,4,CV_64F);
     double max_dist = 0;
     double min_dist = 100;
     double mil_dist = 5;
@@ -108,13 +168,23 @@ cv::Mat ThreadMatching::getProjMat(MatchesVector &matches, SlamType* data1, Slam
         Mat a;
         Rodrigues(R,a);
         transpose(a,a);
+        Mat m=(cv::Mat_<double>(1,4) << 0.0, 0.0, 0.0, 1.0);
         //std::cout<<"ThreadMatching: translation "<< t <<"angle"<< a*180/M_PI<<std::endl;
         hconcat(R,t,Proj);
+        vconcat(Proj,m,Proj);
+        yInfo()<<"ThreadMatching::I'm using vision for the projection matrix";
         std::cout<</*R<<std::endl<<t<<std::endl<<*/Proj<<std::endl;
+        return Proj;
     }
     else{
+        Mat Proj1(4,4,CV_64F),Proj2(4,4,CV_64F);
+        yInfo()<<"ThreadMatching::I'm using kinematics for the projection matrix";
         //in case we have only few good matches we compute Proj using kinematics.
         //kinematics
+        getKinTransformationsToRoot(Proj1,data1);
+        getKinTransformationsToRoot(Proj2,data2);
+        Proj=Proj1.inv()*Proj2;//to check, I think it is correct.
+        std::cout<<Proj<<std::endl;
         return Proj;
     }
     return Proj;

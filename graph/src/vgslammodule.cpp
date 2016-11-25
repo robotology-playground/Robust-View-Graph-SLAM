@@ -84,8 +84,8 @@ bool vgSLAMModule::updateModule(){
     dataR.anglesHead=new std::vector<double>(6);
     dataL.anglesTorso=new std::vector<double>(6);
     dataR.anglesTorso=new std::vector<double>(6);
-    yDebug()<<dataL.anglesTorso->size()<<dataL.anglesHead->size();
-    yDebug()<<dataR.anglesTorso->size()<<dataR.anglesHead->size();
+//    yDebug()<<dataL.anglesTorso->size()<<dataL.anglesHead->size();
+//    yDebug()<<dataR.anglesTorso->size()<<dataR.anglesHead->size();
     //Il problema non e' nelle bottles.
     dataL.anglesHead->at(0)=headBottle->get(0).asDouble();
     dataL.anglesHead->at(1)=headBottle->get(1).asDouble();
@@ -152,7 +152,9 @@ bool vgSLAMModule::updateModule(){
         cvtColor(imageR_cv, imageR_cv, COLOR_BGR2GRAY);
 
         dataL.image = new Mat(imageL_cv);
+        dataL.right=false;
         dataR.image = new Mat(imageR_cv);
+        dataR.right=true;
 
         dataL.stamp =new Stamp(sL);
         dataR.stamp =new Stamp(sR);

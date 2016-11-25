@@ -29,6 +29,7 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
 # Options
 option(YARP "Enable use of YARP." ON)
 option(OpenCV "Enable use of OpenCV." ON)
+option(ICUB "Enable use of iCub." ON)
 # Enable the use of Eigen as a sparse linear algebra library for
 # solving the nonlinear least squares problems. 
 # Simplicial Cholesky factorization in Eigen is licensed under the LGPL.
@@ -52,6 +53,16 @@ if (YARP)
 	endif (YARP_FOUND)
 endif (YARP)
 
+# iCub
+if (ICUB)
+        find_package( ICUB REQUIRED )
+        if (ICUB_FOUND)
+                message("-- Found iCub library: ${ICUB_LIBRARIES}")
+        include_directories(${ICUB_INCLUDE_DIRS})
+        else (ICUB_FOUND)
+        message("-- Did not find YARP library.")
+        endif (ICUB_FOUND)
+endif (ICUB)
 
 # OpenCV.
 if (OpenCV)
@@ -121,7 +132,7 @@ file(GLOB Executable_SOURCES ${SOURCE_DIR}/*.cpp ../src/featureselector.cpp)
 file(GLOB Executable_HEADERS ${INCLUDE_DIR}/*.h  ../include/featureselector.h)
 add_executable(${PROJECTNAME} ${Executable_SOURCES} ${Executable_HEADERS})
 
-target_link_libraries(${PROJECTNAME} ${YARP_LIBRARIES}  ${OpenCV_LIBS} ${VLFEAT_LIB})
+target_link_libraries(${PROJECTNAME} ${YARP_LIBRARIES} ${ICUB_LIBRARIES}  ${OpenCV_LIBS} ${VLFEAT_LIB})
 
 if(${CMAKE_VERSION} VERSION_LESS 3.1)
   include(CheckCXXCompilerFlag)

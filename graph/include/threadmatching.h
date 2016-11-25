@@ -22,9 +22,11 @@ private:
 public:
     ThreadMatching(vgSLAMBuffer<SlamType> &bufferIn, vgSLAMBuffer<SlamType> &bufferOut,cv::Ptr<cv::DescriptorMatcher> _matcher);
     virtual ~ThreadMatching();
-    boost::dynamic_bitset<> remove_points_at_infinity(std::vector<cv::Point2f> matched1, std::vector<cv::Point2f> matched2, double thres);
-    cv::Mat getProjMat(MatchesVector &matches, SlamType *data1, SlamType *data2);
     void run ();
+protected:
+    cv::Mat getProjMat(MatchesVector &matches, SlamType *data1, SlamType *data2);
+    void getKinTransformationsToRoot(cv::Mat& ProjectionMatrix, SlamType *data);
+    boost::dynamic_bitset<> remove_points_at_infinity(std::vector<cv::Point2f> matched1, std::vector<cv::Point2f> matched2, double thres);
 };
 
 #endif // THREADMATCHING_H

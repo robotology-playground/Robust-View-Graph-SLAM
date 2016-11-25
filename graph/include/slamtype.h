@@ -18,7 +18,8 @@ typedef std::vector<cv::DMatch> MatchesVector;
 class SlamType {
 public:
     SlamType() : image(NULL), feature(NULL), descriptor(NULL),
-    matching(NULL), stamp(NULL), relative(NULL) { }
+    matching(NULL), stamp(NULL), relative(NULL),anglesHead(NULL), anglesTorso(NULL),
+    right(true){ }
     virtual ~SlamType() {}
     void free() {
         if(image) {
@@ -67,6 +68,7 @@ public:
     cv::Mat *descriptor;
     MatchesVector *matching;
     cv::Mat  *relative;
+    bool right;
     yarp::os::Stamp *stamp;
 
 };
