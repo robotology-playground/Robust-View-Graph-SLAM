@@ -1,3 +1,17 @@
+/**
+ * @file PwgOptimiser.h
+ * @brief Contains functions for multiple views pairwise geometry estimation.
+ * @detail Implements functions needed for robust nonlinear least-squares batch SLAM.
+ * @copyright Copyright (C) 2016 iCub Facility - Istituto Italiano di Tecnologia
+ * @author Tariq Abuhashim
+ * @email t.abuhashim@gmail.com
+ * @date Nov 2016
+ * @acknowledgement This research has received funding from the European Union’s 
+ * Seventh Framework Programme for research, technological development and demonstration 
+ * under grant agreement No. 611909(KoroiBot).
+ * @license Released under the terms of the LGPLv2.1 or later, see LGPL.TXT
+ */
+
 #ifndef PWGOPTIMISER_H
 #define PWGOPTIMISER_H
 
@@ -16,6 +30,17 @@ private:
 	Eigen::SparseMatrix<double> Y ;
 	Eigen::VectorXd y ;
 
+	/**
+	*	@brief 	Relative measurement constraint structure
+	*	@param	cam 	current camera identification number
+	*	@param	kpt 	2d point identification number
+	*	@param	p1	2d point coordinate in reference frame
+	*	@param	z	2d point coordinate in current camera frame
+	*	@param	R	2d measurement noise covariance matrix
+	*	@param	y	measurement information vector
+	*	@param 	Y	measurement information matrix
+	*	@param	sw	measurement ON/OFF switch
+	*/
 	struct constraint {
 		const int cam ; /* camera identification number */
 		const int kpt ; /* point identification number */
@@ -38,14 +63,39 @@ private:
 		// Member initialization in a constructor
 	};
 
+        /**
+	*	@brief 	A private realisation of pairwise image constraints
+	*/
 	std::vector<constraint> constraints;
+
+	/**
+	*	@brief	Constraints switching vector
+	*/
 	std::vector<int> GATE_SWITCH ;
+
+	/**
+	*	@brief	Constraints use to update flag
+	*/
 	std::vector<int> UPDATE_SWITCH ;
-	//
+
+	/**
+	*	@brief	Initialises an information matrix and an information vector
+	*	@param	xs	Linearisation point
+	*/
 	void initialise_info_matrix(
 			const double *xs );
+
+	/**
+	*	@brief	Performs constraints addition for M-views
+	*	@param	xs 	Linearisation point
+	*/
 	void constraints_addition_inverse_depth_Mviews(
 			const double *xs ) ;
+
+	/**
+	*	@brief	Performs constraints subtraction for M-views
+	*	@param	xs 	Linearisation point
+	*/
 	bool constraints_subtraction_inverse_depth_Mviews(
 			const double *xs ) ;
 	void recover_moments (
