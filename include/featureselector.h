@@ -1,12 +1,17 @@
-/*
- * featureselector.h
- *
- *  Created on: Sept 7, 2016
- *      Author: Nicolo' Genesio
- * This class is designed to interface with the user through configuration files(.ini).
- * The user can select the method for the detector,descriptor and matcher in conf/vgSLAM.ini
+/**
+ * @file featureselector.h
+ * @brief This class is designed to interface with the user through configuration files(.ini).
+ * @detail The user can select the method for the detector,descriptor and matcher in conf/vgSLAM.ini
  * and then tune the parameters of the method in the respective ini files contained in the conf
  * folder.
+ * @copyright Copyright (C) 2016 iCub Facility - Istituto Italiano di Tecnologia
+ * @author Nicolo' Genesio
+ * @email nicogene@hotmail.it
+ * @date Sept 2016
+ * @acknowledgement This research has received funding from the European Union’s 
+ * Seventh Framework Programme for research, technological development and demonstration 
+ * under grant agreement No. 611909(KoroiBot).
+ * @license Released under the terms of the LGPLv2.1 or later, see LGPL.TXT
  */
 
 #ifndef FEATURESELECTOR_H
