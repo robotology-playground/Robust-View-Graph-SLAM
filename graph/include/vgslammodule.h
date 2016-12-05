@@ -1,9 +1,16 @@
-/*
- *  Created on: Nov 11, 2016
- *      Author: Nicolo' Genesio
- *      email: nicolo.genesio@iit.it
+/**
+ * @file vgslammodule.h
+ * @brief Main core of vgSLAM.
+ * @detail It defines, configures, starts and stops all the thread of vgSLAM.
+ * @copyright Copyright (C) 2016 iCub Facility - Istituto Italiano di Tecnologia
+ * @author Nicolo' Genesio
+ * @email nicogene@hotmail.it
+ * @date Nov 2016
+ * @acknowledgement This research has received funding from the European Union’s 
+ * Seventh Framework Programme for research, technological development and demonstration 
+ * under grant agreement No. 611909(KoroiBot).
+ * @license Released under the terms of the LGPLv2.1 or later, see LGPL.TXT
  */
-
 #ifndef VGSLAMMODULE_H
 #define VGSLAMMODULE_H
 

@@ -1,7 +1,16 @@
-/*
- *  Created on: Nov 11, 2016
- *      Author: Nicolo' Genesio
- *      email: nicolo.genesio@iit.it
+/**
+ * @file vgslambuffer.h
+ * @brief  Buffers that can be handled from multiple thread avoiding race condition.
+ * @detail There are two kind of buffers, one that contains a queue as collection and the other
+ * that use the std::priority_queue for storing in function of the time.
+ * @copyright Copyright (C) 2016 iCub Facility - Istituto Italiano di Tecnologia
+ * @author Nicolo' Genesio
+ * @email nicogene@hotmail.it
+ * @date Nov 2016
+ * @acknowledgement This research has received funding from the European Union’s 
+ * Seventh Framework Programme for research, technological development and demonstration 
+ * under grant agreement No. 611909(KoroiBot).
+ * @license Released under the terms of the LGPLv2.1 or later, see LGPL.TXT
  */
 
 #ifndef VGSLAMBUFFER_H
