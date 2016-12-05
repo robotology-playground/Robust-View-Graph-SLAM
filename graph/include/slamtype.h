@@ -3,8 +3,8 @@
  * @brief This class all the types of pointers used in vgSLAM.
  * @detail It is also implemented the comparison for this kind of data type.
  * @copyright Copyright (C) 2016 iCub Facility - Istituto Italiano di Tecnologia
- * @author Nicolo' Genesio
- * @email nicogene@hotmail.it
+ * @authors Tariq Abuhashim, Nicolo' Genesio
+ * @email t.abuhashim@gmail.com, nicogene@hotmail.it
  * @date Nov 2016
  * @acknowledgement This research has received funding from the European Union’s 
  * Seventh Framework Programme for research, technological development and demonstration 

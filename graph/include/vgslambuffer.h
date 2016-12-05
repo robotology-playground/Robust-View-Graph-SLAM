@@ -4,8 +4,8 @@
  * @detail There are two kind of buffers, one that contains a queue as collection and the other
  * that use the std::priority_queue for storing in function of the time.
  * @copyright Copyright (C) 2016 iCub Facility - Istituto Italiano di Tecnologia
- * @author Nicolo' Genesio
- * @email nicogene@hotmail.it
+ * @authors Tariq Abuhashim, Nicolo' Genesio
+ * @email t.abuhashim@gmail.com, nicogene@hotmail.it
  * @date Nov 2016
  * @acknowledgement This research has received funding from the European Union’s 
  * Seventh Framework Programme for research, technological development and demonstration 
