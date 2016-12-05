@@ -74,7 +74,7 @@ public:
     KeyPointsVector *feature;
     cv::Mat *descriptor;
     MatchesVector *matching;
-    cv::Mat  *relative;
+    cv::Mat *relative;
     bool right;
     yarp::os::Stamp *stamp;
 

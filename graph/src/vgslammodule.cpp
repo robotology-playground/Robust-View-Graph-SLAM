@@ -18,7 +18,7 @@
 
 using namespace yarp::os;
 using namespace yarp::sig;
-using namespace  cv;
+using namespace cv;
 
 vgSLAMModule::vgSLAMModule():nCams(-1),  bufferDescriptorR(),bufferDescriptorL()
 {
@@ -30,8 +30,9 @@ vgSLAMModule::vgSLAMModule(int _nCams) :  bufferDescriptorR(),bufferDescriptorL(
     nCams=_nCams;
     configured = false;
 }
+
 //double anglesHead[6], anglesTorso[3];
-//Bottle  *headBottle, *torsoBottle;
+//Bottle *headBottle, *torsoBottle;
 //BufferedPort<Bottle> encHeadPort, encTorsoPort;
 bool vgSLAMModule::configure(ResourceFinder &rf){
     //Open ports

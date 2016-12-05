@@ -1,8 +1,3 @@
-# Copyright: 2016 iCub Facility, Istituto Italiano di Tecnologia
-# Author: Nicolo' Genesio
-# CopyPolicy: Released under the terms of the GNU GPL v2.0.
-# 
-
 cmake_minimum_required(VERSION 3.2.2)
 
 SET(PROJECTNAME vgSLAM_build_graph)
@@ -43,87 +38,31 @@ unset(PWG_COMPILE_OPTIONS)
 unset(PWG_LIBRARIES)
 
 # YARP.
-if (YARP)
-	find_package( YARP REQUIRED )
-	if (YARP_FOUND)
-		message("-- Found YARP library: ${YARP_LIBRARIES}")
-    	include_directories(${YARP_INCLUDE_DIRS})
-	else (YARP_FOUND)
-    	message("-- Did not find YARP library.")
-	endif (YARP_FOUND)
-endif (YARP)
+find_package( YARP REQUIRED )
+if (YARP_FOUND)
+	message("-- Found YARP library: ${YARP_LIBRARIES}")
+	include_directories(${YARP_INCLUDE_DIRS})
+else (YARP_FOUND)
+	message("-- Did not find YARP library.")
+endif (YARP_FOUND)
 
 # iCub
-if (ICUB)
-        find_package( ICUB REQUIRED )
-        if (ICUB_FOUND)
-                message("-- Found iCub library: ${ICUB_LIBRARIES}")
-        include_directories(${ICUB_INCLUDE_DIRS})
-        else (ICUB_FOUND)
-        message("-- Did not find YARP library.")
-        endif (ICUB_FOUND)
-endif (ICUB)
+find_package( ICUB REQUIRED )
+if (ICUB_FOUND)
+	message("-- Found iCub library: ${ICUB_LIBRARIES}")
+include_directories(${ICUB_INCLUDE_DIRS})
+else (ICUB_FOUND)
+	message("-- Did not find YARP library.")
+endif (ICUB_FOUND)
 
 # OpenCV.
-if (OpenCV)
-	find_package(OpenCV REQUIRED)
-	if (OpenCV_FOUND)
-		message("-- Found OPENCV library: ${OpenCV_LIBS}")
-	else (OpenCV_FOUND)
+find_package(OpenCV REQUIRED)
+if (OpenCV_FOUND)
+	message("-- Found OPENCV library: ${OpenCV_LIBS}")
+else (OpenCV_FOUND)
     	message("-- Did not find OPENCV library.")
-	endif (OpenCV_FOUND)
-endif (OpenCV)
+endif (OpenCV_FOUND)
 
-
-# Eigen.
-find_package(Eigen REQUIRED)
-if (EIGEN_FOUND)
-        if (EIGEN_VERSION VERSION_LESS 3.1.0)
-                message(FATAL_ERROR "-- PwgOptimiser requires Eigen version >= 3.1.0 in order "
-                "that Eigen/SparseCore be available, detected version of Eigen is: "
-      "${EIGEN_VERSION}")
-        endif (EIGEN_VERSION VERSION_LESS 3.1.0)
-
-        message("-- Found Eigen version ${EIGEN_VERSION}: ${EIGEN_INCLUDE_DIRS}")
-        # Ensure that only MPL2 licensed code is part of the default build.
-        message("")
-        message("   ===============================================================")
-        if (EIGENSPARSE)
-                list(APPEND PWG_COMPILE_OPTIONS PWG_USE_EIGEN_SPARSE)
-                message("   Enabling the use of Eigen as a sparse linear algebra library ")
-                message("   for solving the nonlinear least squares problems. Enabling ")
-                message("   this option results in an LGPL licensed version of ")
-                message("   solver as the Simplicial Cholesky factorization in Eigen")
-                message("   is licensed under the LGPL. ")
-                if (EIGEN_VERSION VERSION_LESS 3.2.2)
-                        message("   WARNING:")
-                        message("")
-                        message("   Your version of Eigen is older than version 3.2.2.")
-                        message("   The performance of SPARSE_NORMAL_CHOLESKY and SPARSE_SCHUR")
-                        message("   linear solvers will suffer. ")
-                endif (EIGEN_VERSION VERSION_LESS 3.2.2)
-        else (EIGENSPARSE)
-                message("   Disabling the use of Eigen as a sparse linear algebra library.")
-                message("   This does not affect the covariance estimation algorithm ")
-                message("   which can still use the EIGEN_SPARSE_QR algorithm.")
-                add_definitions(-DEIGEN_MPL2_ONLY)
-        endif (EIGENSPARSE)
-        message("   ===============================================================")
-        message("")
-endif (EIGEN_FOUND)
-if (EIGEN_FOUND)
-        include_directories(${EIGEN_INCLUDE_DIRS})
-endif (EIGEN_FOUND)
-
-# vlfeat.
-set(VLFEAT_INCLUDE_DIR /home/ngenesio/Downloads/vlfeat-0.9.20)
-message("-- Using VLFeat: ${VLFEAT_INCLUDE_DIR}")
-include_directories(${VLFEAT_INCLUDE_DIR})
-find_library(VLFEAT_LIB NAMES vl PATHS /home/ngenesio/Downloads/vlfeat-0.9.20/bin/glnxa64)
-#set(VLFEAT_LIB /home/tabuhashim/Dev/vlfeat-0.9.20/bin/glnxa64)
-if (EXISTS ${VLFEAT_LIB})
-        message("-- VLFEAT libs: ${VLFEAT_LIB}")
-endif(EXISTS ${VLFEAT_LIB})
 
 set(SOURCE_DIR ./src)
 set(INCLUDE_DIR ./include)
@@ -132,7 +71,7 @@ file(GLOB Executable_SOURCES ${SOURCE_DIR}/*.cpp ../src/featureselector.cpp)
 file(GLOB Executable_HEADERS ${INCLUDE_DIR}/*.h  ../include/featureselector.h)
 add_executable(${PROJECTNAME} ${Executable_SOURCES} ${Executable_HEADERS})
 
-target_link_libraries(${PROJECTNAME} ${YARP_LIBRARIES} ${ICUB_LIBRARIES}  ${OpenCV_LIBS} ${VLFEAT_LIB})
+target_link_libraries(${PROJECTNAME} ${YARP_LIBRARIES} ${ICUB_LIBRARIES}  ${OpenCV_LIBS})
 
 if(${CMAKE_VERSION} VERSION_LESS 3.1)
   include(CheckCXXCompilerFlag)

@@ -49,11 +49,11 @@ class vgSLAMModule : public yarp::os::RFModule
 public:
     vgSLAMModule();
     vgSLAMModule(int _nCams);
-   bool configure(yarp::os::ResourceFinder &rf);
-   bool updateModule();
-   double getPeriod();
-   bool interruptModule();
-   bool close();
+    bool configure(yarp::os::ResourceFinder &rf);
+    bool updateModule();
+    double getPeriod();
+    bool interruptModule();
+    bool close();
 };
 
 #endif // VGSLAMMODULE_H
