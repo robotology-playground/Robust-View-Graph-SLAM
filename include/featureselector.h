@@ -5,8 +5,8 @@
  * and then tune the parameters of the method in the respective ini files contained in the conf
  * folder.
  * @copyright Copyright (C) 2016 iCub Facility - Istituto Italiano di Tecnologia
- * @author Nicolo' Genesio
- * @email nicogene@hotmail.it
+ * @authors Tariq Abuhashim, Nicolo' Genesio
+ * @email t.abuhashim@gmail.com, nicogene@hotmail.it
  * @date Sept 2016
  * @acknowledgement This research has received funding from the European Union’s 
  * Seventh Framework Programme for research, technological development and demonstration 
@@ -55,7 +55,6 @@ protected:
                   cv::Ptr<cv::Feature2D> &detector, cv::Ptr<cv::Feature2D> &descriptor,cv::Ptr<cv::DescriptorMatcher> &matcher);
     //given the id for the detector,descriptor and matcher, create the objects with the parameters taken from respective ini files
     int assignMethod(std::string str);//given the name of the method it returns the id specified by defines on the top.
-
 
 };
 
