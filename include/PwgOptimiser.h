@@ -3,8 +3,8 @@
  * @brief Contains functions for multiple views pairwise geometry estimation.
  * @detail Implements functions needed for robust nonlinear least-squares batch SLAM.
  * @copyright Copyright (C) 2016 iCub Facility - Istituto Italiano di Tecnologia
- * @author Tariq Abuhashim
- * @email t.abuhashim@gmail.com
+ * @authors Tariq Abuhashim, Nicolo' Genesio
+ * @email t.abuhashim@gmail.com, nicogene@hotmail.it
  * @date Nov 2016
  * @acknowledgement This research has received funding from the European Union’s 
  * Seventh Framework Programme for research, technological development and demonstration 
