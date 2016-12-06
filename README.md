@@ -1,23 +1,15 @@
 ## Release Notes
 
-/**
- * @brief MATLAB and C++ Implementations of View-Graph SLAM
- * @detail This is a robust mexture between Nonlinear Least-Squares Estimation and Multiple-Views Pose-Graph SLAM.
- * This implementation if Applicable for both, stereo and monocular settings.
- * 
+ * MATLAB and C++ Implementations of View-Graph SLAM
+ * This is a robust mexture between Nonlinear Least-Squares Estimation and Multiple-Views Pose-Graph SLAM. This implementation if Applicable for both, stereo and monocular settings.
  * If you are planning on using this implementation, please cite our paper:
- * T. Abuhashim and L. Natale, "Robustness in view-graph SLAM," 2016 19th International Conference on Information Fusion (FUSION), Heidelberg, 2016, pp. 942-949.
- * URL: http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=7527987&isnumber=7527857
- *
- * @copyright Copyright (C) 2016 iCub Facility - Istituto Italiano di Tecnologia
- * @authors Tariq Abuhashim, Nicolo' Genesio
- * @email t.abuhashim@gmail.com, nicogene@hotmail.it
- * @date Nov 2016
- * @acknowledgement This research has received funding from the European Union’s 
- * Seventh Framework Programme for research, technological development and demonstration 
- * under grant agreement No. 611909(KoroiBot).
- * @license Released under the terms of the LGPLv2.1 or later, see LGPL.TXT
- */
+ * T. Abuhashim and L. Natale, "Robustness in view-graph SLAM," 2016 19th International Conference on Information Fusion (FUSION), Heidelberg, 2016, pp. 942-949. URL: http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=7527987&isnumber=7527857
+ * Copyright (C) 2016 iCub Facility - Istituto Italiano di Tecnologia
+ * Authors: Tariq Abuhashim, Nicolo' Genesio
+ * Emails: t.abuhashim@gmail.com, nicogene@hotmail.it
+ * Last Updated: Nov 2016
+ * Acknowledgement: This research has received funding from the European Union’s Seventh Framework Programme for research, technological development and demonstration under grant agreement No. 611909 (KoroiBot).
+ * License: Released under the terms of the LGPLv2.1 or later, see LGPL.TXT
 
 ## Installation of the C++ implementation
 
