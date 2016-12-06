@@ -1,7 +1,8 @@
 #ifndef epnp_h
 #define epnp_h
 
-#include <cv.h>
+//#include <cv.h>
+#include <opencv2/opencv.hpp>
 
 class epnp {
  public:

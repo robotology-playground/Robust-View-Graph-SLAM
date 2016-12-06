@@ -21,8 +21,9 @@ the terms of the BSD license (see the COPYING file).
 #include <math.h>
 #include <assert.h>
 
-#include <cxcore.h>
-#include <highgui.h>
+#include <opencv2/opencv.hpp>
+//#include <cxcore.h>
+//#include <highgui.h>
 
 #include <iostream>
 
