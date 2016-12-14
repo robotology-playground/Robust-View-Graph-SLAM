@@ -29,6 +29,7 @@ vgSLAMModule::vgSLAMModule(int _nCams) :  bufferDescriptorR(),bufferDescriptorL(
 {
     nCams=_nCams;
     configured = false;
+    interrupted=false;
 }
 
 //double anglesHead[6], anglesTorso[3];
@@ -182,7 +183,7 @@ bool vgSLAMModule::close(){
 //finish their work. We are checking how many frames has been processed by the last thread(matching)
     if(configured) {
         yInfo()<<"Waiting for worker thread...";
-        while(threadMatching->getCountProcessed() < (nCams-3))//3->thickness
+        while(threadMatching->getCountProcessed() < (nCams-3) && !interrupted)//3->thickness
             yarp::os::Time::delay(0.5);
     }
     //stop threads
@@ -211,6 +212,7 @@ double vgSLAMModule::getPeriod(){
 }
 
 bool vgSLAMModule::interruptModule(){
+    interrupted=true;
     imageR_port.interrupt();
     imageL_port.interrupt();
     return true;

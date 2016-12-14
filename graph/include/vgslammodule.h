@@ -54,6 +54,7 @@ public:
     double getPeriod();
     bool interruptModule();
     bool close();
+    bool interrupted;
 };
 
 #endif // VGSLAMMODULE_H
