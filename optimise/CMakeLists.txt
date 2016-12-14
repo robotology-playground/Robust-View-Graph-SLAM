@@ -331,15 +331,13 @@ include_directories(${MATLAB_INCLUDE_DIR})
 #include_directories(${MATLAB_EXTERN})
 
 # vlfeat.
-set(VLFEAT_INCLUDE_DIR ${vlfeat})
-message("-- Using VLFEAT: ${VLFEAT_INCLUDE_DIR}")
-include_directories(${VLFEAT_INCLUDE_DIR})
-find_library(VLFEAT_LIB NAMES vl PATHS ${VLFEAT_INCLUDE_DIR}/bin/glnxa64)
-if (EXISTS ${VLFEAT_LIB})
-	message("-- VLFEAT libs: ${VLFEAT_LIB}")
-else(EXISTS ${VLFEAT_LIB})
-	message("-- Could not find VLFEAT libs.")
-endif(EXISTS ${VLFEAT_LIB})
+find_package(VLFeat) #REQUIRED???
+if(VLFEAT_FOUND)
+  message("-- Using VLFEAT: ${VLFEAT_INCLUDE_DIRS}")
+  include_directories(${VLFEAT_INCLUDE_DIRS})
+else()
+	message("-- VLFEAT not found, set the VLFEAT_ROOT to the root folder of VLFeat ")
+endif()
 
 # PwgOptimiser sources
 #set(Executable_SOURCES ./src/main.cpp ./src/PwgOptimiser.cpp ./src/RecoverMoments.cpp)
@@ -351,7 +349,7 @@ file(GLOB Executable_SOURCES ${SOURCE_DIR}/*.cpp)
 file(GLOB Executable_HEADERS ${INCLUDE_DIR}/*.h)
 add_executable(${PROJECT_OPTIMISE} ${Executable_SOURCES})
 
-target_link_libraries(${PROJECT_OPTIMISE} ${YARP_LIBRARIES} ${ICUB_LIBRARIES} ${OpenCV_LIBS} ${cholmod_LIB} ${COLAMD_LIB} ${CCOLAMD_LIB} ${AMD_LIB} ${CAMD_LIB} ${SSC_LIB} ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${VLFEAT_LIB} ${METIS_LIB} ${PARMETIS_LIB} ${GSL_LIB})
+target_link_libraries(${PROJECT_OPTIMISE} ${YARP_LIBRARIES} ${ICUB_LIBRARIES} ${OpenCV_LIBS} ${cholmod_LIB} ${COLAMD_LIB} ${CCOLAMD_LIB} ${AMD_LIB} ${CAMD_LIB} ${SSC_LIB} ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${VLFEAT_LIBRARIES} ${METIS_LIB} ${PARMETIS_LIB} ${GSL_LIB})
 
 if(${CMAKE_VERSION} VERSION_LESS 3.1)
   include(CheckCXXCompilerFlag)

@@ -115,10 +115,10 @@ If compiling without MATLAB, in the makefile, comment out the line
 ```
 #include make/matlab.mak. Then, "make".
 ```
-To compile our code with vlFeat, in our CMakeLists.txt, update the paths in the following two lines to point to your vlFeat local copy:
+To compile our code with VLFeat, in `.bash_aliases` or `.bashrc` write: 
+
 ```
-set(VLFEAT_INCLUDE_DIR /path/to/vlfeat)
-find_library(VLFEAT_LIB NAMES vl PATHS /path/to/vlfeat/bin/glnxa64)
+export VLFEAT_ROOT=/path/to/vlfeat
 ```
 
 ## Compiling MEX functions in MATLAB
