@@ -1,0 +1,77 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link rel="stylesheet" href="docstyle.css" type="text/css">
+
+<script type="text/javascript" src="../includes/product/scripts/jquery/jquery-latest.js"></script>
+<script type="text/javascript" src="../includes/shared/scripts/l10n.js"></script>
+<script type="text/javascript" src="../includes/shared/scripts/docscripts.js"></script>
+<script type="text/javascript" src="../includes/product/scripts/docscripts.js"></script>
+<script type="text/javascript" src="../includes/shared/scripts/mw.toc.js"></script>
+<script type="text/javascript" src="../includes/shared/scripts/mw.imagescaling.js"></script>
+<script type="text/javascript" src="../includes/shared/scripts/mw.imageanimation.js"></script>
+<script type="text/javascript" src="../includes/shared/scripts/mw.breadcrumb.js"></script>
+<script type="text/javascript" src="../includes/shared/scripts/jquery.highlight.js"></script>
+<script type="text/javascript" src="../includes/shared/scripts/nanoscroller.min.js"></script>
+
+<script type="text/javascript" src="../includes/product/scripts/underscore-min.js"></script>
+<script type="text/javascript" src="../includes/product/scripts/jquery/jquery.toggleval.js"></script>
+<script type="text/javascript" src="../includes/product/scripts/localnav.js"></script>
+<script type="text/javascript" src="../includes/product/scripts/suggest.js"></script>
+<script type="text/javascript">
+  var suggestionsObj;
+  $(function() {
+    var searchField = $('#docsearch');
+    suggestionsObj = new Suggestions(getSuggestions, getMore, searchField);
+	
+	loadToc("../techdoc/matlab_env/examples/upslope/html/helptoc.xml");
+  });
+        
+  function getSuggestions() {
+    var text = suggestionsObj.searchField.val();
+    document.location='docsuggestion:' + text;
+  }
+
+  function getMore(type) {
+	var text = suggestionsObj.searchField.val();
+	document.location='docsuggestion:' + type + ':' + text;
+  }
+</script>
+
+<link href="../includes/product/css/reset.css" rel="stylesheet" type="text/css">
+<link href="../includes/product/css/960.css" rel="stylesheet" type="text/css">
+<link href="../includes/product/css/site5.css" rel="stylesheet" type="text/css">
+<link href="../includes/product/css/doc_center.css" rel="stylesheet" type="text/css">
+<link href="../includes/product/css/doc_center_installed.css" rel="stylesheet" type="text/css">
+<link href="../includes/product/css/doc_center_print.css" rel="stylesheet" type="text/css" media="print">
+<script type="text/javascript" src="../../../ui/equationrenderer/release/MathRenderer.js"></script>
+</head>
+
+<body>
+<div class="site_container site_toc_opened">
+         <div class="page_container" style="height:100%">
+            <div class="content_frame"  style="height:100%">
+               <div class="content_container" id="content_container"  style="height:100%">
+
+<div id="search_crumb_container">
+  <div class="docsearch_container">
+    <form id="docsearch_form" name="docsearch_form" method="get" action="searchresults.html">
+    <label for="docsearch" class="hidden">Search MATLAB Documentation</label>
+    <input type="text" name="qdoc" id="docsearch" class="textfield" tabindex="0" autocomplete="off" value="Search Documentation">
+    <input type="submit" name="submitsearch" id="submitsearch" value="Search" class="docsearch_submit">
+    <script type="text/javascript">
+         $("input[name='qdoc']").toggleVal({
+            focusClass: "hasFocus"
+         });
+       </script>
+    </form>
+  </div>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

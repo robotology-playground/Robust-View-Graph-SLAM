@@ -1,0 +1,25 @@
+/* Overrides for Japanese Web Doc Center */
+/* Global */
+html body { font-family: Meiryo, Verdana, Arial, Helvetica,"MS P ゴシック"; }
+
+/* Hierarchy */
+#doc_center_content h6 { font-style:normal; }
+
+/* Off-Canvas Actuator */
+.offcanvas_actuator .offcanvas_actuator_label:before { content: "目次"; }
+.offcanvas_actuator .offcanvas_actuator_close:before { content: "閉じる"; }
+
+/* Disambiguation List Overflow */
+.sidebar-offcanvas .nav_disambiguation_overflow_control:before { content: "展開する..."; }
+.sidebar-offcanvas .collapse.in + .nav_disambiguation_overflow_control:before { content: "折りたたむ..."; }
+
+/* Expand - Collapse: Reveal */
+.reveal .more_results p:after { content:"展開する"; }
+.reveal .expanded .more_results p:after { content:"折りたたむ"; }
+
+/* Expand All in Page */
+.doc_topic_desc { padding-right:170px; }
+.doc_topic_desc .switch { width:160px; margin-right:-170px; }
+
+/* Function Reference */
+.input_argument_container h2 { font-style:normal; }

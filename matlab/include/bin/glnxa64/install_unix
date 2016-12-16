@@ -1,0 +1,975 @@
+#!/bin/sh
+#
+# Name:
+#    install -  script file for invoking the Multi-platform installer on Linux.
+#
+#    Usage: install [-h|help]
+#                              [-javadir <directory>] | [-root <directory>] |
+#                              [-test] | [-v|-verbose]
+#                              -h|-help        - Display arguments.
+#                              -test           - Don't actually run the java
+#                                                command (only useful with -v).
+#                              -v|-verbose     - Display settings.
+#                              -javadir <directory>  - Override default java root directory.
+#                              -root <directory>     - Override default DVD root directory.
+#                              -tmpdir <directory>   - Override default directory for temporary files.
+#
+#              The default settings when no override inputs are supplied are:
+#              -root = <directory containing this script>
+#              -javadir = <root>/sys/java/jre/$ARCH/jre
+#              -tmpdir = /tmp
+#
+#
+# Copyright 2009-2016 The MathWorks, Inc.
+#__________________________________________________________________________
+#
+    arg0_=$0
+#
+#
+    trap "exit 1" 1 2 3 15
+#
+#========================= java_launcher (start) ============================
+#
+#========================= archlist_template.sh (start) ============================
+#
+# usage:        archlist.sh
+#
+# abstract:     This Bourne Shell script creates the variable ARCH_LIST.
+#
+# note(s):      1. This file is always imbedded in another script
+#
+# Copyright 1997-2013 The MathWorks, Inc.
+#----------------------------------------------------------------------------
+#
+    ARCH_LIST='glnxa64 maci64'
+#=======================================================================
+# Functions:
+#   check_archlist ()
+#=======================================================================
+    check_archlist () { # Sets ARCH. If first argument contains a valid
+			# arch then ARCH is set to that value else
+		        # an empty string. If there is a second argument
+			# do not output any warning message. The most
+			# common forms of the first argument are:
+			#
+			#     ARCH=arch
+			#     MATLAB_ARCH=arch
+			#     argument=-arch
+			#
+                        # Always returns a 0 status.
+                        #
+                        # usage: check_archlist arch=[-]value [noprint]
+                        #
+	if [ $# -gt 0 ]; then
+	    arch_in=`expr "$1" : '.*=\(.*\)'`
+	    if [ "$arch_in" != "" ]; then
+	        ARCH=`echo "$ARCH_LIST EOF $arch_in" | awk '
+#-----------------------------------------------------------------------
+	{ for (i = 1; i <= NF; i = i + 1)
+	      if ($i == "EOF")
+		  narch = i - 1
+	  for (i = 1; i <= narch; i = i + 1)
+		if ($i == $NF || "-" $i == $NF) {
+		    print $i
+		    exit
+		}
+	}'`
+#-----------------------------------------------------------------------
+	       if [ "$ARCH" = "" -a $# -eq 1 ]; then
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+echo ' '
+echo "    Warning: $1 does not specify a valid architecture - ignored . . ."
+echo ' '
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	       fi
+	    else
+		ARCH=""
+	    fi
+	else
+	    ARCH=""
+	fi
+#
+	return 0
+    }
+#=======================================================================
+#========================= archlist_template.sh (end) ==============================
+ARCH=
+#========================= arch_template.sh (start) ============================
+#!/bin/sh
+#
+# usage:        arch.sh
+#
+# abstract:     This Bourne Shell script determines the architecture
+#               of the the current machine.
+#
+#               ARCH      - Machine architecture
+#
+#               IMPORTANT: The shell function 'check_archlist' is used
+#                          by this routine and MUST be loaded first.
+#                          This can be done by sourcing the file,
+#
+#                              archlist.sh
+#
+#                          before using this routine.
+#
+# note(s):      1. This routine must be called using a . (period)
+#
+#               2. Also returns ARCH_MSG which may contain additional
+#                  information when ARCH returns 'unknown'.
+#
+# Copyright 1986-2011 The MathWorks, Inc.
+#----------------------------------------------------------------------------
+#
+#=======================================================================
+# Functions:
+#   realfilepath ()
+#   matlab_arch ()
+#=======================================================================
+    realfilepath () { # Returns the actual path in the file system
+                      # of a file. It follows links. It returns an
+                      # empty path if an error occurs.
+                      #
+                      # Returns a 1 status if the file does not exist
+                      # or appears to be a circular link. Otherwise,
+                      # a 0 status is returned.
+                      #
+                      # usage: realfilepath filepath
+                      #
+    filename=$1
+#
+# Now it is either a file or a link to a file.
+#
+    cpath=`pwd`
+
+#
+# Follow up to 8 links before giving up. Same as BSD 4.3
+#
+      n=1
+      maxlinks=8
+      while [ $n -le $maxlinks ]
+      do
+#
+# Get directory correctly!
+#
+	newdir=`echo "$filename" | awk '
+                        { tail = $0
+                          np = index (tail, "/")
+                          while ( np != 0 ) {
+                             tail = substr (tail, np + 1, length (tail) - np)
+                             if (tail == "" ) break
+                             np = index (tail, "/")
+                          }
+                          head = substr ($0, 1, length ($0) - length (tail))
+                          if ( tail == "." || tail == "..")
+                             print $0
+                          else
+                             print head
+                        }'`
+	if [ ! "$newdir" ]; then
+	    newdir="."
+	fi
+	(cd "$newdir") > /dev/null 2>&1
+	if [ $? -ne 0 ]; then
+	    return 1
+	fi
+	cd "$newdir"
+#
+# Need the function pwd - not the built in one
+#
+	newdir=`/bin/pwd`
+#
+	newbase=`expr //"$filename" : '.*/\(.*\)' \| "$filename"`
+        lscmd=`ls -ld "$newbase" 2>/dev/null`
+	if [ ! "$lscmd" ]; then
+	    return 1
+	fi
+#
+# Check for link portably
+#
+	if [ `expr "$lscmd" : '.*->.*'` -ne 0 ]; then
+	    filename=`echo "$lscmd" | awk '{ print $NF }'`
+	else
+#
+# It's a file
+#
+	    dir="$newdir"
+	    command="$newbase"
+#
+	    cd "$dir"
+#
+# On Mac OS X, the -P option to pwd causes it to return a resolved path, but
+# on 10.5, -P is no longer the default, so we are now passing -P explicitly
+#
+            if [ "$ARCH" = 'mac' -o "$ARCH" = 'maci' -o "$ARCH" = 'maci64' ]; then
+                echo `/bin/pwd -P`/$command
+#
+# The Linux version of pwd returns a resolved path by default, and there is
+# no -P option
+#
+            else
+                echo `/bin/pwd`/$command
+            fi
+	    break
+	fi
+	n=`expr $n + 1`
+      done
+      if [ $n -gt $maxlinks ]; then
+	return 1
+      fi
+
+    cd "$cpath"
+    }
+#
+#=======================================================================
+    set_mac_arch() {
+        # First check to see if maci64 is even possible on this hardware
+        if [ "`/usr/sbin/sysctl -n hw.cpu64bit_capable`" = "0" ]; then
+            # maci64 is not possible. So set the arch to maci.
+            ARCH="maci"
+            return
+        fi
+
+        # Now check to see if maci64 is asked for
+        if [ "$MACI64" = "0" ]; then
+            # only maci is wanted, so arch is maci.
+            ARCH="maci"
+            return
+        fi
+
+        # If we get to this point, maci64 is available and desired. So, check to
+        # see if 64 bit binaries are available. First, if $MATLABROOT is NOT
+        # set, we can't really check for anything else.
+        if [ "$MATLABROOT" = "" ]; then
+            ARCH="maci64";
+            return
+        fi
+
+
+        # if we get to this point, we need to check the binaries that we have to
+        # find out if we have maci64 binaries
+        if [ -d "$MATLABROOT/bin/maci64" ]; then
+            ARCH="maci64"
+            return
+        fi
+
+        # if we get to this point, even though maci64 is possible and desired,
+        # the maci64 binaries aren't available, so fall back to maci
+        ARCH="maci"
+    }
+
+#
+#=======================================================================
+    matlab_arch () {  # Determine the architecture for MATLAB
+                      # It returns the value in the ARCH variable.
+                      # If 'unknown' is returned then sometimes a
+                      # diagnostic message is returned in ARCH_MSG.
+                      #
+                      # Always returns a 0 status.
+                      #
+                      # usage: matlab_arch
+                      #
+        ARCH="unknown"
+#
+        if [ -f /bin/uname ]; then
+            case "`/bin/uname`" in
+                SunOS)                                  # Solaris
+                    case "`/bin/uname -p`" in
+                        sparc)
+                            ARCH="sol64"
+                            ;;
+                        i386)
+                            ARCH="sola64"
+                            ;;
+                    esac
+                    ;;
+                Linux)
+                    case "`/bin/uname -m`" in
+                        i*86)
+                            ARCH="glnx86"
+                            ;;
+                        x86_64)
+                            ARCH="glnxa64"
+                            ;;
+                    esac
+                    ;;
+# Usually uname lives in /usr/bin on the Mac, but sometimes people
+# have links in /bin that link uname to /usr/bin.  Because of this
+# Mac needs to be listed in the checks for both /bin/uname and /usr/bin/uname
+                Darwin)                                 # Mac OS X
+                    case "`/bin/uname -p`" in
+                        i386)
+                            set_mac_arch
+                            ;;
+                        esac
+                    ;;
+                *)
+                    :
+                    ;;
+            esac
+        elif [ -f /usr/bin/uname ]; then
+            case "`/usr/bin/uname`" in
+                Darwin)                                 # Mac OS X
+                    case "`/usr/bin/uname -p`" in
+                        i386)
+                            set_mac_arch
+                            ;;
+                        esac
+                    ;;
+            esac
+        fi
+        return 0
+    }
+#=======================================================================
+#
+# The local shell function check_archlist is assumed to be loaded before this
+# function is sourced.
+#
+    ARCH_MSG=''
+    check_archlist ARCH=$ARCH
+    if [ "$ARCH" = "" ]; then
+        if [ "$MATLAB_ARCH" != "" ]; then
+            check_archlist MATLAB_ARCH=$MATLAB_ARCH
+        fi
+        if [ "$ARCH" = "" ]; then
+            matlab_arch
+        fi
+    fi
+    Arch=$ARCH
+#========================= arch_template.sh (end) ==============================
+    setMac () {
+        if [ "$ARCH" = "maci" -o "$ARCH" = "maci64" ]; then
+            ISMAC=1
+        else
+            ISMAC=0
+        fi
+        export ISMAC
+         
+    }
+#=======================================================================
+    setVMenvironment () {
+    #   Set up some variables for the VM environment
+
+    # Augment with AWT Motif default locale resource files
+    XFILESEARCHPATH="$JRE_LOC/lib/locale/%L/%T/%N%S:$XFILESEARCHPATH"
+    export XFILESEARCHPATH
+
+    # Determine <final_load_library_path> for each platform
+    #
+    libraryPathsToAdd=$1
+    
+    case "$ARCH" in
+        glnx*)
+            LD_LIBRARY_PATH="`eval echo $LD_LIBRARY_PATH`"
+            if [ "$LD_LIBRARY_PATH" != "" ]; then
+                LD_LIBRARY_PATH="$libraryPathsToAdd":$LD_LIBRARY_PATH
+            else
+                LD_LIBRARY_PATH="$libraryPathsToAdd"
+            fi
+            export LD_LIBRARY_PATH
+            ;;
+        mac*)
+            DYLD_LIBRARY_PATH="`eval echo $DYLD_LIBRARY_PATH`"
+            if [ "$DYLD_LIBRARY_PATH" != "" ]; then
+                DYLD_LIBRARY_PATH="$libraryPathsToAdd":$DYLD_LIBRARY_PATH
+            else
+                DYLD_LIBRARY_PATH="$libraryPathsToAdd"
+            fi
+            export DYLD_LIBRARY_PATH
+            ;;
+        *)
+            LD_LIBRARY_PATH="`eval echo $LD_LIBRARY_PATH`"
+            if [ "$LD_LIBRARY_PATH" != "" ]; then
+                LD_LIBRARY_PATH=$LD_LIBRARY_PATH
+            else
+                LD_LIBRARY_PATH=
+            fi
+            export LD_LIBRARY_PATH
+            ;;
+    esac
+
+    }
+#=======================================================================
+    setVMpath () {
+    #
+    # Determine the java vm path for each platform.
+    #
+    javaRoot=$1
+    DEFAULT_JRE_LOC=$javaRoot/jre/$ARCH/jre
+
+    if [ "$JRE_LOC" = "" ]; then
+        JRE_LOC=$DEFAULT_JRE_LOC
+    fi
+#
+# Look for JRE
+#
+    if [ ! -d "$JRE_LOC" ]; then
+        echo "---------------------------------------------------------------------------"
+        echo "Error: Cannot locate Java Runtime Environment (JRE)."
+        echo "The directory $JRE_LOC does not exist."
+        echo "---------------------------------------------------------------------------"
+        exit 1
+    fi
+    }
+#=======================================================================
+getJarPaths () {
+    # Get the full search path for our jar files
+    # Echos the search path to stdout.
+
+    JAR_SEARCH_PATHtmp=
+
+    JAVA_DIR="$1/java"
+    JAR_LOC="$JAVA_DIR/jar"
+    JAREXT_LOC="$JAVA_DIR/jarext"
+
+    # Get list of directories in JAR_LOC
+    theDirList=`find "$JAR_LOC" -type d`
+    # Add all subdirectories of JAR_LOC (including recursive search)
+    for aDir in $theDirList
+    do
+        JAR_SEARCH_PATHtmp=$JAR_SEARCH_PATHtmp:$aDir
+    done
+
+    # Get list of directories in JAREXT_LOC
+    theDirList=`find "$JAREXT_LOC" -type d`
+    # Add all subdirectories of JAREXT_LOC (including recursive search)
+    for aDir in $theDirList
+    do
+        # Do not add connector to our path since it brings in older
+        # versions of some other third party classes.
+        if [ "`dirname $aDir`" != "$JAREXT_LOC/connector_impl" ]; then
+            JAR_SEARCH_PATHtmp=$JAR_SEARCH_PATHtmp:$aDir
+        fi
+    done
+
+    JAR_SEARCH_PATHtmp=`getExtLibPaths $JAR_SEARCH_PATHtmp`
+
+    echo $JAR_SEARCH_PATHtmp
+}
+
+getExtLibPaths () {
+
+    JAR_SEARCH_PATHtmp=$1
+
+    # If MW_LIB_EXT_DIRS env var set, append value to existing search path
+    if [ "$MW_LIB_EXT_DIRS" != "" ]; then
+        JAR_SEARCH_PATHtmp=$JAR_SEARCH_PATHtmp:$MW_LIB_EXT_DIRS
+    fi
+
+    # if we have set anything else for java.ext.dirs then we 
+    # need to append the JRE location too
+    if [ "$JAR_SEARCH_PATHtmp" != "" ]; then
+        JAR_SEARCH_PATHtmp=$JRE_LOC/lib/ext:$JAR_SEARCH_PATHtmp
+    fi
+
+    # make sure we don't have double colons
+    # OSX sed doesn't support +, manually expand it
+    echo $JAR_SEARCH_PATHtmp | sed 's/::*/:/g'
+}
+
+#=======================================================================
+    copyDirWritable() { 
+    # Copy an entire directory.  This will create the destination 
+    # directory, do a recursive copy, and then make all the files and 
+    # directories writable.
+    # usage: copyDirWritable src dest
+    srcDir=$1
+    destDir=$2
+
+    mkdir -p "$destDir"
+    cp -RLf "$srcDir"/* "$destDir"
+    chmod -R +w "$destDir" 2>/dev/null
+
+    }
+
+checkDirectoryForMultiDVD() { # If first DVD in Multi-DVD
+			      # scenario detected by presence of 
+			      # dvd1 marker file and absence dvd2 marker file, check for current
+			      # working directory in terminal.
+			      # If current working directory is under DVD drive,
+			      # exit installer with error message to user.
+
+			      # usage: checkDirectoryForMultiDVD rootPath							  
+
+	INSTROOT="$1"
+    
+	CWD=`pwd`
+	CWD=`realfilepath "$CWD"` 
+        runningFromDVDRoot="-runningFromDVDRoot"
+
+	file1="$INSTROOT/.dvd1" 
+	file2="$INSTROOT/.dvd2"
+	
+	if [ $ARCH = "glnxa64" ]; then
+	    if [ -e "$file1" ]  && ! [ -e "$file2" ] ; then
+		if [ `expr "${CWD}" : "^${INSTROOT}"` -gt 0 ]; then
+		        arglist="$arglist $runningFromDVDRoot"
+		fi
+	    fi
+	fi
+}
+
+
+#========================= java_launcher (end) ==============================
+    copyJREAndJarsToTmp () {
+    #
+    # Copy JRE and Jars to tmp
+    #
+    echo "Preparing installation files ..."
+
+    NEW_JRE_LOC="$TEMP_DIR/sys/java/jre/$ARCH/jre"
+    copyDirWritable "$JRE_LOC" "$NEW_JRE_LOC"
+    JRE_LOC=$NEW_JRE_LOC
+
+    JAVA_DIR="$TEMP_DIR/java"
+    JAR_LOC="$JAVA_DIR/jar"
+    JAREXT_LOC="$JAVA_DIR/jarext"
+    copyDirWritable "$ROOT/java" "$JAVA_DIR"
+    }
+#========================= java_launcher_config (start) ============================
+
+#=======================================================================
+# Default launcher properties file relative to install root
+LAUNCHER_PROPERTIES=
+getDefaultLauncherConfig() {
+# Find the default launcher config, if one exists (formerly java/bootstrap.properties)
+    INSTROOT=$1
+    CONFIG_FILE=${INSTROOT}/java/bootstrap.properties
+    
+    if [ -d "${INSTROOT}/java/config/default" ]; then
+        FIRST_CONFIG=`find "${INSTROOT}/java/config/default" -type f -iname '[^\.]*.config' 2>/dev/null | head -n1`
+        if [ -e "${FIRST_CONFIG}" ]; then
+            CONFIG_FILE=${FIRST_CONFIG}
+        fi
+    fi
+    
+    echo $CONFIG_FILE
+}
+
+
+#=======================================================================
+getJavaClasspathJar() {
+    #   Find jar file for classpath.
+
+    CLASSPATH_JAR=
+
+    if [ -f "$LAUNCHER_PROPERTIES" ]; then
+        # the additional sed command is to switch backslashes to frontslashes
+        CLASSPATH_DEFINITION=`grep -i pathlistjar "$LAUNCHER_PROPERTIES" | awk -F= '{ print $2 }' | sed 's|\\\\|/|g' | sed 's/ //g'`
+        if [ "$CLASSPATH_DEFINITION" != "" ]; then
+            CLASSPATH_JAR=$CLASSPATH_DEFINITION
+        fi
+    fi
+
+    echo $CLASSPATH_JAR
+}
+#=======================================================================
+getIcnsLocation() {
+    # return the location where the Mac icns file can be found.  
+    # The location is relative to $ROOT
+
+    LOCATION=InstallForMacOSX.app/Contents/Resources/membrane.icns
+
+    if [ -f "$LAUNCHER_PROPERTIES" ]; then
+        ICNS_DEFINITION=`grep -i icns_location "$LAUNCHER_PROPERTIES" | awk -F= '{ print $2 }'`
+        if [ "$ICNS_DEFINITION" != "" ]; then
+            LOCATION=$ICNS_DEFINITION
+        fi
+    fi
+
+    echo $LOCATION
+}
+#=======================================================================
+getXdocName() {
+    # return the location where the Mac icns file can be found.  
+    # The location is relative to $ROOT
+
+    XDOCKNAME="Install MATLAB"
+
+    if [ -f "$LAUNCHER_PROPERTIES" ]; then
+        NAME_DEFINITION=`grep -i xdockname "$LAUNCHER_PROPERTIES" | awk -F= '{ print $2 }'`
+        if [ "$NAME_DEFINITION" != "" ]; then
+            XDOCNAME=$NAME_DEFINITION
+        fi
+    fi
+
+    if [ $UNINSTALLING -eq 1 ]; then
+        XDOCNAME="Uninstall"
+    fi
+    echo $XDOCNAME
+}
+#=======================================================================
+getCopyToTempFlag() {
+    # return the location where the Mac icns file can be found.  
+    # The location is relative to $ROOT
+
+    COPY_TO_TEMP=1
+
+    if [ -f "$LAUNCHER_PROPERTIES" ]; then
+        COPY_FLAG=`grep -i copyToTemp "$LAUNCHER_PROPERTIES" | awk -F= '{ print $2 }'`
+        if [ "$COPY_FLAG" != "" ]; then
+            COPY_TO_TEMP=$COPY_FLAG
+        fi
+    fi
+
+    echo $COPY_TO_TEMP
+}
+#=======================================================================
+getUninstallLaunchTarget () {
+     # Find uninstaller main class
+   
+    MAIN_CLASS_OVERRIDE=
+ 
+    if [ -f "$LAUNCHER_PROPERTIES" ]; then
+        MAIN_CLASS_OVERRIDE=`grep -i uninstallmainclass "$LAUNCHER_PROPERTIES" | awk -F= '{ print $2 }' | sed 's/ //g'`
+    fi
+
+     echo $MAIN_CLASS_OVERRIDE
+}
+#=======================================================================
+getJavaLaunchTarget () {
+    #   Find jar file to execute.
+
+    MAIN_CLASS=
+
+    if [ -f "$LAUNCHER_PROPERTIES" ]; then
+        MAIN_CLASS_OVERRIDE=`grep -i mainclass "$LAUNCHER_PROPERTIES" | grep -iv uninstall | awk -F= '{ print $2 }' | sed 's/ //g'`
+        if [ "$MAIN_CLASS_OVERRIDE" != "" ]; then
+            MAIN_CLASS=$MAIN_CLASS_OVERRIDE
+        fi
+    fi
+
+    #   By default, set launch target to main class
+    JAVA_LAUNCH_TARGETtmp=$MAIN_CLASS
+
+    #   If MW_MAIN_CLASS env var set, set launch target to "$MW_MAIN_CLASS"
+    if [ "$MW_MAIN_CLASS" != "" ]; then
+        JAVA_LAUNCH_TARGETtmp=$MW_MAIN_CLASS
+    fi
+
+    echo $JAVA_LAUNCH_TARGETtmp
+}
+#========================= java_launcher_config (end) ==============================
+
+#=======================================================================
+#
+# Parse the arguments
+#
+    stat="OK"
+    JAR_LOC=
+    JAREXT_LOC=
+    JAR_SEARCH_PATH=
+    VERBOSE=0
+    TEMP_DIR="/tmp/mathworks_$$"
+    JRE_LOC=
+    XTRAFLAGS=
+    ROOT=
+    TESTONLY=0
+    arglist=
+    arglistTemp=
+    SHOW_SPLASH=1
+    INSTALLBUNDLE=0
+    BOOTSTRAP_PATH=
+    TEMP_DIR_SET=0
+    DO_COPY=
+    LIB_DIR=
+    UNINSTALLING=0
+
+#   Set default values for some variables if they are not set yet.
+    if [ "$ROOT" = "" ]; then
+        SETUP_FILE=`realfilepath "$0"`
+        ROOT=`dirname "$SETUP_FILE" | xargs -0 dirname | xargs -0 dirname` # two directories back
+    fi
+
+    while [ "$stat" = "OK" -a  $# -gt 0 ]; do
+        case "$1" in
+            -h|-help)
+                stat=""
+                ;;
+            -v|-verbose)
+                arglistTemp="\"$1\" $arglistTemp"
+                VERBOSE=1;
+                ;;
+            -javadir)
+                if [ $# -eq 1 ]; then
+                    echo "A JRE directory must be specified with -javadir."
+                    stat=""
+                else
+                    arglistTemp="$arglistTemp \"$1\""
+                    shift
+                    JRE_LOC=$1;
+                    arglistTemp="$arglistTemp \"$1\""
+                    if [ ! -d "$JRE_LOC" ]; then
+                        echo "The directory $JRE_LOC does not exist."
+                        stat=""
+                    fi
+                    if [ ! -d "$JRE_LOC/lib" ]; then
+                        echo "$JRE_LOC does not appear to be a JRE directory."
+                        stat=""
+                    fi
+                fi
+                ;;
+            -root)
+                if [ $# -eq 1 ]; then
+                    echo "A DVD directory must be specified with -root."
+                    stat=""
+                else
+                    shift
+                    ROOT=$1;
+                    if [ ! -d "$ROOT" ]; then
+                        echo "The directory $ROOT does not exist."
+                        stat=""
+                    fi
+                fi
+                ;;
+            -tmpdir)
+                if [ $# -eq 1 ]; then
+                    echo "A directory for temporary files must be specified with -tmpdir."
+                    stat=""
+                else
+                    arglistTemp="$arglistTemp \"$1\""
+                    shift
+                    TEMP_DIR="$1/mathworks_$$"
+                    arglistTemp="$arglistTemp \"$1\""
+                    TEMP_DIR_SET=1
+                fi
+                ;;
+            -test)
+                arglistTemp="$arglistTemp \"$1\""
+                # Just run through script without actually running the java
+                # command.  Only useful with -v.
+                TESTONLY=1
+                ;;
+            -nocopy)
+                arglistTemp="$arglistTemp \"$1\""
+                DO_COPY=0
+                ;;
+            -psn*)
+                # Apple passes this in with things that are double clicked. Ignore.
+                ;;
+            -uninstall)
+                UNINSTALLING=1
+                arglistTemp="$arglistTemp \"$1\""
+                ;; 
+            -launcher)
+                if [ $# -eq 1 ]; then
+                    echo "A launcher name must be specified with -launcher."
+                    stat=""
+                else
+                    arglistTemp="$arglistTemp \"$1\""
+                    shift
+                    arglistTemp="$arglistTemp \"$1\""
+                    LAUNCHER_PROPERTIES=java/config/$1/launcher.config
+                    if [ ! -e "$ROOT/$LAUNCHER_PROPERTIES" ]; then
+                        echo "No configuration found: \"$1\" is an invalid launcher."
+                        stat=""
+                    fi
+                fi
+                ;;
+            -*)
+                OPTION=$1
+                OPTION="$(echo ${OPTION} | tr '[:upper:]' '[:lower:]')"
+                if [ $OPTION = "-mode" ]; then
+                    SHOW_SPLASH=0
+                fi
+                if [ $OPTION = "-inputfile" ]; then
+                    SHOW_SPLASH=0
+                fi
+				if [ $OPTION = "-installbundle" ]; then
+                    SHOW_SPLASH=0
+                    arglist="$arglist \"$1\""
+                    shift
+                    BOOTSTRAP_PATH=`dirname "$1"`                    
+                    INSTALLBUNDLE=1
+                fi
+                found=0
+                # Check for -arch
+                arch=$ARCH
+                check_archlist argument=$1 noprint
+                if [ "$ARCH" != "" ]; then
+                    found=1
+                else
+                    ARCH=$arch
+                fi
+                if [ "$found" = "0" ]; then
+                    arglist="$arglist \"$1\""
+                fi
+                ;;
+            *)
+                    arglist="$arglist \"$1\""
+               ;;
+        esac
+        shift
+    done
+    setMac
+#
+# Check for errors
+#
+    if [ "$stat" != "OK" ]; then        # An error occurred.
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    echo ""
+    echo "   Usage: install [-h|help]"
+    echo "                             [-javadir <directory>] | [-root <directory>] |"
+    echo "                             [-test] | [-v|-verbose]"
+    echo ""
+    echo "    -h|-help        - Display arguments."
+    echo "    -test           - Don't actually run the java command (only useful with -v)."
+    echo "    -v|-verbose     - Display settings."
+    echo "    -javadir <directory>       - Override default java root directory."
+    echo "    -root <directory>          - Override default DVD root directory."
+    echo "    -tmpdir <directory>        - Override default directory for temporary files."
+    echo ""
+    echo "    The default settings when no override inputs are supplied are: "
+    echo "    -root = <directory containing this script>"
+    echo "    -javadir = <root>/sys/java/jre/$ARCH/jre"
+    echo "    -tmpdir = /tmp"
+    echo ""
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        exit 1
+    fi
+	#Call the function to check for current working directory
+	#in multi-DVD scenario.
+	checkDirectoryForMultiDVD "$ROOT"
+#   Determine the java vm path for each platform.
+    setVMpath "$ROOT/sys/java"
+
+################# IF NOCOPY FLAG IS NOT PASSED 
+
+    # LIB_DIR is the base directory where libraries (java and/or bin) will be found
+    # this will be one of TEMP_DIR or ROOT depending on if we are copying
+    # Assume installroot by default (they will always be there anyway)
+    LIB_DIR=$ROOT
+
+    # We can just reference the launcher properties file from 
+    # ROOT rather than waiting for a relocation.  Its a small file
+    # and it has the information as to whether we need to relocate.
+    if [ "$LAUNCHER_PROPERTIES" = "" ]; then
+        LAUNCHER_PROPERTIES=`getDefaultLauncherConfig "$LIB_DIR"`;
+    else
+        LAUNCHER_PROPERTIES="$LIB_DIR/$LAUNCHER_PROPERTIES"
+    fi
+
+
+    if [ x"$DO_COPY" = x"" ]; then
+        DO_COPY=`getCopyToTempFlag`
+    fi
+
+
+    if [ $DO_COPY -eq 1 ]; then
+        if [ $UNINSTALLING -eq 0 ]; then
+             LIB_DIR=$TEMP_DIR
+             copyJREAndJarsToTmp
+             copyDirWritable "$ROOT/bin/$ARCH" "$TEMP_DIR/bin/$ARCH"
+             copyDirWritable "$ROOT/help" "$TEMP_DIR/help"
+             cd $TEMP_DIR
+             eval exec \"$TEMP_DIR/bin/$ARCH/install_unix\" -nocopy -root \"$ROOT\" -javadir \"$TEMP_DIR/sys/java/jre/$ARCH/jre\" $arglist $arglistTemp
+        fi
+    else
+        SCRIPT_ROOT=`dirname "$SETUP_FILE" | xargs -0 dirname | xargs -0 dirname` # two directories back	
+         if [ x"$SCRIPT_ROOT" != x"$ROOT" ]; then 
+            LIB_DIR=$SCRIPT_ROOT
+         fi	
+    fi
+
+    #   Set up some variables for the VM environment.
+    setVMenvironment "$LIB_DIR/bin/$ARCH"
+
+    PATHLIST_JAR=`getJavaClasspathJar "$LIB_DIR"`
+    if [ "$PATHLIST_JAR" != "" ]; then
+        JAR_SEARCH_PATH=`getExtLibPaths`
+        PATHLIST_JAR="$LIB_DIR/$PATHLIST_JAR"
+    else
+        # This is now an error.  We should always have a classpath jar file from this point forward
+        # Never just batch include all jars on the classpath
+        # We only want to exit if we are planning to execute, do not force exit for a "test" run
+        echo "Error: No classpath definition jar found."
+        if [ "$TESTONLY" != "1" ]; then
+            exit 1
+        fi
+    fi
+
+#   Get the java launch target
+    if [ $UNINSTALLING -eq 0 ]; then
+       JAVA_LAUNCH_TARGET=`getJavaLaunchTarget`
+    else
+       JAVA_LAUNCH_TARGET=`getUninstallLaunchTarget`
+    fi
+
+    if [ x"$JAVA_LAUNCH_TARGET" = x"" ]; then
+       echo "Error: No main class found."; exit 1
+    fi
+
+#   Set up splash option
+    if [ $SHOW_SPLASH -eq 1 ]; then
+        SPLASH_OPTION="-splash:\"$ROOT/java/splash.png\""
+    else
+        SPLASH_OPTION=""
+    fi
+
+#   Set up java command to run.                  
+    if [ $ISMAC -eq 1 ]; then
+        if [ $INSTALLBUNDLE -eq 1 ]; then        
+            XTRAFLAGS="-d64 -Xdock:name=\"Install\" -Xdock:icon=\"$BOOTSTRAP_PATH/installer.icns\""             
+        else
+           XTRAFLAGS="-d64 -Xdock:name=\"`getXdocName`\" -Xdock:icon=\"$ROOT/`getIcnsLocation`\""
+        fi
+    fi
+
+    if [ $TEMP_DIR_SET -eq 1 ]; then
+        TMPDIRFLAGS="-Djava.io.tmpdir=$TEMP_DIR"
+    else
+        TMPDIRFLAGS=""
+    fi
+    java_exe=\"$JRE_LOC/bin/java\"
+    java_cmd="$java_exe -Xmx512m $XTRAFLAGS $TMPDIRFLAGS $SPLASH_OPTION"
+    if [ "$JAR_SEARCH_PATH" != "" ]; then
+        java_cmd="$java_cmd -Djava.ext.dirs=$JAR_SEARCH_PATH" 
+    fi
+    if [ "$PATHLIST_JAR" != "" ]; then
+        java_cmd="$java_cmd -cp $PATHLIST_JAR"
+    fi
+    java_cmd="$java_cmd $JAVA_LAUNCH_TARGET -root \"$ROOT\" -libdir \"$LIB_DIR\" $arglist"
+
+#
+    if [ "$VERBOSE" = "1" ]; then
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    echo "->  DVD                 = $ROOT"
+    echo "->  ARCH                = $ARCH"
+    echo "->  DISPLAY             = $DISPLAY"
+    echo "->  TESTONLY            = $TESTONLY"
+    echo "->  JRE_LOC             = $JRE_LOC"
+#
+        case "$ARCH" in
+            mac*)
+    echo "->  DYLD_LIBRARY_PATH   = $DYLD_LIBRARY_PATH"
+                ;;
+            *)
+    echo "->  LD_LIBRARY_PATH     = $LD_LIBRARY_PATH"
+                ;;
+        esac
+
+    echo " "
+    echo "Command to run:"
+    echo "$java_cmd"
+    echo " "
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    fi
+#
+#
+#   Run the java command to start the install app
+    if [ "$TESTONLY" != "1" ]; then
+        if [ "$UNINSTALLING" = "0" ]; then
+            echo "Installing ..."
+        else 
+            echo "Uninstalling ..."
+        fi
+
+        eval "$java_cmd 2> /dev/null"
+
+#   Clean up
+        if [ $DO_COPY -eq 1 ]; then
+            rm -rf $TEMP_DIR
+        fi
+    fi
+
+    echo "Finished"
+

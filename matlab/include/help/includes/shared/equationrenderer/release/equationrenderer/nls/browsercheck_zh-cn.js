@@ -1,0 +1,3 @@
+define('equationrenderer/nls/browsercheck_zh-cn',{
+'l10n/nls/unsupportedErrorPage':{"unsupportedError":"<p>非常抱歉...</p><p>此浏览器不支持您正在访问的页面。</p><p>请更改或升级为以下受支持的浏览器之一:</p><ul><li>在 Windows Vista 或 Windows 7 上:<ul><li>Chrome 12 及更高版本</li><li>Firefox 7 及更高版本</li><li>Internet Explorer 9 及更高版本</li></ul></li><li>在 Mac 10.6 或 Mac 10.7 上:<ul><li>Safari 5.0 及更高版本</li><li>Chrome 12 及更高版本</li></ul></li></ul>","_localized":{}}
+});

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Simplified Chinese strings -->
+<strings language="zh_CN">
+  <string key="all_support">所有支持</string>
+  <string key="all_products">所有产品</string>
+  <string key="current_locale_in_parenthesis">(中文)</string>
+  <string key="documentation_center">文档</string>
+  <string key="installation">安装</string>
+  <string key="release_notes">发行说明</string>
+  <string key="pdf_documentation">PDF 文档</string>
+  <string key="search_documentation">搜索文档</string>
+  <string key="search_latest_documentation">搜索最新文档</string>
+  <string key="supplemental_software">补充软件</string>
+  <string key="acknowledgments">致谢</string>
+  <string key="trademarks">商标</string>
+  <string key="patents">专利</string>
+  <string key="terms_of_use">使用条款</string>
+  <string key="home">主页</string>
+  <string key="other_releases">其他版本</string>
+  <string key="page_not_avail">本版文档中不存在您要查找的页面。</string>
+  <string key="use_search_box_or_browse">您可以使用搜索框或通过浏览产品来查看相关信息。</string>
+  <!--string key="view_archive_doc">您也可以查看以前版本的归档文档。</string-->
+  <string key="accessing_restricted_doc"></string><!--Only applicable for restricted doc, should be empty for non-restricted doc-->
+  <!--string key="transl_doc_is_avail_incr">我们将逐步连续地提供翻译文档，这样您不必等到下一版本后便可看到更新的内容。</string-->
+  <string key="transl_doc_is_avail_incr">如果文档已翻译，会显示翻译文档；如果文档未翻译，则会显示英文文档。</string>
+  <!--string key="you_can_download_doc">您也可下载并安装更新的翻译文档。</string-->
+  <string key="view_archive_doc"></string>  <!-- Not applicable for Chinese -->
+  <string key="you_can_download_doc"></string><!-- Not applicable for Chinese -->
+  <!--string key="refer_to_other_releases">请参阅 &quot;其他版本&quot; 获取以前版本的翻译文档。</string-->
+  <string key="refer_to_other_releases"></string>  <!-- Not relevant for Chinese -->
+  <string key="when_transl_doc_is_avail_you_will_see_it">我们为许可用户提供了有关 MATLAB 的中文文档。这些用户可以通过以下两种方式来查阅中文文档：<br></br><br></br>1) 在 MATLAB 帮助浏览器中，点击“预设项”齿轮图标，在出现的“预设项”窗口的右窗格中，选择“文档位置”部分下的“在 mathworks.com 网站上（需要 Internet 连接）”，然后选择“语言”部分下的“简体中文”。 <br></br>2) 通过系统本身的浏览器访问 <a href="http://www.mathworks.com/help">www.mathworks.com/help</a>。点击网站左下方的国家/地区链接，从中选取“中国”，然后才能查阅中文内容。 </string>
+  <string key="installed_support_packages">已安装的支持包</string>
+  <string key="hardware_catalog">有关硬件解决方案的完整列表，请参阅<a href="http://www.mathworks.com/hardware">硬件支持</a>。</string>
+  <string key="hardware_catalog_inproduct">有关硬件解决方案的完整列表，请参阅<a href="matlab:showAddonExplorerForHardwareSupportPackages">硬件支持</a>。</string>
+  <string key="trial_software">试用软件</string>
+  <string key="product_updates">产品更新</string>
+  <string key="product_documentation">产品文档</string>
+  <string key="explore_examples">浏览示例</string>
+  <string key="explore_addons">浏览附加功能</string>
+  <string key="toggle_navigation">切换导航</string>
+  <string key="matlab_abstract">MATLAB<sup>®</sup> 是供全球数百万工程师和科学家们使用的一门高级语言和互动式环境。这种基于矩阵的语言能够以自然的方式表达计算数学。</string>
+  <string key="getting_started">MATLAB 入门</string>
+  <string key="functions_in_matlab">MATLAB 中的函数</string>
+  <string key="my_products">我的产品</string>
+  <string key="edit_preferences">编辑预设项</string>
+  <string key="matlab_family">MATLAB<sup><small>®</small></sup> 产品系列</string>
+  <string key="parallel_computing">并行计算</string>
+  <string key="math_statistics_and_optimization">数学、统计和优化</string>
+  <string key="control_systems">控制系统</string>
+  <string key="signal_processing_and_communications">信号处理和通信</string>
+  <string key="image_processing_and_computer_vision">图像处理和计算机视觉</string>
+  <string key="test_and_measurement">测试和测量</string>
+  <string key="computational_finance">计算金融学</string>
+  <string key="computational_biology">计算生物学</string>
+  <string key="code_generation">代码生成</string>
+  <string key="application_deployment">应用程序部署</string>
+  <string key="database_access_and_reporting">数据库访问和报告</string>
+  <string key="simulink_family">Simulink<sup><small>®</small></sup> 产品系列</string>
+  <string key="fixed-Point_designer">Fixed-Point Designer</string>
+  <string key="event-based_modeling">基于事件建模</string>
+  <string key="physical_modeling">物理建模</string>
+  <string key="real-time_simulation_and_testing">实时仿真和测试</string>
+  <string key="verification_validation_and_test">验证、确认和测试</string>
+  <string key="simulation_graphics_and_reporting">仿真图形和报告</string>
+  <string key="polyspace_family">Polyspace<sup><small>®</small></sup> 产品系列</string>
+  <string key="hardware_support">硬件支持</string>
+  <string key="search_help">搜索帮助文档</string>
+  <string key="edit_preferences_link">matlab:preferences('帮助')</string>
+</strings>

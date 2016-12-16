@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- American English strings -->
+<strings language="en_US">
+  <string key="all_support">All Support</string>
+  <string key="all_products">All Products</string>
+  <string key="current_locale_in_parenthesis">(English)</string>
+  <string key="documentation_center">Documentation</string>
+  <string key="installation">Installation</string>
+  <string key="release_notes">Release Notes</string>
+  <string key="pdf_documentation">PDF Documentation</string>
+  <string key="search_documentation">Search Documentation</string>
+  <string key="search_latest_documentation">Search the latest documentation</string>
+  <string key="supplemental_software">Supplemental Software</string>
+  <string key="acknowledgments">Acknowledgments</string>
+  <string key="trademarks">Trademarks</string>
+  <string key="patents">Patents</string>
+  <string key="terms_of_use">Terms of Use</string>
+  <string key="home">Home</string>
+  <string key="other_releases">Other Releases</string>
+  <string key="page_not_avail">The page you were looking for is not available in this version of the documentation.</string>
+  <string key="use_search_box_or_browse">You can use the search box or browse the products to find related information.</string>
+  <string key="view_archive_doc">You can also view archived documentation for prior releases.</string>
+  <string key="accessing_restricted_doc"></string><!--Only applicable for restricted doc, should be empty for non-restricted doc-->
+  <string key="transl_doc_is_avail_incr">Translated documentation is now available incrementally so you no longer have to wait for the next release to see updated content.</string>
+  <string key="you_can_download_doc">You can also download the documentation to install updated translated documentation.</string>
+  <string key="refer_to_other_releases">Refer to &quot;Other Releases&quot; for translated documentation prior to the current release.</string>
+  <string key="when_transl_doc_is_avail_you_will_see_it">Whenever translated documentation is available, you will see it; if no translation is available, you will see English documentation.</string>
+  <string key="installed_support_packages">Installed Support Packages</string>
+  <string key="hardware_catalog">For a complete list of hardware solutions, see <a href="http://www.mathworks.com/hardware">Hardware Support</a>.</string>
+  <string key="hardware_catalog_inproduct">For a complete list of hardware solutions, see <a href="matlab:showAddonExplorerForHardwareSupportPackages">Hardware Support</a>.</string>
+  <string key="trial_software">Trial Software</string>
+  <string key="product_updates">Product Updates</string>
+  <string key="product_documentation">Product Documentation</string>
+  <string key="explore_examples">Explore Examples</string>
+  <string key="explore_addons">Explore Add-Ons</string>
+  <string key="toggle_navigation">Toggle navigation</string>
+  <string key="matlab_abstract">MATLAB<sup>®</sup> is the high-level language and interactive environment used by millions of engineers and scientists worldwide. The matrix-based language is a natural way to express computational mathematics.</string>
+  <string key="getting_started">Getting Started with MATLAB</string>
+  <string key="functions_in_matlab">Functions in MATLAB</string>
+  <string key="my_products">My Products</string>
+  <string key="edit_preferences">Edit Preferences</string>
+  <string key="matlab_family">MATLAB<sup><small>®</small></sup> Family</string>
+  <string key="parallel_computing">Parallel Computing</string>
+  <string key="math_statistics_and_optimization">Math, Statistics, and Optimization</string>
+  <string key="control_systems">Control Systems</string>
+  <string key="signal_processing_and_communications">Signal Processing and Communications</string>
+  <string key="image_processing_and_computer_vision">Image  Processing and Computer Vision</string>
+  <string key="test_and_measurement">Test and Measurement</string>
+  <string key="computational_finance">Computational Finance</string>
+  <string key="computational_biology">Computational Biology</string>
+  <string key="code_generation">Code Generation</string>
+  <string key="application_deployment">Application Deployment</string>
+  <string key="database_access_and_reporting">Database Access and Reporting</string>
+  <string key="simulink_family">Simulink<sup><small>®</small></sup> Family</string>
+  <string key="fixed-Point_designer">Fixed-Point Designer</string>
+  <string key="event-based_modeling">Event-Based Modeling</string>
+  <string key="physical_modeling">Physical Modeling</string>
+  <string key="real-time_simulation_and_testing">Real-Time Simulation and Testing</string>
+  <string key="verification_validation_and_test">Verification, Validation, and Test</string>
+  <string key="simulation_graphics_and_reporting">Simulation Graphics and Reporting</string>
+  <string key="polyspace_family">Polyspace<sup><small>®</small></sup> Family</string>
+  <string key="hardware_support">Hardware Support</string>
+  <string key="search_help">Search Help</string>
+  <string key="edit_preferences_link">matlab:preferences('Help')</string>
+</strings>

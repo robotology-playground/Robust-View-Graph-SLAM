@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Korean strings -->
+<strings language="ko_KR">
+  <string key="all_support">모든 지원</string>
+  <string key="all_products">모든 제품</string>
+  <string key="current_locale_in_parenthesis">(한국어)</string>
+  <string key="documentation_center">문서</string>
+  <string key="installation">설치</string>
+  <string key="release_notes">릴리스 정보</string>
+  <string key="pdf_documentation">PDF 문서</string>
+  <string key="search_documentation">문서 검색</string>
+  <string key="search_latest_documentation">최신 문서 검색</string>
+  <string key="supplemental_software">추가 소프트웨어</string>
+  <string key="acknowledgments">감사</string>
+  <string key="trademarks">상표</string>
+  <string key="patents">특허</string>
+  <string key="terms_of_use">사용 약관</string>
+  <string key="home">홈</string>
+  <string key="other_releases">기타 릴리스</string>
+  <string key="page_not_avail">찾는 페이지가 이 릴리스 문서에는 존재하지 않습니다.</string>
+  <string key="use_search_box_or_browse">관련 정보를 보려면 검색 상자를 사용하거나 제품을 검색해 보십시오.</string>
+  <string key="view_archive_doc">보관되어 있는 이전 릴리스 문서도 참조해 보십시오.</string>
+  <string key="accessing_restricted_doc"></string><!-- for 15a 라이선스가 부여된 사용자는 다음 방법 중 하나로 MATLAB 한글 문서를 웹에서 볼 수 있습니다. <br></br><br></br>1) MATLAB에서 [기본 설정] 아이콘을 클릭하고 [도움말] 패널을 선택한 뒤, [문서 위치] 섹션에서 [mathworks.com 웹]을 선택하고, [언어] 섹션에서 [한국어]를 선택합니다. <br></br>2) 브라우저에서 <a href="http://www.mathworks.com/help">kr.mathworks.com/help</a>로 접속하고 MathWorks 계정으로 로그인한 뒤, 국가 설정을 [한국]으로 변경합니다.-->
+  <!-- repurposing this message to really mean, when translated doc is available you will see it; when it isn't it will be in English -->
+  <string key="transl_doc_is_avail_incr">문서가 번역되면 웹 페이지에 바로 업데이트되어 제공됩니다.</string>
+  <string key="you_can_download_doc"></string><!-- Not applicable for Chinese or Korean -->
+  <!--<string key="refer_to_other_releases">현재 릴리스 이전에 번역된 문서는 &quot;기타 릴리스&quot;에서 참조하십시오.</string>-->
+  <string key="refer_to_other_releases"></string><!-- Not applicable for Chinese or Korean -->
+  <string key="when_transl_doc_is_avail_you_will_see_it">라이선스가 부여된 사용자는 다음 방법 중 하나로 MATLAB 한글 문서를 웹에서 볼 수 있습니다. <br></br><br></br>1) MATLAB에서 [기본 설정] 아이콘을 클릭하고 [도움말] 패널을 선택한 뒤, [문서 위치] 섹션에서 [mathworks.com 웹]을 선택하고, [언어] 섹션에서 [한국어]를 선택합니다. <br></br>2) 브라우저에서 <a href="http://www.mathworks.com/help">www.mathworks.com/help</a>로 접속하고 MathWorks 계정으로 로그인한 뒤, 국가 설정을 [한국]으로 변경합니다.</string>
+  <!--<string key="when_transl_doc_is_avail_you_will_see_it">문서가 번역된 경우에는 번역 문서가 제공되고, 번역되지 않은 경우에는 영문 문서가 제공됩니다.</string>-->
+  <string key="installed_support_packages">설치된 지원 패키지</string>
+  <string key="hardware_catalog">하드웨어 솔루션에 대한 전체 목록은 <a href="http://www.mathworks.com/hardware">하드웨어 지원(영문)</a>을 참조하십시오.</string>
+  <string key="hardware_catalog_inproduct">하드웨어 솔루션에 대한 전체 목록은 <a href="matlab:showAddonExplorerForHardwareSupportPackages">하드웨어 지원(영문)</a>을 참조하십시오.</string>
+  <string key="trial_software">평가판</string>
+  <string key="product_updates">제품 업데이트</string>
+  <string key="product_documentation">제품 문서</string>
+  <string key="explore_examples">예제 살펴보기</string>
+  <string key="explore_addons">애드온 살펴보기</string>
+  <string key="toggle_navigation">탐색 표시/숨기기</string>
+  <string key="matlab_abstract">MATLAB<sup>®</sup>은 전 세계 수많은 엔지니어와 과학자들이 사용하는 고급 언어이자 대화형 방식의 환경입니다. 행렬 기반의 MATLAB은 계산 수학을 자연스럽게 표현하는 언어입니다.</string>
+  <string key="getting_started">MATLAB 시작하기</string>
+  <string key="functions_in_matlab">MATLAB 함수</string>
+  <string key="my_products">내 제품</string>
+  <string key="edit_preferences">기본 설정 편집</string>
+  <string key="matlab_family">MATLAB<sup><small>®</small></sup> 제품군</string>
+  <string key="parallel_computing">병렬 컴퓨팅</string>
+  <string key="math_statistics_and_optimization">수학, 통계학 및 최적화</string>
+  <string key="control_systems">제어 시스템</string>
+  <string key="signal_processing_and_communications">신호 처리 및 통신</string>
+  <string key="image_processing_and_computer_vision">이미지 프로세싱 및 컴퓨터 비전</string>
+  <string key="test_and_measurement">테스트 및 계측</string>
+  <string key="computational_finance">계산 금융</string>
+  <string key="computational_biology">계산생물학</string>
+  <string key="code_generation">코드 생성</string>
+  <string key="application_deployment">응용 프로그램 배포</string>
+  <string key="database_access_and_reporting">데이터베이스 액세스 및 리포팅</string>
+  <string key="simulink_family">Simulink<sup><small>®</small></sup> 제품군</string>
+  <string key="fixed-Point_designer">Fixed-Point Designer</string>
+  <string key="event-based_modeling">이벤트 기반 모델링</string>
+  <string key="physical_modeling">물리적 모델링</string>
+  <string key="real-time_simulation_and_testing">실시간 시뮬레이션 및 테스트</string>
+  <string key="verification_validation_and_test">검증(Verification) 및 확인(Validation), 테스트</string>
+  <string key="simulation_graphics_and_reporting">시뮬레이션 그래픽스 및 리포팅</string>
+  <string key="polyspace_family">Polyspace<sup><small>®</small></sup> 제품군</string>
+  <string key="hardware_support">하드웨어 지원</string>
+  <string key="search_help">도움말 검색</string>
+  <string key="edit_preferences_link">matlab:preferences('도움말')</string>
+</strings>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Japanese strings -->
+<strings language="ja_JP">
+  <string key="all_support">すべてのサポート</string>
+  <string key="all_products">すべての製品</string>
+  <string key="current_locale_in_parenthesis">(日本語)</string>
+  <string key="documentation_center">ドキュメンテーション</string>
+  <string key="installation">インストール</string>
+  <string key="release_notes">リリース ノート</string>
+  <string key="pdf_documentation">PDF 版ドキュメンテーション</string>
+  <string key="search_documentation">ドキュメンテーションの検索</string>
+  <string key="search_latest_documentation">最新のドキュメンテーションを検索</string>
+  <string key="supplemental_software">補助ソフトウェア</string>
+  <string key="acknowledgments">謝辞 (英語)</string>
+  <string key="trademarks">商標 (英語)</string>
+  <string key="patents">特許 (英語)</string>
+  <string key="terms_of_use">ご利用条件 (英語)</string>
+  <string key="home">ホーム</string>
+  <string key="other_releases">日本語ドキュメンテーション アーカイブ</string>
+  <string key="page_not_avail">検索中のページは、このバージョンのドキュメンテーションで利用できません。</string>
+  <string key="use_search_box_or_browse">検索ボックスを利用するか製品ページを閲覧して、関連する情報を参照できます。</string>
+  <string key="view_archive_doc">さらに、以前のリリースについてのアーカイブ ドキュメンテーションも参照できます。</string>
+  <string key="accessing_restricted_doc"></string><!--Only applicable for restricted doc, should be empty for non-restricted doc-->
+  <string key="transl_doc_is_avail_incr">翻訳されたドキュメンテーションが、段階的に閲覧できるようになりました。次回のリリースを待つことなく、更新された内容をご確認いただけます。</string>
+  <string key="you_can_download_doc">また、最新の翻訳済みドキュメンテーションを<a href="http://www.mathworks.com/help/ja_JP/doc_download/download.html">ダウンロード</a>してインストールすることもできます。</string>
+  <string key="refer_to_other_releases">現在のリリース以前に翻訳されたドキュメンテーションについては、「<a href="http://www.mathworks.com/help/doc-archives_ja_JP.html">日本語ドキュメンテーション アーカイブ</a>」を参照してください。</string>
+  <string key="when_transl_doc_is_avail_you_will_see_it">製品のドキュメンテーションはこちらからご利用になれます。お探しの項目が未翻訳の場合は英語ドキュメンテーションが表示されます。</string>
+  <string key="installed_support_packages">インストール済みサポート パッケージ</string>
+  <string key="hardware_catalog">ハードウェア ソリューションの詳細については、<a href="http://www.mathworks.com/hardware">ハードウェア サポート (英語)</a> を参照してください。</string>
+  <string key="hardware_catalog_inproduct">ハードウェア ソリューションの詳細については、<a href="matlab:showAddonExplorerForHardwareSupportPackages">ハードウェア サポート (英語)</a> を参照してください。</string>
+  <string key="trial_software">評価版ソフトウェア</string>
+  <string key="product_updates">製品の更新</string>
+  <string key="product_documentation">製品のドキュメンテーション</string>
+  <string key="explore_examples">例の探索</string>
+  <string key="explore_addons">アドオンの探索</string>
+  <string key="toggle_navigation">ナビゲーションの切り替え</string>
+  <string key="matlab_abstract">MATLAB<sup>®</sup> は、数百万人の技術者や科学者に利用されている高水準言語および対話型環境です。行列ベースの言語は計算数学の表現に適しています。</string>
+  <string key="getting_started">MATLAB 入門</string>
+  <string key="functions_in_matlab">MATLAB の関数</string>
+  <string key="my_products">マイ プロダクト</string>
+  <string key="edit_preferences">設定の編集</string>
+  <string key="matlab_family">MATLAB<sup><small>®</small></sup> ファミリ</string>
+  <string key="parallel_computing">並列計算</string>
+  <string key="math_statistics_and_optimization">数学、統計、および最適化</string>
+  <string key="control_systems">制御システム</string>
+  <string key="signal_processing_and_communications">信号処理と通信</string>
+  <string key="image_processing_and_computer_vision">イメージ処理とコンピューター ビジョン</string>
+  <string key="test_and_measurement">テストと計測</string>
+  <string key="computational_finance">金融工学</string>
+  <string key="computational_biology">情報生命科学</string>
+  <string key="code_generation">コード生成</string>
+  <string key="application_deployment">アプリケーション配布</string>
+  <string key="database_access_and_reporting">データベース アクセスとレポート</string>
+  <string key="simulink_family">Simulink<sup><small>®</small></sup> ファミリ</string>
+  <string key="fixed-Point_designer">Fixed-Point Designer</string>
+  <string key="event-based_modeling">イベントベース モデリング</string>
+  <string key="physical_modeling">物理モデリング</string>
+  <string key="real-time_simulation_and_testing">リアルタイム シミュレーションとテスト</string>
+  <string key="verification_validation_and_test">確認、検証、およびテスト</string>
+  <string key="simulation_graphics_and_reporting">シミュレーション グラフィックスとレポート</string>
+  <string key="polyspace_family">Polyspace<sup><small>®</small></sup> ファミリ</string>
+  <string key="hardware_support">ハードウェア サポート</string>
+  <string key="search_help">ヘルプを検索</string>
+  <string key="edit_preferences_link">matlab:preferences('ヘルプ')</string>
+</strings>

@@ -1,0 +1,278 @@
+<div id="search_scope_doc" class="collapse in">
+  <#if request.locale.language == "zh">
+  <form id="docsearch_form" name="docsearch_form" method="get" data-release="${release_number_layout_control}" data-language="zh_CN" action="${doc_search_form_action}">
+    <div class="input-group tokenized_search_field">
+      <label class="sr-only">搜索最新文档</label>
+      <input type="text" class="form-control conjoined_search" autocomplete="off" name="qdoc" placeholder="搜索最新文档" id="docsearch">   
+      <div class="input-group-btn">
+        <button type="button" class="btn btn_search_adjacent dropdown-toggle" data-toggle="dropdown" tabindex="-1"><span class="caret"></span><span class="search_scope_label">文档中心</span></button>
+        <ul class="dropdown-menu list-unstyled dropdown-menu-right" role="menu">
+          <!-- <li data-toggle="collapse" data-target="#search_scope_doc"><a href="#">文档中心</a></li> -->
+          <li data-toggle="collapse" data-target="#search_scope_support" class="doc_search_scope_trigger"><a href="#">支持</a></li>
+          <li data-toggle="collapse" data-target="#search_scope_site"  class="doc_search_scope_trigger"><a href="#">MathWorks</a></li>
+        </ul>
+        <script>
+          $(".doc_search_scope_trigger").click(function() {
+            $("#search_scope_doc").removeClass("in"); 
+            $("#search").val($("#docsearch").val()); 
+            $("#query").val($("#docsearch").val()); 
+          });
+        </script>
+        <button type="submit" name="submitsearch" id="submitsearch" class="btn icon-search btn_search_adjacent btn_search icon_16" tabindex="-1"></button>
+      </div>
+    </div>
+  </form>
+  <#elseif request.locale.language == "ja">
+  <form id="docsearch_form" name="docsearch_form" method="get" data-release="${release_number_layout_control}" data-language="ja_JP" action="${doc_search_form_action}">
+    <div class="input-group tokenized_search_field">
+      <label class="sr-only">最新のドキュメンテーションを検索</label>
+      <input type="text" class="form-control conjoined_search" autocomplete="off" name="qdoc" placeholder="最新のドキュメンテーションを検索" id="docsearch">  
+      <div class="input-group-btn">
+        <button type="button" class="btn btn_search_adjacent dropdown-toggle" data-toggle="dropdown" tabindex="-1"><span class="caret"></span><span class="search_scope_label">ドキュメンテーション</span></button>
+        <ul class="dropdown-menu list-unstyled dropdown-menu-right" role="menu">
+          <!-- <li data-toggle="collapse" data-target="#search_scope_doc"><a href="#">ドキュメンテーション</a></li> -->
+          <li data-toggle="collapse" data-target="#search_scope_support" class="doc_search_scope_trigger"><a href="#">サポート</a></li>
+          <li data-toggle="collapse" data-target="#search_scope_site"  class="doc_search_scope_trigger"><a href="#">MathWorks</a></li>
+        </ul>
+        <script>
+          $(".doc_search_scope_trigger").click(function() {
+            $("#search_scope_doc").removeClass("in"); 
+            $("#search").val($("#docsearch").val()); 
+            $("#query").val($("#docsearch").val()); 
+          });
+        </script>
+        <button type="submit" name="submitsearch" id="submitsearch" class="btn icon-search btn_search_adjacent btn_search icon_16" tabindex="-1"></button>
+      </div>
+    </div>
+  </form>
+  <#elseif request.locale.language == "ko">
+  <form id="docsearch_form" name="docsearch_form" method="get" data-release="${release_number_layout_control}" data-language="ko_KR" action="${doc_search_form_action}">
+    <div class="input-group tokenized_search_field">
+      <label class="sr-only">최신 문서 검색</label>
+      <input type="text" class="form-control conjoined_search" autocomplete="off" name="qdoc" placeholder="최신 문서 검색" id="docsearch">   
+      <div class="input-group-btn">
+        <button type="button" class="btn btn_search_adjacent dropdown-toggle" data-toggle="dropdown" tabindex="-1"><span class="caret"></span><span class="search_scope_label">문서 센터</span></button>
+        <ul class="dropdown-menu list-unstyled dropdown-menu-right" role="menu">
+          <!-- <li data-toggle="collapse" data-target="#search_scope_doc"><a href="#">문서 센터</a></li> -->
+          <li data-toggle="collapse" data-target="#search_scope_support" class="doc_search_scope_trigger"><a href="#">지원</a></li>
+          <li data-toggle="collapse" data-target="#search_scope_site"  class="doc_search_scope_trigger"><a href="#">MathWorks</a></li>
+        </ul>
+        <script>
+          $(".doc_search_scope_trigger").click(function() {
+            $("#search_scope_doc").removeClass("in"); 
+            $("#search").val($("#docsearch").val()); 
+            $("#query").val($("#docsearch").val()); 
+          });
+        </script>
+        <button type="submit" name="submitsearch" id="submitsearch" class="btn icon-search btn_search_adjacent btn_search icon_16" tabindex="-1"></button>
+      </div>
+    </div>
+  </form>
+  <#else>
+  <form id="docsearch_form" name="docsearch_form" method="get" data-release="${release_number_layout_control}" data-language="en" action="${doc_search_form_action}">
+    <div class="input-group tokenized_search_field">
+      <label class="sr-only">Search ThingSpeak Documentation</label>
+      <input type="text" class="form-control conjoined_search" autocomplete="off" name="qdoc" placeholder="Search ThingSpeak Documentation" id="docsearch">  
+      <div class="input-group-btn">
+        <button type="submit" name="submitsearch" id="submitsearch" class="btn icon-search btn_search_adjacent btn_search icon_16" tabindex="-1"></button>
+      </div>
+    </div>
+  </form>
+  </#if>
+</div>
+<div id="search_scope_support" class="collapse">
+  <#if request.locale.language == "zh">
+  <form id="support_search" action="/support/search_results.html" method="get" accept-charset="utf-8">
+    <div class="input-group">
+      <label class="sr-only">搜索全部支持资源</label>
+      <input id="search" class="form-control conjoined_search" type="text" name="q" placeholder="搜索文档、示例以及社区资源" autocomplete="off">      
+      <div class="input-group-btn">
+        <button type="button" class="btn btn_search_adjacent dropdown-toggle" data-toggle="dropdown" tabindex="-1"><span class="caret"></span><span class="search_scope_label">支持</span></button>
+        <ul class="dropdown-menu list-unstyled dropdown-menu-right" role="menu">
+          <li data-toggle="collapse" data-target="#search_scope_doc" class="support_search_scope_trigger"><a href="#">文档中心</a></li>
+          <!--<li data-toggle="collapse" data-target="#search_scope_support"><a href="#">支持</a></li>-->
+          <li data-toggle="collapse" data-target="#search_scope_site"  class="support_search_scope_trigger"><a href="#">MathWorks</a></li>
+        </ul>
+        <script>
+          $(".support_search_scope_trigger").click(function() {
+            $("#search_scope_support").removeClass("in"); 
+            $("#docsearch").val($("#search").val()); 
+            $("#query").val($("#search").val());
+          });
+        </script>  
+        <button type="submit" name="submitsearch" id="support_submitsearch" class="btn icon-search btn_search_adjacent btn_search icon_16" tabindex="-1"></button>
+      </div>
+    </div>
+  </form>
+  <#elseif request.locale.language == "ja">
+  <form id="support_search" action="/support/search_results.html" method="get" accept-charset="utf-8">
+    <div class="input-group">
+      <label class="sr-only">すべてのサポート リソースを検索する</label>
+      <input id="search" class="form-control conjoined_search" type="text" name="q" placeholder="ドキュメンテーション、例、コミュニティのリソースを検索する" autocomplete="off">      
+      <div class="input-group-btn">
+        <button type="button" class="btn btn_search_adjacent dropdown-toggle" data-toggle="dropdown" tabindex="-1"><span class="caret"></span><span class="search_scope_label">サポート</span></button>
+        <ul class="dropdown-menu list-unstyled dropdown-menu-right" role="menu">
+          <li data-toggle="collapse" data-target="#search_scope_doc" class="support_search_scope_trigger"><a href="#">ドキュメンテーション</a></li>
+          <!--<li data-toggle="collapse" data-target="#search_scope_support"><a href="#">サポート</a></li>-->
+          <li data-toggle="collapse" data-target="#search_scope_site"  class="support_search_scope_trigger"><a href="#">MathWorks</a></li>
+        </ul>
+        <script>
+          $(".support_search_scope_trigger").click(function() {
+            $("#search_scope_support").removeClass("in"); 
+            $("#docsearch").val($("#search").val()); 
+            $("#query").val($("#search").val()); 
+          });
+        </script>  
+        <button type="submit" name="submitsearch" id="support_submitsearch" class="btn icon-search btn_search_adjacent btn_search icon_16" tabindex="-1"></button>
+      </div>
+    </div>
+  </form> 
+  <#elseif request.locale.language == "ko">
+  <form id="support_search" action="/support/search_results.html" method="get" accept-charset="utf-8">
+    <div class="input-group">
+      <label class="sr-only">문서와 예제 검색, 커뮤니티 리소스 검색</label>
+      <input id="search" class="form-control conjoined_search" type="text" name="q" placeholder="문서와 예제 검색, 커뮤니티 리소스 검색" autocomplete="off">      
+      <div class="input-group-btn">
+        <button type="button" class="btn btn_search_adjacent dropdown-toggle" data-toggle="dropdown" tabindex="-1"><span class="caret"></span><span class="search_scope_label">지원</span></button>
+        <ul class="dropdown-menu list-unstyled dropdown-menu-right" role="menu">
+          <li data-toggle="collapse" data-target="#search_scope_doc" class="support_search_scope_trigger"><a href="#">문서 센터</a></li>
+          <!--<li data-toggle="collapse" data-target="#search_scope_support"><a href="#">Support</a></li>-->
+          <li data-toggle="collapse" data-target="#search_scope_site"  class="support_search_scope_trigger"><a href="#">MathWorks</a></li>
+        </ul>
+        <script>
+          $(".support_search_scope_trigger").click(function() {
+            $("#search_scope_support").removeClass("in"); 
+            $("#docsearch").val($("#search").val()); 
+            $("#query").val($("#search").val()); 
+          });
+        </script>  
+        <button type="submit" name="submitsearch" id="support_submitsearch" class="btn icon-search btn_search_adjacent btn_search icon_16" tabindex="-1"></button>
+      </div>
+    </div>
+  </form>   
+  <#else>
+  <form id="support_search" action="/support/search_results.html" method="get" accept-charset="utf-8">
+    <div class="input-group">
+      <label class="sr-only">Search All Support Resources</label>
+      <input id="suggestion" type="hidden" name="suggestion" value="">
+      <span role="status" aria-live="polite" class="ui-helper-hidden-accessible"></span>
+      <input id="search" class="form-control conjoined_search" type="text" name="q" placeholder="Search All Support Resources" autocomplete="off">      
+      <div class="input-group-btn">
+        <button type="button" class="btn btn_search_adjacent dropdown-toggle" data-toggle="dropdown" tabindex="-1"><span class="caret"></span><span class="search_scope_label">Support</span></button>
+        <ul class="dropdown-menu list-unstyled dropdown-menu-right" role="menu">
+          <li data-toggle="collapse" data-target="#search_scope_doc" class="support_search_scope_trigger"><a href="#">Documentation</a></li>
+          <!--<li data-toggle="collapse" data-target="#search_scope_support"><a href="#">Support</a></li>-->
+          <li data-toggle="collapse" data-target="#search_scope_site"  class="support_search_scope_trigger"><a href="#">MathWorks</a></li>
+        </ul>
+        <script>
+          $(".support_search_scope_trigger").click(function() {
+            $("#search_scope_support").removeClass("in"); 
+            $("#docsearch").val($("#search").val()); 
+            $("#query").val($("#search").val()); 
+          });
+        </script>  
+        <button type="submit" name="submitsearch" id="support_submitsearch" class="btn icon-search btn_search_adjacent btn_search icon_16" tabindex="-1"></button>
+      </div>
+    </div>
+  </form>  
+  </#if>
+</div>
+<div id="search_scope_site" class="collapse">
+  <#if request.locale.language == "zh">
+  <form name="search" id="site_search" class="site_search" action="/search/site_search.html" method="get">
+    <div class="input-group">
+      <label class="sr-only">搜索 MathWorks</label>
+      <input type="hidden" name="c[]" value="entire_site">
+      <input type="text" name="q" id="query" class="form-control conjoined_search" placeholder="搜索 MathWorks" autocomplete="off" \="">
+      <div class="input-group-btn">
+        <button type="button" class="btn btn_search_adjacent dropdown-toggle" data-toggle="dropdown" tabindex="-1"><span class="caret"></span><span class="search_scope_label">MathWorks</span></button>
+        <ul class="dropdown-menu list-unstyled dropdown-menu-right" role="menu">
+          <li data-toggle="collapse" data-target="#search_scope_doc" class="site_search_scope_trigger"><a href="#">文档中心</a></li>
+          <li data-toggle="collapse" data-target="#search_scope_support" class="site_search_scope_trigger"><a href="#">支持</a></li>
+          <!--<li data-toggle="collapse" data-target="#search_scope_site"  class="support_search_scope_trigger"><a href="#">MathWorks</a></li>-->
+        </ul>
+        <script>
+          $(".site_search_scope_trigger").click(function() {
+            $("#search_scope_site").removeClass("in"); 
+            $("#search").val($("#query").val()); 
+            $("#docsearch").val($("#query").val());
+          });
+        </script>
+        <button type="submit" id="searchbutton" class="btn icon-search btn_search_adjacent btn_search icon_16" tabindex="-1"></button>
+      </div>
+    </div>
+  </form>
+  <#elseif request.locale.language == "ja">
+  <form name="search" id="site_search" class="site_search" action="/search/site_search.html" method="get">
+    <div class="input-group">
+      <label class="sr-only">MathWorks の Web サイトを検索</label>
+      <input type="hidden" name="c[]" value="entire_site">
+      <input type="text" name="q" id="query" class="form-control conjoined_search" placeholder="MathWorks の Web サイトを検索" autocomplete="off" \="">
+      <div class="input-group-btn">
+        <button type="button" class="btn btn_search_adjacent dropdown-toggle" data-toggle="dropdown" tabindex="-1"><span class="caret"></span><span class="search_scope_label">MathWorks</span></button>
+        <ul class="dropdown-menu list-unstyled dropdown-menu-right" role="menu">
+          <li data-toggle="collapse" data-target="#search_scope_doc" class="site_search_scope_trigger"><a href="#">ドキュメンテーション</a></li>
+          <li data-toggle="collapse" data-target="#search_scope_support" class="site_search_scope_trigger"><a href="#">サポート</a></li>
+          <!--<li data-toggle="collapse" data-target="#search_scope_site"  class="support_search_scope_trigger"><a href="#">MathWorks</a></li>-->
+        </ul>
+        <script>
+          $(".site_search_scope_trigger").click(function() {
+            $("#search_scope_site").removeClass("in"); 
+            $("#search").val($("#query").val()); 
+            $("#docsearch").val($("#query").val());
+          });
+        </script>
+        <button type="submit" id="searchbutton" class="btn icon-search btn_search_adjacent btn_search icon_16" tabindex="-1"></button>
+      </div>
+    </div>
+  </form>
+  <#elseif request.locale.language == "de">
+  <form name="search" id="site_search" class="site_search" action="/search/site_search.html" method="get">
+    <div class="input-group">
+      <label class="sr-only">MathWorks-Suche</label>
+      <input type="hidden" name="c[]" value="entire_site">
+      <input type="text" name="q" id="query" class="form-control conjoined_search" placeholder="MathWorks-Suche" autocomplete="off" \="">
+      <div class="input-group-btn">
+        <button type="button" class="btn btn_search_adjacent dropdown-toggle" data-toggle="dropdown" tabindex="-1"><span class="caret"></span><span class="search_scope_label">MathWorks</span></button>
+        <ul class="dropdown-menu list-unstyled dropdown-menu-right" role="menu">
+          <li data-toggle="collapse" data-target="#search_scope_doc" class="site_search_scope_trigger"><a href="#">Documentation</a></li>
+          <li data-toggle="collapse" data-target="#search_scope_support" class="site_search_scope_trigger"><a href="#">Support</a></li>
+          <!--<li data-toggle="collapse" data-target="#search_scope_site"  class="support_search_scope_trigger"><a href="#">MathWorks</a></li>-->
+        </ul>
+        <script>
+          $(".site_search_scope_trigger").click(function() {
+            $("#search_scope_site").removeClass("in"); 
+            $("#search").val($("#query").val()); 
+            $("#docsearch").val($("#query").val());
+          });
+        </script>
+        <button type="submit" id="searchbutton" class="btn icon-search btn_search_adjacent btn_search icon_16" tabindex="-1"></button>
+      </div>
+    </div>
+  </form>  
+  <#else>
+  <form name="search" id="site_search" class="site_search" action="/search/site_search.html" method="get">
+    <div class="input-group">
+      <label class="sr-only">Search MathWorks.com</label>
+      <input type="hidden" name="c[]" value="entire_site">
+      <input type="text" name="q" id="query" class="form-control conjoined_search" placeholder="Search MathWorks.com" autocomplete="off" \="">
+      <div class="input-group-btn">
+        <button type="button" class="btn btn_search_adjacent dropdown-toggle" data-toggle="dropdown" tabindex="-1"><span class="caret"></span><span class="search_scope_label">MathWorks</span></button>
+        <ul class="dropdown-menu list-unstyled dropdown-menu-right" role="menu">
+          <li data-toggle="collapse" data-target="#search_scope_doc" class="site_search_scope_trigger"><a href="#">Documentation</a></li>
+          <li data-toggle="collapse" data-target="#search_scope_support" class="site_search_scope_trigger"><a href="#">Support</a></li>
+          <!--<li data-toggle="collapse" data-target="#search_scope_site"  class="support_search_scope_trigger"><a href="#">MathWorks</a></li>-->
+        </ul>
+        <script>
+          $(".site_search_scope_trigger").click(function() {
+            $("#search_scope_site").removeClass("in"); 
+            $("#search").val($("#query").val()); 
+            $("#docsearch").val($("#query").val()); 
+          });
+        </script>
+        <button type="submit" id="searchbutton" class="btn icon-search btn_search_adjacent btn_search icon_16" tabindex="-1"></button>
+      </div>
+    </div>
+  </form>
+  </#if>
+</div>

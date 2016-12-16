@@ -1,0 +1,143 @@
+<#assign determine_directory = request.URI?split("/")/>
+<#if (determine_directory[2] == "matlab")><#assign docprodcode = "ML" />
+<#elseif (determine_directory[2] == "simulink")><#assign docprodcode = "SL" />
+<#elseif (determine_directory[2] == "aeroblks")><#assign docprodcode = "AE" />
+<#elseif (determine_directory[2] == "aerotbx")><#assign docprodcode = "AT" />
+<#elseif (determine_directory[2] == "antenna")><#assign docprodcode = "AA" />
+<#elseif (determine_directory[2] == "bioinfo")><#assign docprodcode = "BI" />
+<#elseif (determine_directory[2] == "bugfinder")><#assign docprodcode = "BF" />
+<#elseif (determine_directory[2] == "certkitiec")><#assign docprodcode = "IE" />
+<#elseif (determine_directory[2] == "coder")><#assign docprodcode = "ME" />
+<#elseif (determine_directory[2] == "codeprover")><#assign docprodcode = "PB" />
+<#elseif (determine_directory[2] == "comm")><#assign docprodcode = "CM" />
+<#elseif (determine_directory[2] == "compiler")><#assign docprodcode = "CO" />
+<#elseif (determine_directory[2] == "control")><#assign docprodcode = "CT" />
+<#elseif (determine_directory[2] == "curvefit")><#assign docprodcode = "CF" />
+<#elseif (determine_directory[2] == "daq")><#assign docprodcode = "DA" />
+<#elseif (determine_directory[2] == "database")><#assign docprodcode = "DB" />
+<#elseif (determine_directory[2] == "datafeed")><#assign docprodcode = "DF" />
+<#elseif (determine_directory[2] == "distcomp")><#assign docprodcode = "DM" />
+<#elseif (determine_directory[2] == "dotnetbuilder")><#assign docprodcode = "MN" />
+<#elseif (determine_directory[2] == "dsp")><#assign docprodcode = "DS" />
+<#elseif (determine_directory[2] == "ecoder")><#assign docprodcode = "EC" />
+<#elseif (determine_directory[2] == "ecoder_mc")><#assign docprodcode = "EC" />
+<#elseif (determine_directory[2] == "ecoder_sc")><#assign docprodcode = "EC,SL" />
+<#elseif (determine_directory[2] == "econ")><#assign docprodcode = "ET" />
+<#elseif (determine_directory[2] == "edalink")><#assign docprodcode = "ES" />
+<#elseif (determine_directory?size gte 4) && (determine_directory[3] == "elec")><#assign docprodcode = "SN" />
+<#elseif (determine_directory[2] == "exlink")><#assign docprodcode = "EL" />
+<#elseif (determine_directory[2] == "finance")><#assign docprodcode = "FI" />
+<#elseif (determine_directory[2] == "finderiv")><#assign docprodcode = "DE" />
+<#elseif (determine_directory[2] == "finfixed")><#assign docprodcode = "FX" />
+<#elseif (determine_directory[2] == "fininst")><#assign docprodcode = "IT" />
+<#elseif (determine_directory[2] == "fixedpoint")><#assign docprodcode = "PO" />
+<#elseif (determine_directory[2] == "fixpoint")><#assign docprodcode = "FP" />
+<#elseif (determine_directory[2] == "fuzzy")><#assign docprodcode = "FL" />
+<#elseif (determine_directory[2] == "gads")><#assign docprodcode = "GD" />
+<#elseif (determine_directory[2] == "gauges")><#assign docprodcode = "DG" />
+<#elseif (determine_directory[2] == "hdlcoder")><#assign docprodcode = "HD" />
+<#elseif (determine_directory[2] == "hdlfilter")><#assign docprodcode = "FH" />
+<#elseif (determine_directory[2] == "hdlverifier")><#assign docprodcode = "ES" />
+<#elseif (determine_directory?size gte 4) && (determine_directory[3] == "hydro")><#assign docprodcode = "SH" />
+<#elseif (determine_directory[2] == "ident")><#assign docprodcode = "ID" />
+<#elseif (determine_directory[2] == "images")><#assign docprodcode = "IP" />
+<#elseif (determine_directory[2] == "imaq")><#assign docprodcode = "IA" />
+<#elseif (determine_directory[2] == "install")><#assign docprodcode = "" />
+<#elseif (determine_directory[2] == "instrument")><#assign docprodcode = "IC" />
+<#elseif (determine_directory[2] == "compiler_sdk")><#assign docprodcode = "MJ" />
+<#elseif (determine_directory[2] == "lte")><#assign docprodcode = "LS" />
+<#elseif (determine_directory[2] == "map")><#assign docprodcode = "MG" />
+<#elseif (determine_directory[2] == "mbc")><#assign docprodcode = "MB" />
+<#elseif (determine_directory[2] == "mdce")><#assign docprodcode = "DW|DM" />
+<#elseif (determine_directory[2] == "mpc")><#assign docprodcode = "MP" />
+<#elseif (determine_directory[2] == "mts")><#assign docprodcode = "PR" />
+<#elseif (determine_directory[2] == "nnet")><#assign docprodcode = "NN" />
+<#elseif (determine_directory[2] == "opc")><#assign docprodcode = "OT" />
+<#elseif (determine_directory[2] == "optim")><#assign docprodcode = "OP" />
+<#elseif (determine_directory[2] == "pde")><#assign docprodcode = "PD" />
+<#elseif (determine_directory[2] == "phased")><#assign docprodcode = "AR" />
+<#elseif (determine_directory[2] == "plccoder")><#assign docprodcode = "PL" />
+<#elseif (determine_directory[2] == "polyspace_ada")><#assign docprodcode = "PA" />
+<#elseif (determine_directory[2] == "polyspace_c")><#assign docprodcode = "PC" />
+<#elseif (determine_directory[2] == "polyspace_modellink")><#assign docprodcode = "PG" />
+<#elseif (determine_directory[2] == "polyspace_umllink")><#assign docprodcode = "PI" />
+<#elseif (determine_directory?size gte 4) && (determine_directory[3] == "powersys")><#assign docprodcode = "PS" />
+<#elseif (determine_directory[2] == "qualkitdo")><#assign docprodcode = "DO" />
+<#elseif (determine_directory[2] == "rf")><#assign docprodcode = "RF" />
+<#elseif (determine_directory[2] == "robotics")><#assign docprodcode = "RO" />
+<#elseif (determine_directory[2] == "robust")><#assign docprodcode = "RC" />
+<#elseif (determine_directory[2] == "rptgen")><#assign docprodcode = "MR" />
+<#elseif (determine_directory[2] == "rptgenext")><#assign docprodcode = "SR" />
+<#elseif (determine_directory[2] == "rtw")><#assign docprodcode = "RT" />
+<#elseif (determine_directory[2] == "rtwin")><#assign docprodcode = "WT" />
+<#elseif (determine_directory?size gte 4) && (determine_directory[3] == "sdl")><#assign docprodcode = "LD" />
+<#elseif (determine_directory[2] == "signal")><#assign docprodcode = "SG" />
+<#elseif (determine_directory[2] == "simbio")><#assign docprodcode = "SB" />
+<#elseif (determine_directory[2] == "simevents")><#assign docprodcode = "SE" />
+<#elseif (determine_directory[2] == "simrf")><#assign docprodcode = "RB" />
+<#elseif (determine_directory[2] == "sltest")><#assign docprodcode = "SZ" />
+<#elseif (determine_directory?size gte 4) && (determine_directory[3] == "simscape")><#assign docprodcode = "SS" />
+<#elseif (determine_directory[2] == "sl3d")><#assign docprodcode = "VR" />
+<#elseif (determine_directory[2] == "slci")><#assign docprodcode = "CI" />
+<#elseif (determine_directory[2] == "slcontrol")><#assign docprodcode = "SD" />
+<#elseif (determine_directory[2] == "sldo")><#assign docprodcode = "SO" />
+<#elseif (determine_directory[2] == "sldv")><#assign docprodcode = "DV" />
+<#elseif (determine_directory[2] == "slvnv")><#assign docprodcode = "VV" />
+<#elseif (determine_directory?size gte 4) && (determine_directory[3] == "sm")><#assign docprodcode = "MS" />
+<#elseif (determine_directory?size gte 4) && (determine_directory[3] == "smlink")><#assign docprodcode = "MS" />
+<#elseif (determine_directory[2] == "stateflow")><#assign docprodcode = "SF" />
+<#elseif (determine_directory[2] == "stats")><#assign docprodcode = "ST" />
+<#elseif (determine_directory[2] == "symbolic")><#assign docprodcode = "SM" />
+<#elseif (determine_directory[2] == "systemtest")><#assign docprodcode = "SY" />
+<#elseif (determine_directory[2] == "trading")><#assign docprodcode = "TR" />
+<#elseif (determine_directory[2] == "vision")><#assign docprodcode = "VP" />
+<#elseif (determine_directory[2] == "visionhdl")><#assign docprodcode = "VT" />
+<#elseif (determine_directory[2] == "vnt")><#assign docprodcode = "VN" />
+<#elseif (determine_directory[2] == "wavelet")><#assign docprodcode = "WA" />
+<#elseif (determine_directory[2] == "xpc")><#assign docprodcode = "XP" />
+<#else><#assign docprodcode = "ML" />
+</#if>
+
+
+<@include_file fileLocation="/includes_content/nextgen/macros/products/callout_macros.html" />
+<#assign prodCode = "${docprodcode}" />
+<#assign trackingCode = "doc_trial_" + "${docprodcode}" + "_footer" />
+
+
+<#if request.locale.language == "zh">
+
+  <div class="panel panel_color_transparent panel_color_fill">
+    <div class="panel-body"> <img src="/images/nextgen/callouts/bg-trial-arrow_02.png" class="add_margin_5">
+      <h4>试用 MATLAB、Simulink 以及其他产品</h4>
+      <@designComponents.actionlink action="/programs/trials/trial_request.html?prodcode=${prodCode?if_exists}&amp;s_iid=${trackingCode?if_exists}">立即获取试用版</@designComponents.actionlink>
+    </div>
+  </div>
+
+<#elseif request.locale.language == "ja">
+
+  <div class="panel panel_color_transparent panel_color_fill">
+    <div class="panel-body"> <img src="/images/nextgen/callouts/bg-trial-arrow_02.png" class="add_margin_5">
+      <h4>MATLAB、Simulink、その他の製品をお試しください </h4>
+      <@designComponents.actionlink action="/programs/trials/trial_request.html?prodcode=${prodCode?if_exists}&amp;s_iid=${trackingCode?if_exists}">無料評価版のダウンロード </@designComponents.actionlink>
+    </div>
+  </div>
+
+<#elseif request.locale.language == "ko">
+
+  <div class="panel panel_color_transparent panel_color_fill">
+    <div class="panel-body"> <img src="/images/nextgen/callouts/bg-trial-arrow_02.png" class="add_margin_5">
+      <h4>MATLAB, Simulink, 기타 제품 사용해 보기 </h4>
+      <@designComponents.actionlink action="/programs/trials/trial_request.html?prodcode=${prodCode?if_exists}&amp;s_iid=${trackingCode?if_exists}">평가판 신청</@designComponents.actionlink>
+    </div>
+  </div>
+
+<#else>
+
+  <div class="panel panel_color_transparent panel_color_fill">
+    <div class="panel-body"> <img src="/images/nextgen/callouts/bg-trial-arrow_02.png" class="add_margin_5">
+      <h4>Try MATLAB, Simulink, and Other Products</h4>
+      <@designComponents.actionlink action="/programs/trials/trial_request.html?prodcode=${prodCode?if_exists}&amp;s_iid=${trackingCode?if_exists}">Get trial now</@designComponents.actionlink>
+    </div>
+  </div>
+
+</#if>

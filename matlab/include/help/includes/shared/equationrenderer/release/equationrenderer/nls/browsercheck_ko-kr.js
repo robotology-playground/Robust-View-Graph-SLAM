@@ -1,0 +1,3 @@
+define('equationrenderer/nls/browsercheck_ko-kr',{
+'l10n/nls/unsupportedErrorPage':{"unsupportedError":"<p>죄송합니다.</p><p>액세스 중인 페이지는 이 브라우저에서 지원되지 않습니다.</p><p>지원되는 다음 브라우저 중 하나로 변경하거나 업그레이드하십시오.</p><ul><li>Windows Vista 또는 Windows 7의 경우:<ul><li>Chrome 12 이상</li><li>Firefox 7 이상</li><li>Internet Explorer 9 이상</li></ul></li><li>Mac 10.6 또는 Mac 10.7의 경우:<ul><li>Safari 5.0 이상</li><li>Chrome 12 이상</li></ul></li></ul>","_localized":{}}
+});

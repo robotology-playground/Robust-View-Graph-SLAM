@@ -10,19 +10,12 @@
 
 cmake_minimum_required(VERSION 3.2.2)
 
-#SET(PROJECTNAME vgSLAM)
-#PROJECT(${PROJECTNAME})
-
-########################################################################
-################# ONLY change inside this region #######################
-########################################################################
-#SET(matlab /home/tariq/Dev/matlab)
-########################################################################
-########################################################################
-########################################################################
-
 OPTION( BUILD_CAMERA_GRAPH	"Build camera graph"	OFF )
 OPTION( BUILD_OPTIMISER		"Enable optimisation"	OFF )
+OPTION( ENABLE_MATLAB		"Enable use of MATLAB"	ON )
+OPTION( ENABLE_VLFEAT		"Enable use of VLFEAT"	ON )
+
+SET(VLFEAT_ROOT /home/tariq/Dev/matlab)
 
 if (BUILD_OPTIMISER)
 	add_subdirectory(optimise)

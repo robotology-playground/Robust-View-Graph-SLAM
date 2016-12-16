@@ -1,0 +1,266 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>MATLAB Documentation Center</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link rel="stylesheet" href="docstyle.css" type="text/css">
+<link href="../includes/product/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="../includes/product/scripts/jquery/jquery-latest.js"></script>
+<link href="../includes/product/css/site6.css?201602231719" rel="stylesheet" type="text/css">
+<link href="../includes/product/css/site6_lg.css?201602231719" rel="stylesheet" media="screen and (min-width: 1200px)">
+<link href="../includes/product/css/site6_md.css?201602231719" rel="stylesheet" media="screen and (min-width: 992px) and (max-width: 1199px)">
+<link href="../includes/product/css/site6_sm+xs.css?201602231719" rel="stylesheet" media="screen and (max-width: 991px)">
+<link href="../includes/product/css/site6_sm.css?201602231719" rel="stylesheet" media="screen and (min-width: 768px) and (max-width: 991px)">
+<link href="../includes/product/css/site6_xs.css?201602231719" rel="stylesheet" media="screen and (max-width: 767px)">
+<link href="../includes/product/css/site6_offcanvas.css?201602231719" rel="stylesheet" type="text/css">
+<script src="../includes/shared/scripts/l10n.js"></script>
+<script src="../includes/shared/scripts/docscripts.js"></script>
+<script src="../includes/shared/scripts/f1help.js"></script>
+<script src="../includes/product/scripts/docscripts.js"></script>
+<script src="../includes/shared/scripts/mw.imageanimation.js"></script>
+<script src="../includes/shared/scripts/jquery.highlight.js"></script>
+<script src="../includes/product/scripts/underscore-min.js"></script>
+<script src="../includes/product/scripts/suggest.js"></script>
+<script src="../includes/product/scripts/jquery/jquery.mobile.custom.min.js"></script>
+<script src="../includes/product/scripts/bootstrap.min.js" type="text/javascript"></script>
+<script src="../includes/product/scripts/global.js"></script>
+<link href="../includes/web/css/doc_center.css" rel="stylesheet" type="text/css">
+<link href="../includes/product/css/doc_center_installed.css" rel="stylesheet" type="text/css">
+<link href="../includes/product/css/doc_center_print.css" rel="stylesheet" type="text/css" media="print">
+<script src="../includes/product/scripts/search.js"></script>
+<script src="../includes/product/scripts/suggest.js"></script>
+<script src="../includes/product/scripts/tokenize.js"></script>
+<script src="../includes/shared/scripts/l10n.js"></script>
+<script type="text/javascript">
+    var get_facet_label;
+    function populateResults(jsonObject) {
+        populateResultsList(jsonObject.searchresults);
+        populateResultData(jsonObject);
+        populateFacets(jsonObject.facetresults);
+    }
+
+    function populateResultsList(searchresults, searchTerm) {
+        var highlightTerm = "";
+        if (searchTerm && searchTerm.length > 0) {
+            highlightTerm = searchTerm;
+        } else if( $('#docsearch') && $('#docsearch').val() ){
+            highlightTerm = $('#docsearch').val();
+        }
+        $('#wait').remove();
+
+        var resultsHtml = '';
+        resultsHtml = getSearchResultsHtml(searchresults, highlightTerm);
+
+        var resultsDiv = $('#results_area');
+        resultsDiv.html(resultsHtml);
+    }
+
+    function populateResultData(jsonObject) {
+        var searchterm = jsonObject.searchterm;
+        var productbreadcrumb = jsonObject.productbreadcrumb;
+        var summarydata = jsonObject.summarydata;
+        var footerdata = jsonObject.footerdata;
+        var searchTextDesc = jsonObject.searchtext;
+
+        $('#docsearch').val(searchterm);
+
+        $('.tokenized_search_field').tokenize({
+            fields: ["product", "category", "type"],
+            remove_if_empty: true,
+            label_function: get_facet_label
+        });
+
+
+        var summaryHtml = '';
+        summaryHtml = getSearchSummaryHtml(footerdata);
+
+        var searchingInfoDiv = $('#search_result_info_header');
+        searchingInfoDiv.html(searchTextDesc);   
+
+        var summaryDiv = $('#search_result_header');
+        summaryDiv.html(summaryHtml);
+
+        var footerHtml = '';
+        footerHtml = getSearchFooterHtml(footerdata);
+
+        var footerDiv = $('#search_result_footer');
+        footerDiv.html(footerHtml);
+
+        setPageTitle();
+    }
+
+    function populateFacets(facetJson) {
+        var facetHtml = '';
+        facetHtml = getFacetResultsHtml(facetJson);
+
+        var facetDiv = $('#facets_area');
+        facetDiv.html(facetHtml);
+    }
+
+    function displayError(error) {
+        $('#docsearch').val(error.searchtext);
+        var errorHtml = getErrorHtml(error.message);
+
+        var errorDiv = $('#results_area');
+        errorDiv.html(errorHtml);
+        setPageTitle();
+    }
+
+    function displayMessage(message) {
+        var messageDiv = $('#results_area');
+        messageDiv.empty();
+        $('#docsearch').val(message.searchtext);
+        messageDiv.append(getSuggestionsListHtml(message));
+        setPageTitle();
+    }
+
+    function setPageTitle() {
+        document.title = "Search Results - " + $("#docsearch").val();
+    }
+
+    function populateLookupTable(facetLabelJson) {
+
+        var labels = {};
+        for (var facetLabel in facetLabelJson) {
+            if (facetLabelJson.hasOwnProperty(facetLabel)) {
+                labels[facetLabelJson[facetLabel].field + ":" +
+                        facetLabelJson[facetLabel].value] = facetLabelJson[facetLabel].label;
+            }
+        }
+        get_facet_label = function (token) {
+            return labels[token.field + ":" + token.value];
+        }
+    }
+
+</script>
+
+<style>
+.offcanvas_actuator .offcanvas_actuator_label:before {content: "FILTER";}
+#search_result_info_header { font-size:15px; line-height:36px; }
+</style>
+</head>
+
+<body id="responsive_offcanvas">
+<div id="doc_header_spacer" class="header"></div>
+<div class="sticky_header_container includes_subnav">
+  <div class="section_header level_3">
+    <div class="container-fluid">
+      <div class="row" id="mobile_search_row">
+        <div class="col-xs-12 col-sm-6 col-sm-push-6 col-md-5 col-md-push-7" id="mobile_search">
+          <div class="search_nested_content_container">
+            <form id="docsearch_form" name="docsearch_form" method="get" data-release="R2016b" data-language="en" action="../templates/searchresults.html">
+              <div class="input-group tokenized_search_field">
+                <label class="sr-only">Search Help</label>
+                <input type="text" class="form-control conjoined_search" autocomplete="off" name="qdoc" placeholder="Search Help" id="docsearch">
+                <div class="input-group-btn">
+                  <button type="submit" name="submitsearch" id="submitsearch" class="btn icon-search btn_search_adjacent btn_search icon_16" tabindex="-1"></button>
+                </div>
+              </div>
+            </form>
+          </div>
+          <button class="btn icon-remove btn_search pull-right icon_32 visible-xs" data-toggle="collapse" href="#mobile_search" aria-expanded="false" aria-controls="mobile_search"></button>
+        </div>
+        <div class="col-sm-6 col-sm-pull-6 col-md-7 col-md-pull-5" id="section_header_title">
+          <div class="section_header_content">
+            <div class="section_header_title">
+              <h1>Search</h1>
+            </div>
+          </div>
+        </div>
+        <div class="visible-xs" id="search_actuator">
+          <button class="btn icon-search btn_search pull-right icon_16" data-toggle="collapse" href="#mobile_search" aria-expanded="false" aria-controls="mobile_search"></button>
+        </div>
+      </div>
+      <!--END.CLASS row--> 
+    </div>
+    <!--END.CLASS container-fluid--> 
+  </div>
+  <!--END.CLASS section_header level_3-->
+  <div class="horizontal_nav">
+    <div class="horizontal_nav_container">
+      <div class="offcanvas_actuator" data-toggle="offcanvas" data-target="#sidebar" id="nav_toggle">
+        <button type="button" class="btn"><span class="sr-only">Toggle navigation</span><span class="icon-filter icon_24"></span></button>
+        <span class="offcanvas_actuator_label"></span><span class="offcanvas_actuator_close"></span> </div>
+      <div class="offcanvas_horizontal_nav">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12 hidden-xs hidden-sm"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row-offcanvas row-offcanvas-left">
+  <div class="sidebar-offcanvas" id="sidebar" role="navigation">
+    <nav class="offcanvas_nav" role="navigation">
+    <ul xmlns:atict="http://www.arbortext.com/namespace/atict" class="nav_breadcrumb">
+      <li itemscope="" itemtype="http://www.data-vocabulary.org/Breadcrumb" itemprop="breadcrumb"><a href="../documentation-center.html" itemprop="url"><span itemprop="title">All Products</span></a></li>
+    </ul>
+
+      <!-- DOC FACETS: START -->
+      <div id="facets_area"></div>
+      <!-- DOC FACETS: END --> 
+      
+    </nav>
+  </div>
+  <script src="../includes/product/scripts/offcanvas.js?20150904"></script> 
+  
+  <!-- MOBILE CTA - Begin --> 
+  <!-- MOBILE CTA - End -->
+  
+  <div class="content_container" id="content_container">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-xs-12">
+          <div id="nugget-container" class="nugget_container" style="display: none;"> <span class="nugget_label">Your Selections</span>
+            <div id="nugget-box" class="nugget_box"></div>
+          </div>
+          <section id="doc_center_content"> 
+            
+            <!-- DOC SEARCH CONTENT: START -->
+            <div class="col-sm-6 col-sm-push-6">
+              <div id="search_result_header"></div>
+            </div>
+            <div class="col-sm-6 col-sm-pull-6">
+              <div id="search_result_info_header"></div>
+            </div>
+            <div class="clearfix"></div>
+            <div id="results_area">
+              <div id="wait"> <img src="../includes/product/images/doc_center/progress.gif" alt=""> </div>
+            </div>
+            <div id="search_result_footer"></div>
+            <!-- DOC SEARCH CONTENT: END --> 
+            
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer id="footer" class="bs-footer">
+    <div class="container-fluid">
+      <div class="footer">
+        <div class="row">
+          <div class="col-xs-12"> 
+            
+            <!-- DOC SEARCH FOOTER: START -->
+            <ul class="footernav">
+              <li class="footernav_trademarks"><a id="acknowledgments" href="../acknowledgments.html"></a></li>
+              <li class="footernav_trademarks"><a id="trademarks" href="../../trademarks.txt"></a></li>
+              <li class="footernav_patents"><a id="patents" href="../../patents.txt"></a></li>
+              <li class="footernav_help"><a id="terms_of_use" href="../../license_agreement.txt"></a></li>
+            </ul>
+            <div class="clearfix"></div>
+            <div class="copyright">&copy; 1994-<span id="current_year"></span> The MathWorks, Inc.</div>
+            <!-- DOC SEARCH FOOTERT: END --> 
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+</body>
+</html>

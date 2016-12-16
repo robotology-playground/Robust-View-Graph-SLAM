@@ -292,7 +292,6 @@ endif(EXISTS ${METIS_LIB})
 find_library(METIS4_LIB
 			 PATHS ../metis-4.0
 			 NAMES libmetis.a)
-#link_directories(${METIS4_LIB})
 if (EXISTS ${METIS4_LIB})
 	message("-- METIS-4.0 libs: ${METIS4_LIB}")
 endif(EXISTS ${METIS4_LIB})
@@ -315,7 +314,7 @@ endif(EXISTS ${GSL_LIB})
 #-lgfortran -lceres -lcholmod -lcolamd -lamd -lcamd -lcxsparse -lsuitesparseconfig -lgomp -lglog -lpthread
 
 ########### MATLAB
-set(MATLAB_INCLUDE_DIRS ${MATLAB_ROOT})
+set(MATLAB_INCLUDE_DIRS ../matlab/include)
 message("-- Using MATLAB: ${MATLAB_INCLUDE_DIRS}")
 include_directories(${MATLAB_INCLUDE_DIRS})
 #find_package( matlab )

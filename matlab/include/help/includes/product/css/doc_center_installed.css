@@ -1,0 +1,158 @@
+/* Overrides for Doc Center in the Product */
+
+/*
+-----------------------------------
+TOC
+-----------------------------------
+
+Bootstrap Overrides:......Changes to base-Bootstrap CSS
+
+Page Globals:.............Styling of HTML and BODY
+
+Site Elements:............Re-usable site elements   
+
+Structure:................Site structural components
+
+Section Specific:.........Styles for Home and all Sub Pages
+
+Page/Element Specific:....Page, element or flow Specific CSS
+
+Responsive:...............Specific styles for Desktop, Tablet and Mobile
+
+Additive CSS:.............Additive/override CSS
+
+*/
+
+
+
+/* ------------------------------------
+$ Fonts
+------------------------------------ */
+@font-face { font-family: 'mathworks'; font-style: normal; font-weight: normal;
+  src:  url('../fonts/mathworks.woff?5hi3p2') format('woff'),
+        url('../fonts/mathworks.ttf?5hi3p2') format('truetype'),
+        url('../fonts/mathworks.svg?5hi3p2#mathworks') format('svg');
+}
+
+@font-face { font-family: 'mathworks-eps'; font-style: normal; font-weight: normal;
+  src:  url('../fonts/mathworks-eps.woff?29yaua') format('woff'),
+        url('../fonts/mathworks-eps.ttf?29yaua') format('truetype'),
+        url('../fonts/mathworks-eps.svg?29yaua#mathworks-eps') format('svg');
+}
+
+
+
+/*-----------------------------------
+   Site Elements
+-------------------------------------*/
+
+/* ---- Product and Web Specific Links ---- */
+
+  /* Relese Mark */
+  #doc_center_content h1.r2016a,
+  #doc_center_content h1.r2016b { background:none; }
+
+  #doc_center_content h2.title.r2016a,
+  #doc_center_content h2.title.r2016b { background:none; }
+
+  /* Product and Web Specific Links: Hide/Show - Responsive-ification Needed: visible_product hidden_web; */
+  .execmatlabproduct { display:inline; }
+  .execmatlabweb { display:none; }
+
+  .coming_from_product { display:inline; }
+  div.coming_from_product { display:block; }
+  .not_coming_from_product { display:none; }
+  div.not_coming_from_product { display:none; }
+
+  .execmatlabproduct.video { display:inline-block; }
+  .execmatlabweb.video { display:none; }
+
+  .support_package_list { display:none; }
+
+
+
+/*-----------------------------------
+   Structure
+-------------------------------------*/
+
+/* ---- Header ---- */
+#header_mobile,
+#header_desktop { display: none !important; }
+
+  /* Product Documentation does not use #header_mobile or #header_desktop, so the sticky_header_container affixes immediately. This spacer prevents that. */
+  #doc_header_spacer { height: 1px; background: #2f7eb2; }
+
+
+/* ---- Section Header ---- */
+.section_header .btn_search_adjacent.dropdown-toggle { display: none; }
+
+  /* Product Documentation (Web) does not use #header_mobile or #header_desktop, so the sticky_header_container affixes immediately. */
+  /* Reduce height of section_header by 1px to accomodate #doc_header_spacer */
+  .section_header { height: 51px; }
+  .section_header_content { height: 51px; }
+
+  /* Restore height on scroll */
+  .sticky_header_container.affix .section_header { padding-top:1px; }
+
+.section_header_content a,
+.section_header_content a:hover,
+.section_header_content a:visited { color: #fff; text-decoration: none; }
+
+.sticky_header_container .section_header.level_3 h1,
+.sticky_header_container .section_header.level_3 p.h1 { font-size: 23px; } 
+
+
+/* ---- Off-Canvas Actuator  ---- */
+
+  /* Off-Canvas Actuator: Container */
+
+    /* Actuator Container: Inactive */   
+    .offcanvas_actuator { background: url(../images/global/bg-offcanvas-actuator.png) repeat-y -270px top; }
+
+    /* Actuator Container: Active */ 
+   .offcanvas_actuator.active { background: url(../images/global/bg-offcanvas-actuator.png) repeat-y 0 top; }
+
+
+/* ---- Horizontal Nav ---- */
+/*
+.horizontal_nav_container .cta_box { display: none; }
+*/
+
+/* ---- Body Trail ---- */
+.body_trail_container .panel { display: none; }
+
+
+/* ---- Mobile CTA Container ---- */
+.cta_container_mobile { display: none !important; }
+
+
+/* ---- Footer ---- */
+.fat_footer_container { display: block; }
+.fat_footer_container .footernav > li:first-child> a { padding-left: 0; }
+
+#footer { min-height: 100px; padding: 18px 0; overflow: hidden; }
+
+
+
+
+
+
+
+/* Fixes for 16b */
+/* New Category Page Design */
+#pgtype-category h2 { border-bottom:none; }
+.panel-group .panel { margin-bottom:10px; }
+.panel-group .panel-heading { border-radius:4px; }
+.panel-group .panel-heading .panel-title { font-size:13px; }
+.panel-group .panel-default .panel-heading { border-bottom:none; }
+.panel-group table { margin-bottom:20px; }
+#doc_center_content .panel-group .panel-collapse.collapse { padding:0 !important; background:transparent; }
+
+.panel-group .panel-heading { padding-right:56px; position:relative; }
+.panel-group .panel-heading .icon-arrow-open-up,
+.panel-group .panel-heading .icon-arrow-open-down { float:right; position:absolute; right:15px; top:calc(50% - 11px); }
+
+.panel-group .panel-heading .icon-arrow-open-down { display:none !important; }
+
+.panel-group .panel-heading.collapsed .icon-arrow-open-up { display:none !important; }
+.panel-group .panel-heading.collapsed .icon-arrow-open-down { display:block !important; }
