@@ -30,6 +30,7 @@ cmake_install.cmake
 # directories
 build*
 graph/build*
+metis-4.0*
 
 
 # Documentation directory
