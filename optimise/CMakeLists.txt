@@ -22,70 +22,71 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
-# Set postfixes for generated libraries based on buildtype.
+########### Set postfixes for generated libraries based on buildtype.
 set(CMAKE_RELEASE_POSTFIX "-release")
 set(CMAKE_DEBUG_POSTFIX "-debug")
 
-# Flags
+########### Flags
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
 
-# Options
-OPTION( BUILD_SHARED_LIBS 	"Enable shared libraries." 				OFF )
-OPTION( YARP 			"Enable use of YARP." 					ON )
-OPTION( ICUB 			"Enable use of ICUB." 					ON )
-OPTION( OpenCV 			"Enable use of OpenCV." 				ON )
-OPTION( LAPACK 			"Enable use of LAPACK." 				ON )
-OPTION( EIGENSPARSE		"Enable Eigen as a sparse linear algebra library"	ON )
-OPTION( SUITESPARSE 		"Enable SuiteSparse." 					ON )
-OPTION( CXSparse 		"Enable CXSparse." 					ON )
+########### Options
+OPTION( BUILD_SHARED_LIBS 	"Enable shared libraries." 							OFF )
+OPTION( YARP 				"Enable use of YARP." 								ON )
+OPTION( ICUB 				"Enable use of ICUB." 								ON )
+OPTION( OpenCV 				"Enable use of OpenCV." 							ON )
+OPTION( LAPACK 				"Enable use of LAPACK." 							ON )
+OPTION( EIGENSPARSE			"Enable Eigen as a sparse linear algebra library"	ON )
+OPTION( SUITESPARSE 		"Enable SuiteSparse." 								ON )
+OPTION( CXSparse 			"Enable CXSparse." 									ON )
 
-# Unset a variable, cache variable, or environment variable.
-#unset(PWG_COMPILE_OPTIONS)
-#unset(PWG_LIBRARIES)
-
-# YARP.
+########### YARP.
 if (YARP)
 	find_package( YARP REQUIRED )
 	if (YARP_FOUND)
 		message("-- Found YARP library: ${YARP_LIBRARIES}")
         include_directories(${YARP_INCLUDE_DIRS})
+		SET(PROJECT_LIBS ${PROJECT_LIBS} ${YARP_LIBRARIES})
 	else (YARP_FOUND)
     	message("-- Did not find YARP library.")
 	endif (YARP_FOUND)
 endif (YARP)
 
-# ICUB.
+########### ICUB.
 if (ICUB)
 	find_package( ICUB REQUIRED )
 	if (ICUB_FOUND)
 		message("-- Found ICUB library: ${ICUB_LIBRARIES}")
 		include_directories(${ICUB_INCLUDE_DIRS})
+		SET(PROJECT_LIBS ${PROJECT_LIBS} ${ICUB_LIBRARIES})
 	else (ICUB_FOUND)
 		message("-- Did not find ICUB library.")
 	endif (ICUB_FOUND)
 endif (ICUB)
 
-# OpenCV.
+########### OpenCV.
 if (OpenCV)
-        find_package( OpenCV REQUIRED )
-        if (OpenCV_FOUND)
-                message("-- Found OPENCV library: ${OpenCV_LIBS}")
-        else (OpenCV_FOUND)
+	find_package( OpenCV REQUIRED )
+	if (OpenCV_FOUND)
+		message("-- Found OPENCV library: ${OpenCV_LIBS}")
+		SET(PROJECT_LIBS ${PROJECT_LIBS} ${OpenCV_LIBS})
+	else (OpenCV_FOUND)
         message("-- Did not find OPENCV library.")
-        endif (OpenCV_FOUND)
+	endif (OpenCV_FOUND)
 endif (OpenCV)
 
-# LAPACK (& BLAS).
+########### LAPACK (& BLAS).
 if (LAPACK)
 	find_package(LAPACK REQUIRED )
 	if (LAPACK_FOUND)
 		message("-- Found LAPACK library: ${LAPACK_LIBRARIES}")
+		SET(PROJECT_LIBS ${PROJECT_LIBS} ${LAPACK_LIBRARIES})
 	else (LAPACK_FOUND)
 		message("-- Did not find LAPACK library, disabling LAPACK support.")
 	endif (LAPACK_FOUND)
 	find_package(BLAS REQUIRED )
 	if (BLAS_FOUND)
 		message("-- Found BLAS library: ${BLAS_LIBRARIES}")
+		SET(PROJECT_LIBS ${PROJECT_LIBS} ${BLAS_LIBRARIES})
 	else (BLAS_FOUND)
 		message("-- Did not find BLAS library, disabling LAPACK support.")
 	endif (BLAS_FOUND)
@@ -98,16 +99,7 @@ else (LAPACK)
 	#list(APPEND PWG_COMPILE_OPTIONS PWG_NO_LAPACK)
 endif (LAPACK)
 
-# Eigen.
-#find_path(Eigen_INCLUDE_DIR NAMES signature_of_eigen3_matrix_library PATHS $ENV{EIGEN_ROOT} /usr/include/eigen3 /usr/local/include/eigen3)
-#if(NOT EXISTS ${Eigen_INCLUDE_DIR})
-#    message( "could not find Eigen - should be the path containing the Eigen 3 directory and /Eigen/Eigen, /Eigen/Core, etc..." )
-#else(NOT EXISTS ${Eigen_INCLUDE_DIR})
-#    message("-- Found Eigen: ${Eigen_INCLUDE_DIR}")
-#    include_directories(${Eigen_INCLUDE_DIR})
-#endif(NOT EXISTS ${Eigen_INCLUDE_DIR})
-
-# Eigen.
+########### Eigen.
 find_package(Eigen REQUIRED)
 if (EIGEN_FOUND)
 	if (EIGEN_VERSION VERSION_LESS 3.1.0)
@@ -157,7 +149,7 @@ if (EIGEN_FOUND)
 	include_directories(${EIGEN_INCLUDE_DIRS})
 endif (EIGEN_FOUND)
 
-# SuiteSparse.
+########### SuiteSparse.
 if (SUITESPARSE AND NOT LAPACK)
 	# If user has disabled LAPACK, but left SUITESPARSE ON, turn it OFF,
 	# LAPACK controls whether Ceres will be linked, directly or indirectly
@@ -210,15 +202,14 @@ if (SUITESPARSE)
 	include_directories(${SUITESPARSE_INCLUDE_DIRS})
 endif (SUITESPARSE)
 
-# CXSparse.
+########### CXSparse.
 if (CXSPARSE)
 	# Don't search with REQUIRED as we can continue without CXSparse.
 	find_package(CXSparse)
 	if (CXSPARSE_FOUND)
 		# By default, if CXSparse and all dependencies are found, Ceres is
 		# built with CXSparse support.
-		message("-- Found CXSparse version: ${CXSPARSE_VERSION}, "
-      "building with CXSparse.")
+		message("-- Found CXSparse version: ${CXSPARSE_VERSION}, building with CXSparse.")
 	else (CXSPARSE_FOUND)
 		# Disable use of CXSparse if it cannot be found and continue.
 		message("-- Did not find CXSparse, Building without CXSparse.")
@@ -237,7 +228,6 @@ endif (CXSPARSE)
 if (CXSPARSE)
 	include_directories(${CXSPARSE_INCLUDE_DIRS})
 endif (CXSPARSE)
-
 # Ensure that the user understands they have disabled all sparse libraries.
 if (NOT SUITESPARSE AND NOT CXSPARSE AND NOT EIGENSPARSE)
 	message("   ===============================================================")
@@ -248,76 +238,86 @@ if (NOT SUITESPARSE AND NOT CXSPARSE AND NOT EIGENSPARSE)
 	message("   ===============================================================")
 endif(NOT SUITESPARSE AND NOT CXSPARSE AND NOT EIGENSPARSE)
 
-# Include libraries
-#cholmod
+###########cholmod
 find_library(cholmod_LIB NAMES cholmod)
 if (EXISTS ${cholmod_LIB})
 	message("-- cholmod libs: ${cholmod_LIB}")
-	#add_library(${cholmod_LIB})
+	SET(PROJECT_LIBS ${PROJECT_LIBS} ${cholmod_LIB})
 endif(EXISTS ${cholmod_LIB})
-# lapack
-# suitesparseconfig
+
+########### suitesparseconfig
 find_library(SSC_LIB NAMES suitesparseconfig)
 if (EXISTS ${SSC_LIB})
 	message("-- SuiteSparse_config libs: ${SSC_LIB}")
-	#add_library(${SSC_LIB})
+	SET(PROJECT_LIBS ${PROJECT_LIBS} ${SSC_LIB})
 endif(EXISTS ${SSC_LIB})
-# colamd
+
+########### colamd
 find_library(COLAMD_LIB NAMES colamd)
 if (EXISTS ${COLAMD_LIB})
 	message("-- Colamd libs: ${COLAMD_LIB}")
-	#add_library(${COLAMD_LIB})
+	SET(PROJECT_LIBS ${PROJECT_LIBS} ${COLAMD_LIB})
 endif(EXISTS ${COLAMD_LIB})
-# ccolamd
+
+########### ccolamd
 find_library(CCOLAMD_LIB NAMES ccolamd)
 if (EXISTS ${CCOLAMD_LIB})
-	message("-- ccolamd libs: ${CCOLAMD_LIB}")
-	#add_library(${CCOLAMD_LIB})
+	message("-- CColamd libs: ${CCOLAMD_LIB}")
+	SET(PROJECT_LIBS ${PROJECT_LIBS} ${CCOLAMD_LIB})
 endif(EXISTS ${CCOLAMD_LIB})
-# amd
+
+########### amd
 find_library(AMD_LIB NAMES amd)
 if (EXISTS ${AMD_LIB})
 	message("-- AMD libs: ${AMD_LIB}")
+	SET(PROJECT_LIBS ${PROJECT_LIBS} ${AMD_LIB})
 endif(EXISTS ${AMD_LIB})
-# camd
+
+########### camd
 find_library(CAMD_LIB NAMES camd)
 if (EXISTS ${CAMD_LIB})
 	message("-- CAMD libs: ${CAMD_LIB}")
+	SET(PROJECT_LIBS ${PROJECT_LIBS} ${CAMD_LIB})
 endif(EXISTS ${CAMD_LIB})
-# metis
-#find_library(METIS_LIB NAMES metis)
-#if (EXISTS ${METIS_LIB})
-#	message("-- METIS libs: ${METIS_LIB}")
-#endif(EXISTS ${METIS_LIB})
-# metis-4.0
+
+########### metis
 find_library(METIS_LIB NAMES metis)# PATHS /home/tariq/Dev/suitesparse/metis-4.0)
 if (EXISTS ${METIS_LIB})
 	message("-- METIS libs: ${METIS_LIB}")
+	SET(PROJECT_LIBS ${PROJECT_LIBS} ${METIS_LIB})
 endif(EXISTS ${METIS_LIB})
-set(METIS4_LIB ${suitesparse}/metis-4.0)
-link_directories(${METIS4_LIB})
+
+########### metis-4.0
+#set(METIS4_LIB ${suitesparse}/metis-4.0)
+find_library(METIS4_LIB
+			 PATHS ../metis-4.0
+			 NAMES libmetis.a)
+#link_directories(${METIS4_LIB})
 if (EXISTS ${METIS4_LIB})
 	message("-- METIS-4.0 libs: ${METIS4_LIB}")
 endif(EXISTS ${METIS4_LIB})
-# parmetis
+
+########### parmetis
 find_library(PARMETIS_LIB NAMES parmetis)
 if (EXISTS ${PARMETIS_LIB})
 	message("-- PARMETIS libs: ${PARMETIS_LIB}")
+	SET(PROJECT_LIBS ${PROJECT_LIBS} ${PARMETIS_LIB})
 endif(EXISTS ${PARMETIS_LIB})
-# GSL.
+
+########### GSL.
 find_library(GSL_LIB NAMES gsl)
 if (EXISTS ${GSL_LIB})
 	message("-- GSL libs: ${GSL_LIB}")
+	SET(PROJECT_LIBS ${PROJECT_LIBS} ${GSL_LIB})
 endif(EXISTS ${GSL_LIB})
 
 #-lglfw -O3 -Wall -lCg -lCgGL -lpthread -lglut -lGL -lGLU -lX11 -lXxf86vm -lXrandr -lXi -lopencv_core -lopencv_flann -lopencv_highgui
 #-lgfortran -lceres -lcholmod -lcolamd -lamd -lcamd -lcxsparse -lsuitesparseconfig -lgomp -lglog -lpthread
 
-# MATLAB
-set(MATLAB_INCLUDE_DIR ${matlab})
-message("-- Using MATLAB: ${MATLAB_INCLUDE_DIR}")
-include_directories(${MATLAB_INCLUDE_DIR})
-
+########### MATLAB
+set(MATLAB_INCLUDE_DIRS ${MATLAB_ROOT})
+message("-- Using MATLAB: ${MATLAB_INCLUDE_DIRS}")
+include_directories(${MATLAB_INCLUDE_DIRS})
 #find_package( matlab )
 #find_path(MATLAB_INCLUDE_DIR NAMES extern PATHS /usr/local/MATLAB/R2016a/extern/include)
 #find_library(MATLAB_LIB NAMES matlab)
@@ -330,16 +330,17 @@ include_directories(${MATLAB_INCLUDE_DIR})
 #message("-- Using MATLAB_EXTERN: ${MATLAB_EXTERN}")
 #include_directories(${MATLAB_EXTERN})
 
-# vlfeat.
-find_package(VLFeat) #REQUIRED???
-if(VLFEAT_FOUND)
-  message("-- Using VLFEAT: ${VLFEAT_INCLUDE_DIRS}")
-  include_directories(${VLFEAT_INCLUDE_DIRS})
-else()
-	message("-- VLFEAT not found, set the VLFEAT_ROOT to the root folder of VLFeat ")
-endif()
+########### vlfeat.
+find_package(VLFeat)
+#if(VLFEAT_FOUND)
+	message("-- Using VLFeat: ${VLFEAT_INCLUDE_DIRS}")
+	include_directories(${VLFEAT_INCLUDE_DIRS})
+	SET(PROJECT_LIBS ${PROJECT_LIBS} ${VLFEAT_LIBRARIES})
+#else()
+#	message("-- VLFeat not found, set the VLFEAT_ROOT to the root folder of VLFeat ")
+#endif()
 
-# PwgOptimiser sources
+########### PwgOptimiser sources
 #set(Executable_SOURCES ./src/main.cpp ./src/PwgOptimiser.cpp ./src/RecoverMoments.cpp)
 #set(Executable_HEADERS ./include/PwgOptimiser.h ./include/RecoverMoments.h)
 set(SOURCE_DIR ./src)
@@ -349,8 +350,10 @@ file(GLOB Executable_SOURCES ${SOURCE_DIR}/*.cpp)
 file(GLOB Executable_HEADERS ${INCLUDE_DIR}/*.h)
 add_executable(${PROJECT_OPTIMISE} ${Executable_SOURCES})
 
-target_link_libraries(${PROJECT_OPTIMISE} ${YARP_LIBRARIES} ${ICUB_LIBRARIES} ${OpenCV_LIBS} ${cholmod_LIB} ${COLAMD_LIB} ${CCOLAMD_LIB} ${AMD_LIB} ${CAMD_LIB} ${SSC_LIB} ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${VLFEAT_LIBRARIES} ${METIS_LIB} ${PARMETIS_LIB} ${GSL_LIB})
+target_link_libraries(${PROJECT_OPTIMISE} ${YARP_LIBRARIES} ${ICUB_LIBRARIES} ${OpenCV_LIBS} ${cholmod_LIB} ${COLAMD_LIB} ${CCOLAMD_LIB} ${AMD_LIB} ${CAMD_LIB} ${SSC_LIB} ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} ${VLFEAT_LIBRARIES} ${METIS_LIB} ${METIS4_LIB} ${PARMETIS_LIB} ${GSL_LIB})
+#target_link_libraries(${PROJECT_OPTIMISE} ${PROJECT_LIBS})
 
+###########
 if(${CMAKE_VERSION} VERSION_LESS 3.1)
   include(CheckCXXCompilerFlag)
   check_cxx_compiler_flag("-std=c++11" COMPILER_SUPPORTS_CXX11)
