@@ -118,7 +118,7 @@ If compiling without MATLAB, in the makefile, comment out the line
 To compile our code with VLFeat, in `.bash_aliases` or `.bashrc` write: 
 
 ```
-export VLFEAT_ROOT=/path/to/vlfeat
+export VLFEAT_ROOT=/path/to/vlfeat/directory
 ```
 
 ## Compiling MEX functions in MATLAB
