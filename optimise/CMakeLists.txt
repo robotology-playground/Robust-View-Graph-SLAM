@@ -331,13 +331,13 @@ include_directories(${MATLAB_INCLUDE_DIRS})
 
 ########### vlfeat.
 find_package(VLFeat)
-#if(VLFEAT_FOUND)
+if(VLFEAT_FOUND)
 	message("-- Using VLFeat: ${VLFEAT_INCLUDE_DIRS}")
 	include_directories(${VLFEAT_INCLUDE_DIRS})
 	SET(PROJECT_LIBS ${PROJECT_LIBS} ${VLFEAT_LIBRARIES})
-#else()
-#	message("-- VLFeat not found, set the VLFEAT_ROOT to the root folder of VLFeat ")
-#endif()
+else()
+	message("-- VLFeat not found, set the VLFEAT_ROOT to the root folder of VLFeat ")
+endif()
 
 ########### PwgOptimiser sources
 #set(Executable_SOURCES ./src/main.cpp ./src/PwgOptimiser.cpp ./src/RecoverMoments.cpp)
