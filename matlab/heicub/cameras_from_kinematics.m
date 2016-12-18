@@ -1,6 +1,6 @@
-function [P, A0, H0, A_left, A_right] = cameras_from_kinematics(eyes, neck, waist, floatingbase)
-
-%--------
+function [P, A0, H0, A_left, A_right] = cameras_from_kinematics(encoders, floatingbase)
+% [P, A0, H0, A_left, A_right] = cameras_from_kinematics(encoders, floatingbase)
+%
 % this function takes inputs as the pairwise_geometry of set of images and
 % opt structure. The function will modefy and output a new
 % pairwise_geometry where projection matrices are replaced by the forward
@@ -10,15 +10,16 @@ function [P, A0, H0, A_left, A_right] = cameras_from_kinematics(eyes, neck, wais
 %
 % INPUTS:
 %--------
-% eyes, neck, waist: angles from encoders
+% encoders		angles in the order of eyes, neck, waist
+% floatingbase	ZMP computed root poses (note: could be unreliable)
 %
 % OUTPUTS:
 %--------
-% P   : projection matrices from forward kinematics
-% A0  :
-% H0  :
-% A_left
-% A_right
+% P			camera matrices from forward kinematics
+% A0		reference camera matrix
+% H0		reference frame transformation
+% A_left	left camera matrix to current root frame
+% A_right	right camera matrix to current root frame
 %
 % To test the relative localisation:
 %--------
@@ -35,7 +36,15 @@ function [P, A0, H0, A_left, A_right] = cameras_from_kinematics(eyes, neck, wais
 %
 %   2.  b = [a(1:3,1:3)\b(1:3,1:3) a(1:3,1:3)\(b(1:3,4)-a(1:3,4)); 0 0 0 1]
 %       a = eye(4);
-%--------
+%
+% Tariq Abuhashim
+% started: September 2014
+%
+% iCub - Koroibot
+
+eyes = encoders([1 2 3],:);
+neck = encoders([4 5 6],:);
+waist = encoders([7 8 9],:);
 
 if size(neck, 2)>1;
     disp('  ');
@@ -53,33 +62,28 @@ P=cell(1,2*size(eyes,2));
 A_left=cell(1,size(eyes,2));
 A_right=cell(1,size(eyes,2));
 
-c1=[floatingbase(1:3,1);floatingbase(4:6,1)*pi/180];
-for i=1:size(floatingbase,2)
-    floatingbase(:,i)=[floatingbase(1:3,i);floatingbase(4:6,i)*pi/180];
-    %floatingbase(:,i)=transform_to_relative_w(floatingbase(:,i),c1);
-end
-
+c0=[zeros(3,1);R2w(H(1:3,1:3))'];
 for i=1:size(eyes,2)
     % compute body-head-eye rotations and translation from kinematics
-    [A,B,~,~,H0]=forward_kinematics(waist(1:3,i),neck(1:3,i),eyes(1:3,i));
+    [A,B]=forward_kinematics(waist(1:3,i),neck(1:3,i),eyes(1:3,i));
     % copy transformations into a new cell
     A_left{i}=scale_to_meters(A);
     A_right{i}=scale_to_meters(B);
-    if nargin>3;% project to floating-base coordinates as reference
-
-ci=camera_matrix_to_pose(A_left{i});
-ci=transform_to_global_w(ci,[zeros(3,1);R2w(H(1:3,1:3))']);
-ci=transform_to_global_w(ci,floatingbase(:,i));
-P{2*i-1}=[w2R(ci(4:6)) ci(1:3)];
-
-ci=camera_matrix_to_pose(A_right{i});
-ci=transform_to_global_w(ci,[zeros(3,1);R2w(H(1:3,1:3))']);
-ci=transform_to_global_w(ci,floatingbase(:,i));
-P{2*i-0}=[w2R(ci(4:6)) ci(1:3)];
-
-    %else
-    %    P{2*i-1}=A_left{i}(1:3,1:4);  % output A_left w.r.t the first joint
-    %    P{2*i}=A_right{i}(1:3,1:4);  % output A_right w.r.t the first joint
+    if nargin>1;% project to floating-base coordinates as reference
+		ci=floatingbase(:,i);
+		% Left camera
+		cj=camera_matrix_to_pose(A_left{i});
+		cj=transform_to_global_w(cj,c0);
+		cji=transform_to_global_w(cj,ci);
+		P{2*i-1}=[w2R(cji(4:6)) cji(1:3)];
+		% right camera
+		cj=camera_matrix_to_pose(A_right{i});
+		cj=transform_to_global_w(cj,c0);
+		cji=transform_to_global_w(cj,ci);
+		P{2*i-0}=[w2R(cji(4:6)) cji(1:3)];
+    else
+		P{2*i-1}=A_left{i}(1:3,1:4);  % output A_left w.r.t the first joint
+		P{2*i}=A_right{i}(1:3,1:4);  % output A_right w.r.t the first joint
     end
 end
 
@@ -93,23 +97,18 @@ for i=1:size(P,2)
 end
 
 % plot ?
-if 1
+if 0
    plot_cameras_floating(P, floatingbase);
-   pause
+   %pause
 end
-
 %
 %
 function P=scale_to_meters(P)
 P(1:3,4)=P(1:3,4)/1000; % scale to meters?
 
-%
-%
 function x=camera_matrix_to_pose(P)
 x=[P(1:3,4);R2w(P(1:3,1:3))'];
 
-%
-%
 function plot_cameras_floating(Pkin,floatingbase)
 % COM and eyes
 % floating-base

@@ -127,9 +127,9 @@ options.kc1=kc_left;
 options.K2=KK_right;
 options.kc2=kc_right;
 
-options.r = om; % stereo extrinsics (right-to-left, I believe)
+options.a = om; % stereo extrinsics (right-to-left, I believe)
 options.t = T; % changed to left-to-right when computing Pkin.
-options.r_error=om_error;
+options.a_error=om_error;
 options.t_error=T_error;
 
 options.imgsize=[ny,nx];

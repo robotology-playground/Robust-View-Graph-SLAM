@@ -11,23 +11,33 @@
 % */
 % 
 
+addpath('/home/tariq/Documents/Robust-View-Graph-SLAM/matlab/batch/common');
+addpath('/home/tariq/Documents/Robust-View-Graph-SLAM/matlab/common');
+addpath('/home/tariq/Documents/Robust-View-Graph-SLAM/matlab/test');
+addpath('/home/tariq/Dev/mexopencv');
+addpath('/home/tariq/Dev/vlfeat-0.9.20/toolbox'); vl_setup();
+
+clc; clear all;
 
 % 
-options = heicub_config() ;
+[options, encoders, floatingbase] = heicub_config() ;
+
+% Compute forward kinematics
+Pkin = cameras_from_kinematics(encoders, floatingbase);
 
 % Perform matching (or tracking) of image correspondences
-[C,kpts] = build_camera_graph(options) ;
+[C,kpts] = build_camera_graph(options);
 
 % Utilise kinematics or epipolar geometry to initialise constraints
-C = initialise_graph_constraints(C,kpts,options) ; 
+C = initialise_graph_constraints(C,kpts,Pkin,options); 
 
 % Refined sets of pair-wise geometry constraints using image correspondences
-C = optimise_pwg_constraints(C) ;
+%C = optimise_pwg_constraints(C) ;
 
 % Assign constraint weights
 
 
 % Optimise for global camera poses using all the constraints in the graph
-C = optimise_graph_constraints(C) ;
+%C = optimise_graph_constraints(C) ;
 
 

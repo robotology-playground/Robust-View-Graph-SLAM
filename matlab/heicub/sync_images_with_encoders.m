@@ -1,13 +1,12 @@
 function [imgl, imgr, waist, floatingbase] = sync_images_with_encoders(cam1, cam2, tor, floatingbase, freq, id)
 
 rate = 1/freq;
-
 disp([' ----> Frames captured at ',num2str(1/rate),' Hz']);
 disp([' ----> Frames later than ',num2str(rate/2),' sec were dropped']);
 
 if isempty(cam1)||isempty(cam2)
-    error('imgl or imgr data is empty'); 
-end;
+	error('imgl or imgr data is empty'); 
+end
 
 % right images
 m1 = repmat(cam2.time,1,size(cam1.time,1));
@@ -17,6 +16,7 @@ use = a3<=rate/2;
 on  = find(use);
 id = id(id<=length(on)); %added 26/04/2016, limits id to max images number
 if ~isempty(id); on = on(id); end
+
 imgl.time  = cam1.time(on)';
 imgl.image  = cam1.name(on)';
 imgr.time  = cam2.time(i3(on))';

@@ -1,11 +1,11 @@
 function [tor, imgl, imgr, floatingbase] = load_data(folder)
 %[tor, imgl, imgr] = load_data(folder)
 %
-% this importdatas the HeiCub logged data
+% Imports the HeiCub logged data
 %
+% iCub Facility
 % Tariq Abuhashim - 2014
 %
-% HeiCub
 
 time_min = +Inf;
 tor  = [];
@@ -22,7 +22,6 @@ if isdir([folder, '/img/left'])
         names = zero_padding(data(:,3),8);
         imgl.name = strcat(names,repmat('.ppm',length(names),1));
         imgl.folder = [folder,'/img/left/'];
-        %time_min = min(time_min,imgl.time(1));
     end
 end
 if isempty(imgl)
@@ -34,7 +33,6 @@ else % remove unreadable files
         if exist(strcat([folder, '/img/left'],'/',imgl.name{i}),'file')
             idx = [idx; i];
         else
-            %disp('image removed');
             count = count+1;
         end
     end
@@ -56,7 +54,6 @@ if isdir([folder, '/img/right'])
         names = zero_padding(data(:, 3), 8);
         imgr.name = strcat(names, repmat('.ppm', length(names), 1));
         imgr.folder = [folder, '/img/right/'];
-        %time_min = min(time_min,imgr.time(1));
     end
 end
 if isempty(imgr)
@@ -68,7 +65,6 @@ else % remove unreadable files
         if exist(strcat([folder, '/img/right'],'/',imgr.name{i}),'file')
             idx = [idx; i];
         else
-            %disp('image removed');
             count = count+1;
         end
     end
@@ -99,8 +95,8 @@ if isdir([folder, '/floatingBase'])
     if ~isempty(data)
         floatingbase.pkg = data(:, 1);
         floatingbase.time = data(:, 2);
-        floatingbase.rotation = data(:, 3:5); %translation vector
-        floatingbase.translation = data(:, 6:8)/1000; %rotation vector
+	floatingbase.translation = data(:, 6:8)/1000; %translation vector
+        floatingbase.rotation = data(:, 3:5)*pi/180; %rotation vector
         time_min = min(time_min,floatingbase.time(1));
     end
 end

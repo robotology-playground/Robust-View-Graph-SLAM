@@ -1,5 +1,6 @@
-function [options, encoders, floatingbase] = set_images(options)
-% [options, encoders] = set_images(options)
+function [options,encoders,floatingbase]=set_images(options)
+% [options,encoders,floatingbase]=set_images(options)
+%
 % setup folders, parameters and read images for a sequence of images.
 % this is used in the patch and sequential implementations
 %
@@ -12,25 +13,22 @@ if isstruct(options)
     if isfield(options,'folder') && isfield(options,'freq')
         path_to_img = options.folder;
         freq = options.freq;
+	start = 0;
         if isfield(options,'first_image')
-            start = options.first_image;
-        else
-            start = 0;                        
-        end;
+            start = options.first_image;                      
+        end
+	stop = 0;
         if isfield(options,'last_image')
-            stop = options.last_image;
-        else
-            stop = 0;                        
-        end;
+            stop = options.last_image;                       
+        end
+	steps = 0; 
         if isfield(options,'steps')
-            steps = options.steps;
-        else
-            steps = 0;                        
-        end;
+            steps = options.steps;                     
+        end
         image_id = start:steps:stop; % images used
     end
 else
-    error('Input should be either a structure with at least two fields (folder, freq)');
+    error('Input should be a structure with at least two fields (folder, freq)');
 end
 
 % get icub data
@@ -47,7 +45,7 @@ img_folder{2} = [path_to_img,'/img/right/'];
 options.cam_left = cam_left;
 options.cam_right = cam_right;
 options.img_folder = img_folder;
-encoders = waist;
+encoders([7 8 9],:) = waist;
 
 % save to .mat file:
 if isfield(options,'save')
