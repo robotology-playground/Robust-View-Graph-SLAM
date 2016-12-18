@@ -8,7 +8,7 @@
 #
 #   VLFEAT_INCLUDE_DIRS    - Vlfeat include directory
 #   VLFEAT_LIBRARIES       - Vlfeat libraries 
-#   VLFEAT_FOUND           - if false, you cannot build anything that requires ZFP
+#   VLFEAT_FOUND           - if false, you cannot build anything that requires VLFEAT
 
 include(FindPackageHandleStandardArgs)
 include(SelectLibraryConfigurations)
