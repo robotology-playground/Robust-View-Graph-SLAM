@@ -1,6 +1,11 @@
 function [y,Y]=initialise_info_matrix(Ct,xs,ncams)
 %[y,Y]=initialise_info_matrix(Ct,xs,ncams)
 %
+%	Information matrix initialisation for iCub@heidelberg
+%	This assumes the calibrated stereo case.
+%
+%	For iCub@heidelberg.
+%
 % Tariq Abuhashim, 2016.
 % iCub - Koroibot
 
@@ -39,7 +44,7 @@ npts = N-6*ncams;
 s = ones(N,1)./(sd^2); % depth error ( .5 meters with vision->R , 1 meters with kinematics->R )
 s(1:6) = 1/(s0)^2; % cam 1, 0.0001 error in global
 for j = 2 : 2 : ncams % stereo constraints
-    if j==2
+	if j==2
         s((j-1)*6+(1:3)) = 1./(t2).^2; % .0005 meters
         s((j-1)*6+(4:6)) = 1./(a2.*pi/180).^2; % .5 degrees
         continue

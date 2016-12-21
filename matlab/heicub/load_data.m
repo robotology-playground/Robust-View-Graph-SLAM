@@ -3,6 +3,8 @@ function [tor, imgl, imgr, floatingbase] = load_data(folder)
 %
 % Imports the HeiCub logged data
 %
+%	For iCub@heidelberg.
+%
 % Tariq Abuhashim
 % started: September 2014
 % t.abuhashim@gmail.com

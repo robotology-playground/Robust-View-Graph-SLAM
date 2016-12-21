@@ -3,6 +3,8 @@
 %
 % Loads residuals switch configurations
 %
+%	For iCub@heidelberg.
+%
 % Tariq Abuhashim - 2016
 % t.abuhashim@gmail.com
 %
@@ -28,3 +30,5 @@ maxitr=options.maxitr;
 %GATE_PROB_RESID(1) = max(GATE_PROB_RESID(1),.5); % min. first gate prob. limit
 
 GATE_PROB_RESID=[0.05 0.9 0.7];
+
+TRUST_INIT_LINKS=false;

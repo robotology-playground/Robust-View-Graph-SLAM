@@ -3,6 +3,8 @@
 %
 % Loads visual configurations
 %
+%	For iCub@heidelberg.
+%
 % Tariq Abuhashim - 2016
 % t.abuhashim@gmail.com
 %

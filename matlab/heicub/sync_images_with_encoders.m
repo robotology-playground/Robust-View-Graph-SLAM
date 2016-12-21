@@ -1,4 +1,10 @@
 function [imgl, imgr, waist, floatingbase] = sync_images_with_encoders(cam1, cam2, tor, floatingbase, freq, id)
+%[imgl, imgr, waist, floatingbase] = sync_images_with_encoders(cam1, cam2, tor, floatingbase, freq, id)
+%
+%	For iCub@heidelberg.
+%
+% Tariq Abuhashim, 2016.
+% iCub - Koroibot
 
 rate = 1/freq;
 disp([' ----> Frames captured at ',num2str(1/rate),' Hz']);

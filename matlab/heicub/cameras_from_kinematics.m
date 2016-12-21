@@ -37,6 +37,8 @@ function [P, A0, H0, A_left, A_right] = cameras_from_kinematics(encoders, floati
 %   2.  b = [a(1:3,1:3)\b(1:3,1:3) a(1:3,1:3)\(b(1:3,4)-a(1:3,4)); 0 0 0 1]
 %       a = eye(4);
 %
+%	For iCub@heidelberg.
+%
 % Tariq Abuhashim
 % started: September 2014
 % t.abuhashim@gmail.com

@@ -49,6 +49,8 @@ function [A_left, A_right, A_inertial, Chain, H_0] = forward_kinematics(waist, n
 % To calculate the camera orientation given change in neck roll angle
 %           DCM = R_45*R_56*R_67*R_78
 %
+%	For iCub@heidelberg.
+%
 % Tariq Abuhashim
 % started: October 2014
 % t.abuhashim@gmail.com

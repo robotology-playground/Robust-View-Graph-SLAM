@@ -12,6 +12,8 @@ function C = initialise_graph_constraints(C,kpts,Pkin,options)
 %	else
 %		random initialisation
 %
+%	For all robots.
+%
 % Tariq Abuhashim - 2016
 % t.abuhashim@gmail.com
 %
@@ -47,6 +49,7 @@ for k=1:length(C)
 end
 end %initialise_graph_constraints()
 
+% Additional functions
 function flag=is_calibrated(C,options)
 	flag=logical( mod(C.edge(1),2) & (C.edge(2)-C.edge(1))==1 ...
 		& isfield(options,'t') & isfield(options,'a') ) ;

@@ -1,0 +1,30 @@
+Robust View-Graph SLAM (MATLAB Implementation)
+Author: Tariq Abuhashim
+Email: t.abuhashim@gmail.com
+Last Updated: December 2016
+Copyright (C) 2016 iCub Facility - Istituto Italiano di Tecnologia
+
+This contains MATLAB demonstrations for
+	1- iCub@iit
+	2- iCub@heidelberg
+	3- R1@iit
+	
+You main function is batch_demo().
+
+The folder contains toolboxes, where some of them are still under review:
+	1-	batch: is the batch optimisation (relative and global) toolbox.
+	2-	common: contains matlab utilities common in between all the tools.
+	3-	dense: contains dense disparity estimation functions.
+	4-	heicub: contains functions related to icub@heidelberg.
+	5-	icub: contains functions related to icub@iit.
+	6-	include: contains standard Mathworks headers (copyright of Mathworks).
+	7-	lmatch: contains line matching and lines bundle-adjustment functions.
+	8-	r1: contains functions related to r1@iit.
+	9-	rectify: contains rectification related functions.
+	10-	test: constains multiple-views geometry functions (as explained by Hartley and Zisserman).
+	
+If you are planning on using this implementation, please cite our paper:
+T. Abuhashim and L. Natale, "Robustness in view-graph SLAM," 2016 19th International Conference on Information Fusion (FUSION), Heidelberg, 2016, pp. 942-949. URL: http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=7527987&isnumber=7527857
+
+Acknowledgement: This research has received funding from the European Union’s Seventh Framework Programme for research, technological development and demonstration under grant agreement No. 611909 (KoroiBot).
+License: Released under the terms of the LGPLv2.1 or later, see LGPL.TXT.

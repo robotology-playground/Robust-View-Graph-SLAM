@@ -4,6 +4,8 @@ function [options,encoders,floatingbase]=set_images(options)
 % setup folders, parameters and read images for a sequence of images.
 % this is used in the patch and sequential implementations
 %
+%	For iCub@heidelberg.
+%
 % Tariq Abuhashim
 % started: September 2014
 % t.abuhashim@gmail.com

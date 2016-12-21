@@ -11,6 +11,8 @@
 %	3- mexopencv, which contains various Opencv wrappers.
 %	4- rvgslam, which contains our robust view-graph slam implementation.
 %
+%	For all robots.
+%
 % Tariq Abuhashim - 2016
 % t.abuhashim@gmail.com
 %
@@ -19,12 +21,15 @@
 addpath('/home/tariq/Dev/mexopencv'); % mexopencv
 addpath('/home/tariq/Dev/vlfeat-0.9.20/toolbox'); vl_setup(); % vlfeat
 addpath('/home/tariq/Documents/Robust-View-Graph-SLAM/matlab/batch/common'); %rvgslam
+addpath('/home/tariq/Documents/Robust-View-Graph-SLAM/matlab/batch/estimator_relative'); %rvgslam
+addpath('/home/tariq/Documents/Robust-View-Graph-SLAM/matlab/batch/estimator_global'); %rvgslam
 addpath('/home/tariq/Documents/Robust-View-Graph-SLAM/matlab/common'); %rvgslam
 addpath('/home/tariq/Documents/Robust-View-Graph-SLAM/matlab/test'); %rvgslam
+addpath('/home/tariq/Documents/Robust-View-Graph-SLAM/mex'); %rvgslam
 
-clc; clear all;
+clc; clear all; % FIXME: temporary thing, remove after using this as a function
 
-% 
+% FIXME: setup for icub, heicub, and r1
 [options, encoders, floatingbase] = heicub_config() ;
 
 % Compute forward kinematics
