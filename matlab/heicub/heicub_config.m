@@ -1,8 +1,9 @@
 function [options,encoders,floatingbase]=heicub_config()
-% [options,encoders,floatingbase]=heicub_config()
+%[options,encoders,floatingbase]=heicub_config()
 %
 % Tariq Abuhashim
 % started: September 2014
+% t.abuhashim@gmail.com
 %
 % iCub - Koroibot
 
@@ -14,9 +15,9 @@ options=set_params(); % loads basic defaults
 options=set_params(options,'folder',		DATA_DIR);
 options=set_params(options,'save',			SAVE_DIR);
 options=set_params(options,'calib',			CALB_DIR);
-options=set_params(options,'freq',			10);
-options=set_params(options,'first_image',	50); % 50
-options=set_params(options,'last_image',	80); % 800
+options=set_params(options,'freq',			10	);
+options=set_params(options,'first_image',	50	); % 50
+options=set_params(options,'last_image',	80	); % 800
 options=set_params(options,'steps',			2	);
 options=set_params(options,'verbose',		0	);
  

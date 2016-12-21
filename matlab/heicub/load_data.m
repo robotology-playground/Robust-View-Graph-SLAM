@@ -3,9 +3,11 @@ function [tor, imgl, imgr, floatingbase] = load_data(folder)
 %
 % Imports the HeiCub logged data
 %
-% iCub Facility
-% Tariq Abuhashim - 2014
+% Tariq Abuhashim
+% started: September 2014
+% t.abuhashim@gmail.com
 %
+% iCub - Koroibot
 
 time_min = +Inf;
 tor  = [];

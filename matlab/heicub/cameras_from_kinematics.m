@@ -1,5 +1,5 @@
 function [P, A0, H0, A_left, A_right] = cameras_from_kinematics(encoders, floatingbase)
-% [P, A0, H0, A_left, A_right] = cameras_from_kinematics(encoders, floatingbase)
+%[P, A0, H0, A_left, A_right] = cameras_from_kinematics(encoders, floatingbase)
 %
 % this function takes inputs as the pairwise_geometry of set of images and
 % opt structure. The function will modefy and output a new
@@ -39,6 +39,7 @@ function [P, A0, H0, A_left, A_right] = cameras_from_kinematics(encoders, floati
 %
 % Tariq Abuhashim
 % started: September 2014
+% t.abuhashim@gmail.com
 %
 % iCub - Koroibot
 

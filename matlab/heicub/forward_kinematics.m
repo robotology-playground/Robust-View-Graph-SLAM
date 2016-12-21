@@ -50,8 +50,10 @@ function [A_left, A_right, A_inertial, Chain, H_0] = forward_kinematics(waist, n
 %           DCM = R_45*R_56*R_67*R_78
 %
 % Tariq Abuhashim
-% October, 2014
-% icub - koroibot
+% started: October 2014
+% t.abuhashim@gmail.com
+%
+% iCub - Koroibot
 
 % torso
 if nargin<1; waist=zeros(1, 3); end

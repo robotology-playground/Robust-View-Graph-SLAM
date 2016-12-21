@@ -1,8 +1,10 @@
 function options = set_params(options, field, val)
 %options = set_params(options)
+%
 % loads options for the batch implementation
 %
 % Tariq Abuhashim, 2015.
+% t.abuhashim@gmail.com
 %
 % iCub - Koroibot
 
