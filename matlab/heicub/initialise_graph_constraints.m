@@ -42,7 +42,7 @@ for k=1:length(C)
 	if has_scan(C(k),options)
 		[p1,p2]=get_correspondence(C(k),kpts,options);
 		xs=[C(k).t;C(k).a];
-		C(k).xf=test_triangulate_inverse_depth(p1,p2,xs);
+		C(k).xf=test_triangulate_inverse_depth(p1,p2,xs)';
 	end
 end
 end %initialise_graph_constraints()

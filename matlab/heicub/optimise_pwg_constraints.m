@@ -14,17 +14,27 @@ config_rswitch();
 
 keyframe = 0;
 
-for k = 1:length(C)
+%for k = 1:length(C)
+k = 0;
+while true
+
+	k = k + 1;
+	
+	if k > length(C) % optimises for the last bundle
+		ncams = length(camera);
+		npts = length(tracks);
+		xs = [xc;xf];
+		optimise_image_data(xs,Cimg,ncams,npts);
+		break
+	end
 
 	if is_new_keyframe(C(k),keyframe) % a new edge to add
-
-		if keyframe % FIXME: Last bundle is not optimised
+		if keyframe
 			ncams = length(camera);
 			npts = length(tracks);
-			fprintf(['running optimisation using ' ... 
-					num2str(ncams) ' cameras and ' num2str(npts) ' points.\n']);
+			xs = [xc;xf];
+			optimise_image_data(xs,Cimg,ncams,npts);
 		end
-
 		keyframe = C(k).edge(1);
 		xc = zeros(6,1);
 		camera = keyframe;
@@ -32,7 +42,6 @@ for k = 1:length(C)
 		tracks = C(k).matches(1,:);
 		Cimg = [];
 		fprintf(['Keyframe ' num2str(keyframe) ', ']);
-
 	end
 
 	[xc,camera] = push_camera_state(C(k),xc,camera);
@@ -51,7 +60,7 @@ for k = 1:length(C)
 		Cimg(n+j).R = R./options.K1(1,1); % projection noise matrix (pixels/focal_length)
 	end
 
-end %for k = 1:length(C)
+end %for k = 1:length(C) or while true
 end %optimise_pwg_constraints()
 
 function flag = is_new_keyframe(C,keyframe)
@@ -90,3 +99,8 @@ function cr=calibrate_image_points(cr,options,k)
 	x(:,2)=(x(:,2)-K(2,3))/K(2,2);
 	cr(:,1:2)=x(:,1:2);
 end %calibrate_image_points()
+
+function optimise_image_data(xs,C,ncams,npts)
+	fprintf(['running optimisation using ' ... 
+		num2str(ncams) ' cameras and ' num2str(npts) ' points.\n']);
+end %optimise_image_data()
