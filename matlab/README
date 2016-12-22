@@ -4,12 +4,12 @@ Email: t.abuhashim@gmail.com
 Last Updated: December 2016
 Copyright (C) 2016 iCub Facility - Istituto Italiano di Tecnologia
 
-This contains MATLAB demonstrations for
+This contains MATLAB demonstrations for:
   1- iCub@iit
   2- iCub@heidelberg
   3- R1@iit
 	
-The main function is batch_demo().
+The main function is batch_demo.
 
 The folder contains toolboxes, where some of them are still under review:
   1- batch: is the batch optimisation (relative and global) toolbox.
