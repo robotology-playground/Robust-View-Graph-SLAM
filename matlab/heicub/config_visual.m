@@ -10,4 +10,4 @@
 %
 % iCub - Koroibot
 
-USE_VISION = false;
+USE_VISION = false; % if set TRUE, then use essential matrix to intialise rotation

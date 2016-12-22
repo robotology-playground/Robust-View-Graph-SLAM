@@ -1,8 +1,15 @@
 function [y,Y,sw,x]=optimise_constraint_image_inverse_depth(Ct,C,sw,xs,options,ncams)
 %[y,Y,sw,x]=optimise_constraint_image_inverse_depth(Ct,C,sw,xs,options)
 %
-% Tariq Abuhashim, 2016.
+% NOTE: This script is also used to compare MATLAB functions to their C++ counterparts.
+%		DO NOT change any of the if statements, until further updates.
+%
+% Tariq Abuhashim - 2016
+% t.abuhashim@gmail.com
+%
 % iCub - Koroibot
+
+tic;
 
 % verbose
 if options.verbose > 0;
@@ -16,16 +23,7 @@ end
 [y, Y] = initialise_info_matrix(Ct, xs, ncams); % sw is for C, not for Ct
 
 % Generate image constraints information
-% H = sparse(2*(length(xs)-6*ncams),length(xs));
-% for k = 1:length(C)
-%     i = 6*ncams+C(k).kpt;
-%     c = (C(k).cam-1)*6;
-%     h = mex_observation_model_jacobian_inverse_depth_Mviews( xs, C(k).p1, i, c+1 );
-%     H(2*C(k).kpt-1,[c+(1:6) i]) = h(1,:);
-%     H(2*C(k).kpt,[c+(1:6) i]) = h(1,:);
-% end
-% clf; spy(H); pause;
-if 0
+if 0 % using C++
     C = generate_image_constraints_info_inverse_depth(C, xs, ncams);
 else
     C = mex_generate_constraints_info_Mviews(C, xs, ncams);
@@ -33,7 +31,7 @@ end
 
 % Include measurements that are initially ON, but not trusted
 npts = length(xs) - 6*ncams;
-if 0
+if 0 % using C++
     [yon, Yon] = update_info_matrix_inverse_depth(C(sw == 1), npts, ncams);
 else
 	[yon, Yon] = mex_update_info_matrix_Mviews(C(sw == 1), npts, ncams);
@@ -58,26 +56,27 @@ Y = Y + Yon;
 %   1. It only supports the positive-definite case.                       %
 %   2. Lines 280-283 has a memory allocation (assignment) error.          %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % Apply remaining constraints with residual switching
-tic;
-if 1 % Add
+if 1 % Add using MATLAB
     [y, Y, sw] = constraints_addition_inverse_depth(y, Y, C, sw, xs, options, ncams);
 else
 	[y, Y, sw] = mex_constraints_addition_inverse_depth_Mviews(y, Y, C, sw, xs, ncams);
 end
 while any(sw==1)
-    if 1 % Subtract
+    if 1 % Subtract using MATLAB
         [y, Y, sw, ~, converged] = constraints_removal_inverse_depth(y, Y, C, Ct, sw, xs, options, ncams);
     else
     	[y, Y, sw] = mex_constraints_subtraction_inverse_depth_Mviews(y, Y, C, sw, xs, ncams);
     end
     if converged; break; end
 end
-if 1 % Solve
+if 1 % Solve using MATLAB
     x = recover_moments(y, Y);
 else
 	x = mex_recover_moments(y, Y);
 end
+
 toc
 
 %for i = 1 : ncams
@@ -113,8 +112,7 @@ xlabel('x-direction, mm', 'fontsize', 14);
 ylabel('z-direction, mm', 'fontsize', 14);
 set(gcf, 'Color', 'w');
 export_fig([filename,'.png']);
-%
-%
+
 function p = get_scan_from_range(p, r)
 if size(p,1) < 3; p = pextend(p); end;
 rim = sqrt(sum(p(1:2,:).^2) + 1);
@@ -122,3 +120,14 @@ d = r./rim;
 p(1,:) = p(1,:).*d;
 p(2,:) = p(2,:).*d;
 p(3,:) = p(3,:).*d;
+
+function check_jacobian_matrix(C,xs,ncams)
+H = sparse(2*(length(xs)-6*ncams),length(xs));
+for k = 1:length(C)
+	i = 6*ncams+C(k).kpt;
+	c = (C(k).cam-1)*6;
+	h = mex_observation_model_jacobian_inverse_depth_Mviews( xs, C(k).p1, i, c+1 );
+	H(2*C(k).kpt-1,[c+(1:6) i]) = h(1,:); % we do not usually fill sparse matrices this way
+	H(2*C(k).kpt,[c+(1:6) i]) = h(1,:); % but, this is only a quick check
+end
+clf; spy(H); pause;
