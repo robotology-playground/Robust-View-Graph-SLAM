@@ -2,10 +2,11 @@ function [x, P, C, sw, GATE_PROB_RESID] = PwgOptimiser(C, Ct, xs, sw, ncams, opt
 %[x, ~] = PwgOptimiser(xs, p, options)
 % Robust Pair-Wise Geometry Optimiser
 %
-% Tariq Abuhashim - 2016
+% Tariq Abuhashim
 % t.abuhashim@gmail.com
 %
-% iCub - Koroibot
+% Koroibot, iCub Facility, Istituto Italiano di Tecnologia
+% Genova, Italy, 2016
 
 % Configurations
 config_rswitch;
@@ -34,8 +35,7 @@ while 1 % applies an optimisation exit criterion
     disp('    ');
     disp(['#', num2str(i), ': Minimum gate = ', num2str(GATE_PROB_RESID(i))]);
     fprintf('%.4f, %.4f, %.4f, %.4f, %.4f, %.4f\n', x(7:9)', x(10:12)'*180/pi);
-    options = constraint_graph_optimise_set_options(options, ...
-        'gateresid', chi_square_bound(GATE_PROB_RESID(i), 2));
+    options = set_params(options, 'gateresid', chi_square_bound(GATE_PROB_RESID(i), 2));
     [y, Y, sw, x] = optimise_constraint_image_inverse_depth(Ct, C, sw, x, options, ncams);
     fprintf('%.4f, %.4f, %.4f, %.4f, %.4f, %.4f\n', x(7:9)', x(10:12)'*180/pi);
 

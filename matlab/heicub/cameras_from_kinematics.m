@@ -40,10 +40,10 @@ function [P, A0, H0, A_left, A_right] = cameras_from_kinematics(encoders, floati
 %	For iCub@heidelberg.
 %
 % Tariq Abuhashim
-% started: September 2014
 % t.abuhashim@gmail.com
 %
-% iCub - Koroibot
+% Koroibot, iCub Facility, Istituto Italiano di Tecnologia
+% Genova, Italy, 2014
 
 eyes = encoders([1 2 3],:);
 neck = encoders([4 5 6],:);

@@ -4,10 +4,11 @@ function [y,Y,sw,x]=optimise_constraint_image_inverse_depth(Ct,C,sw,xs,options,n
 % NOTE: This script is also used to compare MATLAB functions to their C++ counterparts.
 %		DO NOT change any of the if statements, until further updates.
 %
-% Tariq Abuhashim - 2016
+% Tariq Abuhashim
 % t.abuhashim@gmail.com
 %
-% iCub - Koroibot
+% Koroibot, iCub Facility, Istituto Italiano di Tecnologia
+% Genova, Italy, 2016
 
 tic;
 
@@ -23,7 +24,7 @@ end
 [y, Y] = initialise_info_matrix(Ct, xs, ncams); % sw is for C, not for Ct
 
 % Generate image constraints information
-if 0 % using C++
+if 0 % 0 - using C++
     C = generate_image_constraints_info_inverse_depth(C, xs, ncams);
 else
     C = mex_generate_constraints_info_Mviews(C, xs, ncams);
@@ -31,7 +32,7 @@ end
 
 % Include measurements that are initially ON, but not trusted
 npts = length(xs) - 6*ncams;
-if 0 % using C++
+if 0 % 0 - using C++
     [yon, Yon] = update_info_matrix_inverse_depth(C(sw == 1), npts, ncams);
 else
 	[yon, Yon] = mex_update_info_matrix_Mviews(C(sw == 1), npts, ncams);
@@ -58,20 +59,20 @@ Y = Y + Yon;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Apply remaining constraints with residual switching
-if 1 % Add using MATLAB
+if 1 % 1 - Add using MATLAB
     [y, Y, sw] = constraints_addition_inverse_depth(y, Y, C, sw, xs, options, ncams);
 else
 	[y, Y, sw] = mex_constraints_addition_inverse_depth_Mviews(y, Y, C, sw, xs, ncams);
 end
 while any(sw==1)
-    if 1 % Subtract using MATLAB
-        [y, Y, sw, ~, converged] = constraints_removal_inverse_depth(y, Y, C, Ct, sw, xs, options, ncams);
-    else
-    	[y, Y, sw] = mex_constraints_subtraction_inverse_depth_Mviews(y, Y, C, sw, xs, ncams);
-    end
-    if converged; break; end
+	if 1 % 1 - Subtract using MATLAB
+		[y, Y, sw, ~, converged] = constraints_removal_inverse_depth(y, Y, C, Ct, sw, xs, options, ncams);
+	else
+		[y, Y, sw] = mex_constraints_subtraction_inverse_depth_Mviews(y, Y, C, sw, xs, ncams);
+	end
+	if converged; break; end
 end
-if 1 % Solve using MATLAB
+if 1 % 1 - Solve using MATLAB
     x = recover_moments(y, Y);
 else
 	x = mex_recover_moments(y, Y);

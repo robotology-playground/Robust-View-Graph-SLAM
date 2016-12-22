@@ -6,10 +6,11 @@ function C = optimise_pwg_constraints(C,kpts,options)
 %
 %	For all robots.
 %
-% Tariq Abuhashim - 2016
+% Tariq Abuhashim
 % t.abuhashim@gmail.com
 %
-% iCub - Koroibot
+% Koroibot, iCub Facility, Istituto Italiano di Tecnologia
+% Genova, Italy, 2016
 
 % configurations
 config_rswitch();

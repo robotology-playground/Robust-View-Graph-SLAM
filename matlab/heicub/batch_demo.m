@@ -13,10 +13,11 @@
 %
 %	For all robots.
 %
-% Tariq Abuhashim - 2016
+% Tariq Abuhashim
 % t.abuhashim@gmail.com
 %
-% iCub - Koroibot
+% Koroibot, iCub Facility, Istituto Italiano di Tecnologia
+% Genova, Italy, 2016
 
 addpath('/home/tariq/Dev/mexopencv'); % mexopencv
 addpath('/home/tariq/Dev/vlfeat-0.9.20/toolbox'); vl_setup(); % vlfeat
