@@ -9,6 +9,22 @@ function [options,encoders,floatingbase]=heicub_config()
 % Koroibot, iCub Facility, Istituto Italiano di Tecnologia
 % Genova, Italy, 2014
 
+% Restore original <Default>Properties of root,
+% load default PATH, run STARTUP.m:
+matlabrc;
+
+% Toolbox functions
+addpath('/home/tariq/Dev/mexopencv'); % mexopencv
+addpath('/home/tariq/Dev/vlfeat-0.9.20/toolbox'); vl_setup(); % vlfeat
+addpath('./batch/common'); %rvgslam
+addpath('./batch/estimator_relative'); %rvgslam
+addpath('./common'); %rvgslam
+addpath('./mex'); %rvgslam
+addpath('./test'); %rvgslam
+
+% Robot related functions
+addpath('./heicub'); 
+
 DATA_DIR='/home/tariq/Documents/data/heicub/data_set1';
 SAVE_DIR=strcat(DATA_DIR,'/run_',datestr(now,'yyyymmdd'));
 CALB_DIR='/home/tariq/Documents/data/heicub/calib_20160913/img/stereo';

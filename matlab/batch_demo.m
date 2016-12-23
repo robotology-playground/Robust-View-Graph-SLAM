@@ -1,5 +1,5 @@
-% function batch_demo()
-%function batch_demo()
+% function batch_demo(robot)
+%function batch_demo(robot)
 %
 % Performs view-graph slam 
 % Requirements:
@@ -19,19 +19,18 @@
 % Koroibot, iCub Facility, Istituto Italiano di Tecnologia
 % Genova, Italy, 2016
 
-addpath('/home/tariq/Dev/mexopencv'); % mexopencv
-addpath('/home/tariq/Dev/vlfeat-0.9.20/toolbox'); vl_setup(); % vlfeat
-addpath('/home/tariq/Documents/Robust-View-Graph-SLAM/matlab/batch/common'); %rvgslam
-addpath('/home/tariq/Documents/Robust-View-Graph-SLAM/matlab/batch/estimator_relative'); %rvgslam
-addpath('/home/tariq/Documents/Robust-View-Graph-SLAM/matlab/batch/estimator_global'); %rvgslam
-addpath('/home/tariq/Documents/Robust-View-Graph-SLAM/matlab/common'); %rvgslam
-addpath('/home/tariq/Documents/Robust-View-Graph-SLAM/matlab/test'); %rvgslam
-addpath('/home/tariq/Documents/Robust-View-Graph-SLAM/mex'); %rvgslam
-
 clc; clear all; % FIXME: temporary thing, remove after using this as a function
 
-% FIXME: setup for icub, heicub, and r1
-[options, encoders, floatingbase] = heicub_config() ;
+robot = 'heicub'; %icub, heicub, r1
+assert(any(strcmp(robot,{'r1','icub','heicub'})),['Unknown robot: ', robot]);
+
+% setup for icub, heicub, and r1
+switch robot
+	case 'icub'%iCub@iit
+	case 'heicub'%iCub@heidelberg
+		[options, encoders, floatingbase] = heicub_config() ;
+	case 'r1'%r1@iit
+end
 
 % Compute forward kinematics
 Pkin = cameras_from_kinematics(encoders, floatingbase) ;
