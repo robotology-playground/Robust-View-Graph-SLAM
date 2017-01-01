@@ -19,6 +19,7 @@ addpath('/home/tariq/Dev/vlfeat-0.9.20/toolbox'); vl_setup(); % vlfeat
 addpath('/home/tariq/Dev/suitesparse/CHOLMOD/MATLAB'); % CHOLMOD, for spinv
 addpath('./batch/common'); %rvgslam
 addpath('./batch/estimator_relative'); %rvgslam
+addpath('./batch/estimator_global'); %rvgslam
 addpath('./common'); %rvgslam
 addpath('./mex'); %rvgslam
 addpath('./test'); %rvgslam
@@ -35,8 +36,8 @@ options=set_params(options,'folder',		DATA_DIR); % where is the data?
 options=set_params(options,'save',			SAVE_DIR); % where to save the results?
 options=set_params(options,'calib',			CALB_DIR); % where is the calibration file?
 options=set_params(options,'freq',			10	); % frequency of acquisition for synchronisation
-options=set_params(options,'first_image',	50	); % first image frame
-options=set_params(options,'last_image',	60	); % last image frame
+options=set_params(options,'first_image',	51	); % first image frame
+options=set_params(options,'last_image',	150	); % last image frame
 options=set_params(options,'steps',			2	); % frames resampling frequency
 options=set_params(options,'verbose',		0	); % show verbose during data acquisition
  
@@ -54,7 +55,7 @@ options=set_params(options,'gridmargin',	5.0	); % discarded image margins during
 options=set_params(options,'gridhorizon',	5.0	); % discarded image horison during features extraction
  
 options=set_params(options,'optimiser'); % loads the pwg_optimiser defaults
-options=set_params(options,'ncams',			10	); % PWGOPTIMISER: number of cams in each bundle
+options=set_params(options,'ncams',			200	); % PWGOPTIMISER: number of cams in each bundle
 options=set_params(options,'nkeys',			1	); % PWGOPTIMISER: number of keyframes in each bundle
 options=set_params(options,'nview',			10	); % PWGOPTIMISER: minimum number of views to accept a 3D point
 options=set_params(options,'sigma_r',		1.0	); % PWGOPTIMISER: image measurements noise

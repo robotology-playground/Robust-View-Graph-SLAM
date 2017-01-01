@@ -44,7 +44,7 @@ for k=1:length(C)
 	% get the scans
 	if has_scan(C(k),options)
 		[p1,p2]=get_correspondence(C(k),kpts,options);
-		xs=[C(k).t;C(k).a]
+		xs=[C(k).t;C(k).a];
 		C(k).xf=test_triangulate_inverse_depth(p1,p2,xs)';
 		if 0 % Debugging; plot to check the scan
 			get_scan_from_range(p1,1./C(k).xf',1);
