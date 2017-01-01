@@ -21,7 +21,7 @@ if options.verbose > 0;
 end
 
 % Initialise estimate with switched ON constraints
-[y, Y] = initialise_info_matrix(Ct, xs, ncams); % sw is for C, not for Ct
+[y, Y] = initialise_info_matrix(Ct, xs, ncams, options); % sw is for C, not for Ct
 
 % Generate image constraints information
 if 0 % 0 - using C++

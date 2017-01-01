@@ -20,12 +20,12 @@ function C = initialise_graph_constraints(C,kpts,Pkin,options)
 % Koroibot, iCub Facility, Istituto Italiano di Tecnologia
 % Genova, Italy, 2016
 
-config_visual;
+config_visual();
 
 for k=1:length(C)
 	% get the poeses
 	if is_calibrated(C(k),options)
-		C(k).t=-w2R(-options.a)*options.t;
+		C(k).t=-w2R(options.a)*options.t/1000; % also in intialise_info_matrix.m
 		C(k).a=-options.a;
 	elseif has_correspondence(C(k),options)&&USE_VISION
 		% currently, its better not to use the essential matrix
@@ -39,15 +39,16 @@ for k=1:length(C)
 		C(k).t=rand(3,1);
 		C(k).a=rand(3,1);
 		warning(['Edge ', num2str(C(k).edge(1)),'-',num2str(C(k).edge(2)), ... 
-				' could not be initialised and is set to RAND']);	
+				' could not be initialised and is set to RAND.']);	
 	end
 	% get the scans
 	if has_scan(C(k),options)
 		[p1,p2]=get_correspondence(C(k),kpts,options);
-		xs=[C(k).t;C(k).a];
+		xs=[C(k).t;C(k).a]
 		C(k).xf=test_triangulate_inverse_depth(p1,p2,xs)';
-		if 0 % plot to check the scan
+		if 0 % Debugging; plot to check the scan
 			get_scan_from_range(p1,1./C(k).xf',1);
+			pause;
 		end
 	end
 end
@@ -80,41 +81,51 @@ function flag=has_kinematics(P1,P2)
 % Koroibot, iCub Facility, Istituto Italiano di Tecnologia
 % Genova, Italy, 2014
 	flag=logical( ~isempty(P1) & ~isempty(P2) );
-end
+end %has_kinematics()
 
 function flag=has_scan(C,options)
 % Tariq Abuhashim
 % t.abuhashim@gmail.com
 %
 % Koroibot, iCub Facility, Istituto Italiano di Tecnologia
-% Genova, Italy, 2014
+% Genova, Italy, 2016
 	% FIXME: scan merging, not implemented yet
 	flag=logical( mod(C.edge(1),2) & has_correspondence(C,options) ... 
 		& (C.edge(2)-C.edge(1))==1 ) ;
-end %is_scan()
+end %has_scan()
 
 function x=camera_matrix_to_pose(P)
+% Tariq Abuhashim
+% t.abuhashim@gmail.com
+%
+% Koroibot, iCub Facility, Istituto Italiano di Tecnologia
+% Genova, Italy, 2015
 	x=[P(1:3,4);R2w(P(1:3,1:3))'];
 end %camera_matrix_to_pose()
 
 function [p1,p2]=get_correspondence(C,kpts,options)
+% Tariq Abuhashim
+% t.abuhashim@gmail.com
+%
+% Koroibot, iCub Facility, Istituto Italiano di Tecnologia
+% Genova, Italy, 2016
 	p1=kpts{C.edge(1)}(C.matches(1,:),1:2);
 	p1=calibrate_image_points(p1,options,C.edge(1))';
 	p2=kpts{C.edge(2)}(C.matches(2,:),1:2);
 	p2=calibrate_image_points(p2,options,C.edge(2))';
 end %get_correspondence()
 
-function cr=calibrate_image_points(cr,options,k)
+function p=calibrate_image_points(p,options,k)
 % Tariq Abuhashim
 % t.abuhashim@gmail.com
 %
 % Koroibot, iCub Facility, Istituto Italiano di Tecnologia
 % Genova, Italy, 2014
 	[K,kc]=get_intrinsics(options,k); % remove lense distortion from the key-points
-	x=remove_lens_distortion(cr(:,1:2),kc,K);
+	x=remove_lens_distortion(p(:,1:2),kc,K);
 	x(:,1)=(x(:,1)-K(1,3))/K(1,1);
 	x(:,2)=(x(:,2)-K(2,3))/K(2,2);
-	cr(:,1:2)=x(:,1:2);
+	p(:,1:2)=x(:,1:2);
 end %calibrate_image_points()
 
 function p = get_scan_from_range(p, r, verbose)
@@ -122,14 +133,16 @@ function p = get_scan_from_range(p, r, verbose)
 % t.abuhashim@gmail.com
 %
 % Koroibot, iCub Facility, Istituto Italiano di Tecnologia
-% Genova, Italy, 2014
+% Genova, Italy, 2015
 	if size(p,1) < 3; p = pextend(p); end;
 	rim = sqrt(p(1,:).*p(1,:) + p(2,:).*p(2,:) + p(3,:).*p(3,:));
 	d = r./rim;
 	p(1,:) = d.*p(1,:);
 	p(2,:) = d.*p(2,:);
 	p(3,:) = d.*p(3,:);
-	if verbose
-		plot3(p(1,:),p(2,:),p(3,:),'+'); axis equal; grid on; pause;
+	if verbose % Debugging; 
+		plot3(p(1,:),p(2,:),p(3,:),'+');
+		axis equal, grid on
+		drawnow
 	end
 end %get_scan_from_range()

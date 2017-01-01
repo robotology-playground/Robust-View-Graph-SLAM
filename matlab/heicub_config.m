@@ -16,6 +16,7 @@ matlabrc;
 % Toolbox functions
 addpath('/home/tariq/Dev/mexopencv'); % mexopencv
 addpath('/home/tariq/Dev/vlfeat-0.9.20/toolbox'); vl_setup(); % vlfeat
+addpath('/home/tariq/Dev/suitesparse/CHOLMOD/MATLAB'); % CHOLMOD, for spinv
 addpath('./batch/common'); %rvgslam
 addpath('./batch/estimator_relative'); %rvgslam
 addpath('./common'); %rvgslam
@@ -53,7 +54,7 @@ options=set_params(options,'gridmargin',	5.0	); % discarded image margins during
 options=set_params(options,'gridhorizon',	5.0	); % discarded image horison during features extraction
  
 options=set_params(options,'optimiser'); % loads the pwg_optimiser defaults
-options=set_params(options,'ncams',			5	); % PWGOPTIMISER: number of cams in each bundle
+options=set_params(options,'ncams',			10	); % PWGOPTIMISER: number of cams in each bundle
 options=set_params(options,'nkeys',			1	); % PWGOPTIMISER: number of keyframes in each bundle
 options=set_params(options,'nview',			10	); % PWGOPTIMISER: minimum number of views to accept a 3D point
 options=set_params(options,'sigma_r',		1.0	); % PWGOPTIMISER: image measurements noise
