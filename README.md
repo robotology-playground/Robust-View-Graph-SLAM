@@ -94,7 +94,7 @@ sudo apt-get install libboost-all-dev
 ### YARP Network and iCub
 Our implementation uses [**YARP**](http://www.yarp.it/install.html) to replay data, implement multi-threading, and locate different resources. I personally install it from source. Also, if you are a fan of [**iCub**](http://wiki.icub.org/wiki/ICub_Software_Installation), you will find very useful tools and simulations. To run iCubSIM, you would need to install SDL, GLUT, ODE, IPOPT, and gfortran:
 ```
-sudo apt-get install libsdl1.2-dev freeglut3 freeglut3-dev libode3 libode-dev coinor-libipopt-dev libgsl2 libgsl-dev
+sudo apt-get install libsdl1.2-dev freeglut3 freeglut3-dev libode-dev coinor-libipopt-dev libgsl2 libgsl-dev
 sudo apt-get update && sudo apt-get install gfortran -y
 ```
 Additionally, for Ubuntu 16.04.01
