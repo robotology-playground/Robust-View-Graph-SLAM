@@ -85,7 +85,8 @@ while true
 	
 end %for k = 1:length(C) or while true
 end %optimise_pwg_constraints()
-
+%
+%
 % Additional functions
 function flag = is_new_keyframe(C,keyframe)
 % Tariq Abuhashim

@@ -18,6 +18,12 @@
 %
 % Koroibot, iCub Facility, Istituto Italiano di Tecnologia
 % Genova, Italy, 2016
+%
+% if you receive and error: libstdc++.so.6: version `GLIBCXX_x.x.xx' not found:
+% exit MATLAB
+% rm -r /usr/local/MATLAB/R2016b/bin/glnxa64/../../sys/os/glnxa64/libstdc++.so.6
+% sudo ln -s /usr/lib/x86_64-linux-gnu/libstdc++.so.6 /usr/local/MATLAB/R2016b/bin/glnxa64/../../sys/os/glnxa64/libstdc++.so.6
+% restart MATLAB
 
 clc; clear all; % FIXME: temporary thing, remove after using this as a function
 

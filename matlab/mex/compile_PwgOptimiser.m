@@ -2,12 +2,12 @@
 clc; clear;
 warning off MATLAB:mex:GccVersion_link
 
-vgslam = '../';
-eigen = '/home/tariq/Dev/Eigen';
+vgslam = '../../';
+eigen = '/home/tariq/Dev/eigen';
 suitesparse = '/home/tariq/Dev/suitesparse/';
 
-cd([vgslam,'/mex/']);
-run('../../heicub/set_folders');
+cd([vgslam,'/matlab/mex/']);
+%run('../../heicub/set_folders');
 
 model = 1;
 jacobian = 1;
@@ -16,6 +16,8 @@ update = 1; if (update&&~generate); generate = 1 ; end;
 gate = 1;
 addition = 0 ; if (addition&&~generate); generate = 1 ; end;
 optimise = 0 ; if (optimise&&~generate); generate = 1 ; end;
+
+run_test = false;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % COMPILE
@@ -122,7 +124,7 @@ end
 % compile mexFunctions
 % compile each library source file
 if pc
-    mex_src =  'winCsource\spinv.c';
+    mex_src = 'winCsource\spinv.c';
     outpath = 'private\spinv';
     s = sprintf ('mex %s -DDLONG -O %s -output %s %s', d, include, outpath, mex_src);
     s = [s ' ' libs];
@@ -135,15 +137,15 @@ else
     compile_source(d, include, output, mex_src, libs);
 end
 
-include = [include ' -I' vgslam 'include -I' eigen];
+include = [include ' -I' vgslam 'optimise/include -I' eigen];
 
 if (model)
     output = 'mex_observation_model_inverse_depth';
-    mex_src = [output '.cpp ../src/PwgOptimiser.cpp ../src/RecoverMoments.cpp'];
+    mex_src = [output '.cpp ' vgslam 'optimise/src/PwgOptimiser.cpp ' vgslam 'optimise/src/RecoverMoments.cpp'];
     compile_source(d, include, output, mex_src, libs);
     
     output = 'mex_observation_model_inverse_depth_Mviews';
-    mex_src = [output '.cpp ../src/PwgOptimiser.cpp ../src/RecoverMoments.cpp'];
+    mex_src = [output '.cpp ' vgslam 'optimise/src/PwgOptimiser.cpp ' vgslam 'optimise/src/RecoverMoments.cpp'];
     compile_source(d, include, output, mex_src, libs);
 end
     
@@ -171,11 +173,11 @@ end
 
 if (jacobian)
     output = 'mex_observation_model_jacobian_inverse_depth';
-    mex_src = [output '.cpp ../src/PwgOptimiser.cpp ../src/RecoverMoments.cpp'];
+    mex_src = [output '.cpp ' vgslam 'optimise/src/PwgOptimiser.cpp ' vgslam 'optimise/src/RecoverMoments.cpp'];
     compile_source(d, include, output, mex_src, libs);
     
     output = 'mex_observation_model_jacobian_inverse_depth_Mviews';
-    mex_src = [output '.cpp ../src/PwgOptimiser.cpp ../src/RecoverMoments.cpp'];
+    mex_src = [output '.cpp ' vgslam 'optimise/src/PwgOptimiser.cpp ' vgslam 'optimise/src/RecoverMoments.cpp'];
     compile_source(d, include, output, mex_src, libs);
 end
 
@@ -202,7 +204,7 @@ end
 
 if (generate)
     output = 'mex_generate_constraints_info_Mviews';
-    mex_src = [output '.cpp ../src/PwgOptimiser.cpp ../src/RecoverMoments.cpp'];
+    mex_src = [output '.cpp ' vgslam 'optimise/src/PwgOptimiser.cpp ' vgslam 'optimise/src/RecoverMoments.cpp'];
     compile_source(d, include, output, mex_src, libs);
 end
 
@@ -219,25 +221,25 @@ end
 
 if (update)
     output = 'mex_update_info_matrix_Mviews';
-    mex_src = [output '.cpp ../src/PwgOptimiser.cpp ../src/RecoverMoments.cpp'];
+    mex_src = [output '.cpp ' vgslam 'optimise/src/PwgOptimiser.cpp ' vgslam 'optimise/src/RecoverMoments.cpp'];
     compile_source(d, include, output, mex_src, libs);
 end
 
 if (gate)
     output = 'mex_compute_gate_inverse_depth_Mviews';
-    mex_src = [output '.cpp ../src/PwgOptimiser.cpp ../src/RecoverMoments.cpp'];
+    mex_src = [output '.cpp ' vgslam 'optimise/src/PwgOptimiser.cpp ' vgslam 'optimise/src/RecoverMoments.cpp'];
     compile_source(d, include, output, mex_src, libs);
 end
 
 if (addition)
     output = 'mex_constraints_addition_inverse_depth_Mviews';
-    mex_src = [output '.cpp ../src/PwgOptimiser.cpp ../src/RecoverMoments.cpp'];
+    mex_src = [output '.cpp ' vgslam 'optimise/src/PwgOptimiser.cpp ' vgslam 'optimise/src/RecoverMoments.cpp'];
     compile_source(d, include, output, mex_src, libs);
 end
 
 if (optimise)
     output = 'mex_optimise_constraints_Mviews';
-    mex_src = [output '.cpp ../src/PwgOptimiser.cpp ../src/RecoverMoments.cpp'];
+    mex_src = [output '.cpp ' vgslam 'optimise/src/PwgOptimiser.cpp ' vgslam 'optimise/src/RecoverMoments.cpp'];
     compile_source(d, include, output, mex_src, libs);
 end
 
@@ -301,6 +303,8 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%
+
+if run_test
 
 nrho = 3000 ; % number of inverse depth data
 ncams = 40 ; % number of cameras
@@ -498,6 +502,8 @@ if (jacobian)
     full(H2(:,[2:7 1])) % inverse depth first, permutated to be consistent with H1 and H3
     full(H3)
     fprintf('\n') ;
+end
+
 end
 
 %%%

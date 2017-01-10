@@ -48,8 +48,10 @@ end
 if isfield(options,'save');
    save(strcat(options.save,'/camera_graph.mat'),'-v7.3','C','options','kpts');
 end
+end
 %
 %
+% Additional functions
 function [c,d]=get_akaze(options,j)
 % Tariq Abuhashim
 % t.abuhashim@gmail.com
@@ -63,6 +65,7 @@ function [c,d]=get_akaze(options,j)
 	c(:,3)=c(:,1)<options.imgsize(2)&c(:,2)<options.imgsize(1)&c(:,1)>0&c(:,2)>0;
 	extractor=cv.DescriptorExtractor('SIFT');
 	d=extractor.compute(im,keypoints);
+end
 
 function im=get_image_k(options,k)
 % Tariq Abuhashim
@@ -94,3 +97,4 @@ function im=get_image_k(options,k)
 	    I=rgb2gray(I);
 	end
 	im=I;
+end
