@@ -55,7 +55,7 @@ function pwg_install()
 		% METIS option
 		%-------------------------------------------------------------------------------
 		% Determine the METIS path, and whether or not METIS is available
-		metis_path = '../../metis-4.0' ;
+		metis_path = [suitesparse 'metis-4.0'] ;
 		have_metis = (~isempty (metis_path)) ;
 		% fix the METIS 4.0.1 rename.h file
 		if (have_metis)
@@ -100,7 +100,7 @@ function pwg_install()
 		cholmod_path = [suitesparse 'CHOLMOD/'];
 		include = strrep(include, '../../', suitesparse);
 		include = strrep(include, '../', cholmod_path);
-		include = strrep (include, '/', filesep) ;
+		include = strrep(include, '/', filesep);
 		include = [include ' -I' vgslam 'optimise/include -I' eigen];
 		
 		libs = ['-lcholmod -lcolamd -lccolamd -lamd -lcamd -lmetis -lsuitesparseconfig ',' -L' metis_path];

@@ -282,7 +282,7 @@ endif()
 ########### metis-4.0
 #set(METIS4_LIB ${suitesparse}/metis-4.0)
 find_library(METIS4_LIB
-			 PATHS ../metis-4.0
+			 PATHS ../SuiteSparse/metis-4.0
 			 NAMES libmetis.a)
 if(EXISTS ${METIS4_LIB})
 	message("-- METIS-4.0 libs: ${METIS4_LIB}")
