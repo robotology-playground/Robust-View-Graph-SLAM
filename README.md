@@ -99,7 +99,7 @@ sudo apt-get update && sudo apt-get install gfortran -y
 ```
 Additionally, for Ubuntu 16.04.01
 ```
-sudo apt-get install aces3 libghc-glut-dev 
+sudo apt-get install libace-dev libghc-glut-dev 
 ```
 In addition to the installation instruction, if you like to install ICUB_SIM, then set:
 ```
