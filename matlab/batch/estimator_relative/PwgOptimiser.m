@@ -58,4 +58,7 @@ while 1 % applies an optimisation exit criterion
 end
 
 [x, P] = recover_moments(y, Y);
+%P = inv(Y);
+%x = Y\y;
+
 fprintf('%.4f, %.4f, %.4f, %.4f, %.4f, %.4f\n', x(7:9)', x(10:12)'*180/pi);

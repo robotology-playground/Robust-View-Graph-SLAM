@@ -1,5 +1,5 @@
 function gate = compute_gate_inverse_depth(x, P, C, xs, ncams)
-%gate = compute_gate_inverse_depth(x, P, C, xs)
+%gate = compute_gate_inverse_depth(x, P, C, xs, ncams)
 %
 % Tariq Abuhashim, 2016.
 % iCub - Koroibot

@@ -1,5 +1,5 @@
-function C = initialise_graph_constraints(C,kpts,Pkin,options)
-%[C,kpts]=build_camera_graph(options)
+function C=initialise_graph_constraints(C,kpts,Pkin,options)
+%C=initialise_graph_constraints(C,kpts,Pkin,options)
 %
 % Initialises edges in the camera graph with motion parameters 
 % if (there is an edge)
@@ -20,6 +20,7 @@ function C = initialise_graph_constraints(C,kpts,Pkin,options)
 % Koroibot, iCub Facility, Istituto Italiano di Tecnologia
 % Genova, Italy, 2016
 
+% configurations
 config_visual();
 
 for k=1:length(C)

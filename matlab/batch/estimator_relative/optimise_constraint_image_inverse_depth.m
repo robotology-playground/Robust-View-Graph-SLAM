@@ -74,6 +74,7 @@ while any(sw==1)
 end
 if 1 % 1 - Solve using MATLAB
     x = recover_moments(y, Y);
+	%x = Y\y;
 else
 	x = mex_recover_moments(y, Y);
 end

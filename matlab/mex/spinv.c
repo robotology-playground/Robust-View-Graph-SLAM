@@ -46,8 +46,6 @@
 #define max(a,b) (((a) > (b)) ? (a) : (b))
 #define min(a,b) (((a) < (b)) ? (a) : (b))
 
-#define Int long /* Added by Tariq to replace UFconfig.h (old suitesparse)*/
-
 void cumsum2 (mwIndex *p, mwIndex *c, mwSize n);
 
 void mexFunction
@@ -71,10 +69,10 @@ void mexFunction
   char *uplo="L", *trans="N";
   
 
-  /* ------------------------------------------------------------------------ */
-  /* Only one input. We have to find first the Cholesky factorization.        */ 
+  /* ---------------------------------------------------------------------- */
+  /* Only one input. We have to find first the Cholesky factorization.      */ 
   /* start CHOLMOD and set parameters */ 
-  /* ------------------------------------------------------------------------ */
+  /* ---------------------------------------------------------------------- */
 
   if (nargin == 1) {
     cm = &Common ;
@@ -99,9 +97,9 @@ void mexFunction
   /* This will disable the supernodal LL', which will be slow. */
   /* cm->supernodal = CHOLMOD_SIMPLICIAL ; */
   
-  /* ------------------------------------------------------------------------ */
+  /* ---------------------------------------------------------------------- */
   /* get inputs */
-  /* ------------------------------------------------------------------------ */
+  /* ---------------------------------------------------------------------- */
   
   if (nargin > 3)
     {
@@ -120,7 +118,7 @@ void mexFunction
       mexErrMsgTxt ("A must be square") ;
     }
 
-  /* Only one input. We have to find first the Cholesky factorization.        */
+  /* Only one input. We have to find first the Cholesky factorization.      */
   if (nargin == 1) {
     /* get sparse matrix A, use tril(A)  */
     A = sputil_get_sparse (pargin [0], &Amatrix, &dummy, -1) ; 
@@ -183,8 +181,8 @@ void mexFunction
       fclose (out1);*/
     
   } else {
-    /* The cholesky factorization is given as an input.                       */
-    /* We have to copy it into workspace                                      */
+    /* The cholesky factorization is given as an input.      */
+    /* We have to copy it into workspace                     */
     It = mxGetIr(pargin [0]);
     Jt = mxGetJc(pargin [0]);
     Ct = mxGetPr(pargin [0]);
@@ -267,10 +265,10 @@ void mexFunction
   mxFree(Zt);
   mxFree(zz);
 
-  /* ------------------------------------------------------------------------ */
-  /* Permute the elements according to r(q) = 1:n                             */
-  /* Done only if the Cholesky was evaluated here                             */
-  /* ------------------------------------------------------------------------ */
+  /* ---------------------------------------------------------------------- */
+  /* Permute the elements according to r(q) = 1:n                           */
+  /* Done only if the Cholesky was evaluated here                           */
+  /* ---------------------------------------------------------------------- */
   if (nargin == 1) {
    
     Bm = mxCreateSparse(m, m, nnz, mxREAL) ;     
@@ -319,9 +317,9 @@ void mexFunction
     mxDestroyArray(Bm);
   }
   
-  /* ------------------------------------------------------------------------ */
+  /* ---------------------------------------------------------------------- */
   /* Fill the upper triangle of the sparse inverse */
-  /* ------------------------------------------------------------------------ */
+  /* ---------------------------------------------------------------------- */
   
   w = mxCalloc(m,sizeof(mwIndex));        /* workspace */
   w2 = mxCalloc(m,sizeof(mwIndex));       /* workspace */
@@ -351,13 +349,13 @@ void mexFunction
   mxFree(w2);
   mxFree(w);
   
-  /* ------------------------------------------------------------------------ */
+  /* ---------------------------------------------------------------------- */
   /* return to MATLAB */
-  /* ------------------------------------------------------------------------ */
+  /* ---------------------------------------------------------------------- */
   
-  /* ------------------------------------------------------------------------ */
+  /* ---------------------------------------------------------------------- */
   /* free workspace and the CHOLMOD L, except for what is copied to MATLAB */
-  /* ------------------------------------------------------------------------ */
+  /* ---------------------------------------------------------------------- */
   if (nargin == 1) {
     cholmod_l_free_factor (&L, cm) ;
     cholmod_l_finish (cm) ;

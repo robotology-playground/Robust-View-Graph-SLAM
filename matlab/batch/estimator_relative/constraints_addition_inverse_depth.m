@@ -10,6 +10,8 @@ if length(off)<1; return; end
 
 % recover moments
 [x, P] = recover_moments(y, Y);
+%P=inv(Y);
+%x=Y\y;
 %r = compute_gate_inverse_depth(x, P, C(off), xs, ncams); %gate of OFF constraints - MATLAB
 r = mex_compute_gate_inverse_depth_Mviews(x, P, C(off), xs, ncams); %gate of OFF constraints - cpp
 on = off(r < options.gateinnov & r >= 0 & ~isnan(r)); %turn acceptable constraints ON

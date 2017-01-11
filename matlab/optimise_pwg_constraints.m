@@ -1,4 +1,4 @@
-function C = optimise_pwg_constraints(C,kpts,options)
+function C=optimise_pwg_constraints(C,kpts,options)
 %C=optimise_pwg_constraints(C,kpts,options)
 %
 % Optimises motion constraints in C using robust nonlinear least-squares
@@ -25,27 +25,29 @@ while true
 	
 	% Check if end of constraints is reached, and hence optimise and exit.
 	if k>length(C) || (is_new_keyframe(C(k),keyframe) && keyframe>0)
-		ncams = length(camera);
-		npts = length(tracks);
-		xs = [xc;xf];
+		ncams = length(camera); % number of included camera
+		npts = length(tracks); % number of included 3D tracks
+		xs = [xc;xf]; % state vector
 		assert(length(xs)==ncams*6+npts, 'state vector should be of length ncams*6+npts');
 		if 0 % Debugging;
 			plot_bundle_state(xs,Cimg,ncams);
 			pause
 		end
 		x = optimise_image_data(xs,Cimg,sw,ncams,options);
+		% Update graph constraints
 		for i = 2:ncams
 			C(idx(i-1)).t = x((i-1)*6+(1:3));
 			C(idx(i-1)).a = x((i-1)*6+(4:6));
 		end
 		C(idx(1)).xf = x(ncams*6+(1:npts)); % FIXME: assumes cam1 only has a scan
+		% If end of constraints is reached, then exit
 		if k>length(C)
 			break
 		end
 	end
 
-	% Check if this is a new keyframe, and hence reset vectors
-	if is_new_keyframe(C(k),keyframe) % a new edge to add
+	% Check if this is a new keyframe, and hence reset all vectors
+	if is_new_keyframe(C(k),keyframe)
 		keyframe = C(k).edge(1);
 		xc = zeros(6,1);
 		xf = [];
@@ -75,7 +77,7 @@ while true
 			Cimg(n+s).kpt = position; % point track
 			Cimg(n+s).p1 = p1(1:2,j); % projection in keyframe
 			Cimg(n+s).z = p2(1:2,j); % projection in second camera
-			Cimg(n+s).R = R./options.K1(1,1); % projection noise matrix (pixels/focal_length)
+			Cimg(n+s).R = R; % projection noise matrix (pixels/focal_length)
 			sw(n+s) = 0; % FIXME: all constraints are initially set as OFF, but maybe not?
 		end
 	end

@@ -16,12 +16,14 @@ if length(on)<1; converged = false; x = xs; return; end
 %idx = sort(unique(idx));
 idx = 1:length(xs);
 [x, P] = recover_moments(y, Y, idx, ncams);
+%P=inv(Y);
+%x=Y\y;
 
 % print to file
 %for i = 1:6*ncams; fprintf(options.fid, '%.4f ', x(i)); end
 %fprintf(options.fid, [num2str(length(sw)) ' ' num2str(sum(sw)) '\n']);
 
-%r = compute_gate_inverse_depth(x, P, C(on), xs);%gate of ON constraints - MATLAB
+%r = compute_gate_inverse_depth(x, P, C(on), xs, ncams);%gate of ON constraints - MATLAB
 r = mex_compute_gate_inverse_depth_Mviews(x, P, C(on), xs, ncams);%gate of ON constraints - cpp
 rmax = max(r(isfinite(r)));
 gate = rmax*options.gateratio;
@@ -30,8 +32,8 @@ gate = rmax*options.gateratio;
 if gate < options.gateresid
     rmaxt = 0;
     if ~isempty(Ct)
-        rt = compute_gate_inverse_depth(x, P, Ct, xs);
-        %rt = mex_compute_gate_inverse_depth(x, P, Ct, xs);
+        %rt = compute_gate_inverse_depth(x, P, Ct, xs);
+        rt = mex_compute_gate_inverse_depth(x, P, Ct, xs);
         rmaxt = max(rt);
         disp(['Max trusted residual: ' num2str(rmaxt)])
     end
