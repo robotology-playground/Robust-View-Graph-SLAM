@@ -17,10 +17,10 @@ OPTION( ENABLE_VLFEAT		"Enable use of VLFEAT"	ON )
 
 SET(VLFEAT_ROOT /home/tariq/Dev/matlab)
 
-if (BUILD_OPTIMISER)
-	add_subdirectory(optimise)
-endif (BUILD_OPTIMISER)
-
 if (BUILD_CAMERA_GRAPH)
 	add_subdirectory(graph)
 endif (BUILD_CAMERA_GRAPH)
+
+if (BUILD_OPTIMISER)
+	add_subdirectory(optimise)
+endif (BUILD_OPTIMISER)

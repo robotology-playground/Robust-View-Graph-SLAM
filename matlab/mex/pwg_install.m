@@ -1,4 +1,14 @@
 function pwg_install()
+%pwg_install( )
+%
+% A consule to compile and test mex files under construction
+% This function uses the batch image optimisation class PwgOptimser
+%
+% Tariq Abuhashim
+% t.abuhashim@gmail.com
+%
+% Koroibot, iCub Facility, Istituto Italiano di Tecnologia
+% Genova, Italy, 2016
 
 	config_install;
 	

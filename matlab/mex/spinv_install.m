@@ -1,4 +1,14 @@
 function spinv_install()
+%spinv_install( )
+%
+% A consule to compile and test mex files under construction
+% This function uses sparse inverse using Takahashi's method
+%
+% Tariq Abuhashim
+% t.abuhashim@gmail.com
+%
+% Koroibot, iCub Facility, Istituto Italiano di Tecnologia
+% Genova, Italy, 2016
 
 	config_install;
 

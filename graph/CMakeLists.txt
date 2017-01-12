@@ -34,11 +34,11 @@ set(CMAKE_DEBUG_POSTFIX "-debug")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
 
 # Options
-OPTION( BUILD_SHARED_LIBS 	"Enable shared libraries." 				OFF )
-OPTION( YARP 			"Enable use of YARP." 					ON )
-OPTION( ICUB 			"Enable use of ICUB." 					ON )
-OPTION( OpenCV 			"Enable use of OpenCV." 				ON )
-OPTION( EIGENSPARSE		"Enable Eigen as a sparse linear algebra library"	ON )
+OPTION( BUILD_SHARED_LIBS 	"Enable shared libraries." 							OFF )
+OPTION( YARP 				"Enable use of YARP." 								ON )
+OPTION( ICUB 				"Enable use of ICUB." 								ON )
+OPTION( OpenCV 				"Enable use of OpenCV." 							ON )
+OPTION( EIGENSPARSE			"Enable Eigen as a sparse linear algebra library"	ON )
 
 # YARP.
 find_package( YARP REQUIRED )
