@@ -1,7 +1,7 @@
-function [options,encoders,floatingbase]=heicub_config()
-%[options,encoders,floatingbase]=heicub_config()
+function [options,encoders,floatingbase]=icub_config()
+%[options,encoders,floatingbase]=icub_config()
 %
-%	For iCub@heidelberg.
+%	For iCub@iit.
 %
 % Tariq Abuhashim
 % t.abuhashim@gmail.com
@@ -25,12 +25,12 @@ addpath('./mex'); % rvgslam, mex wrappers to ../optimise and ../graph C++ classe
 addpath('./test'); % rvgslam, a collection of test functions, some are needed here.
 
 % Robot related functions
-addpath('./heicub'); % robot related functions
+addpath('./icub'); % robot related functions
 
 % Data related paths
-DATA_DIR='/home/tariq/Documents/data/heicub/data_set1';
+DATA_DIR='/path/to/data';
 SAVE_DIR=strcat(DATA_DIR,'/run_',datestr(now,'yyyymmdd')); % a folder with date suffix is created
-CALB_DIR='./heicub/calib_20160913'; % path to intrinsic and extrinsic calibration files
+CALB_DIR='./icub/calib_xxxxxxxx'; % path to intrinsic and extrinsic calibration files
 
 % Simulation parameters:
 options=set_params(); % loads basic defaults

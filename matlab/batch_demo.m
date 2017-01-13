@@ -55,5 +55,3 @@ C = assign_constraint_weight(C);
 
 % Optimise for global camera poses using all the constraints in the graph
 %C = optimise_graph_constraints(C);
-
-

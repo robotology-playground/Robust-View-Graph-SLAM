@@ -5,22 +5,22 @@ Last Updated: December 2016
 Copyright (C) 2016 iCub Facility - Istituto Italiano di Tecnologia
 
 This contains MATLAB demonstrations for:
-	1- iCub@iit
-	2- iCub@heidelberg
-	3- R1@iit
+ 1- iCub@iit
+ 2- iCub@heidelberg
+ 3- R1@iit
 
 The folder contains toolboxes, where some of them are still under review:
-	1- batch: is the batch optimisation (relative and global) toolbox.
-	2- common: contains matlab utilities common in between all the tools.
-	3- dense: contains dense disparity estimation functions.
-	4- heicub: contains functions related to icub@heidelberg.
-	5- icub: contains functions related to icub@iit.
-	6- include: contains standard Mathworks headers (copyright of Mathworks).
-	7- lmatch: contains line matching and lines bundle-adjustment functions.
-	8- mex: contains mex wrappers to C++ classes found in ../optimiser and ../graph
-	9- r1: contains functions related to r1@iit.
-	10- rectify: contains rectification related functions.
-	11- test: constains multiple-views geometry functions (as explained by Hartley and Zisserman).
+ 1- batch: is the batch optimisation (relative and global) toolbox.
+ 2- common: contains matlab utilities common in between all the tools.
+ 3- dense: contains dense disparity estimation functions.
+ 4- heicub: contains functions related to icub@heidelberg.
+ 5- icub: contains functions related to icub@iit.
+ 6- include: contains standard Mathworks headers (copyright of Mathworks).
+ 7- lmatch: contains line matching and lines bundle-adjustment functions.
+ 8- mex: contains mex wrappers to C++ classes found in ../optimiser and ../graph
+ 9- r1: contains functions related to r1@iit.
+ 10- rectify: contains rectification related functions.
+ 11- test: constains multiple-views geometry functions (as explained by Hartley and Zisserman).
 	
 If you are planning on using this implementation, please cite our paper:
 T. Abuhashim and L. Natale, "Robustness in view-graph SLAM," 2016 19th International Conference on Information Fusion (FUSION), Heidelberg, 2016, pp. 942-949. URL: http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=7527987&isnumber=7527857
@@ -29,22 +29,22 @@ Acknowledgement: This research has received funding from the European Union’s 
 License: Released under the terms of the LGPLv2.1 or later, see LGPL.TXT.
 
 The main function is batch_demo. In order to run this simulation, a robot has to be configured first:
-	1- iCub@iit
-		icub_config.m contains paths to robot related functions, and parameters (which are explained at declaration)
-		the icub folder contains icub related functions
-	2- iCub@heidelberg
-		heicub_config.m contains paths to robot related functions, and parameters (which are explained at declaration)
-		the heicub folder contains heicub related functions
-	3- R1@iit
-		r1_config.m contains paths to robot related functions, and parameters (which are explained at declaration)
-		the r1 folder contains icub related functions
+ 1- iCub@iit
+	  icub_config.m contains paths to robot related functions, and parameters (which are explained at declaration)
+      the icub folder contains icub related functions
+ 2- iCub@heidelberg
+      heicub_config.m contains paths to robot related functions, and parameters (which are explained at declaration)
+      the heicub folder contains heicub related functions
+ 3- R1@iit
+      r1_config.m contains paths to robot related functions, and parameters (which are explained at declaration)
+      the r1 folder contains icub related functions
 		
 For all robots, config files operate in the same way, but they are different in the way they collect the data, perform synchronisation, and generate forward kinematics.
 In every robot config file, the following three lines need to be updated:
-		addpath('/path/to/mexopencv'); % mexopencv
-		addpath('/path/to/vlfeat/toolbox'); vl_setup(); % vlfeat
-		DATA_DIR='/path/to/data_set'; % data set
+	addpath('/path/to/mexopencv'); % mexopencv
+	addpath('/path/to/vlfeat/toolbox'); vl_setup(); % vlfeat
+	DATA_DIR='/path/to/data_set'; % data set
 One may also tune the parameters in the config functions. There are three sets of parameters (for full list of parameters, check the defauls in set_param.m):
-	1- Data related parameters (folder, save, calib, freq, first_image, last_image, steps).
-	2- Vision related parameters (for example, kazethreshold, kazeratio, mindisp, ransac, mincorrnr, etc ...)
-	3- Optimiser related parameters (for example, ncams, nkeys, nview, sigma_r, gateratio, maxitr, etc ...)
+ 1- Data related parameters (folder, save, calib, freq, first_image, last_image, steps).
+ 2- Vision related parameters (for example, kazethreshold, kazeratio, mindisp, ransac, mincorrnr, etc ...)
+ 3- Optimiser related parameters (for example, ncams, nkeys, nview, sigma_r, gateratio, maxitr, etc ...)
