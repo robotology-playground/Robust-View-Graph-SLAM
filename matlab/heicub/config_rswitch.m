@@ -11,7 +11,7 @@
 % iCub - Koroibot
 
 
-sigma_r = 1/options.K1(1,1); % pixels
+sigma_r = options.sigma_r/options.K1(1,1); % in normalised pixels
 R = eye(2)*sigma_r*sigma_r;
 
 terr=0.001; % norm of translation error

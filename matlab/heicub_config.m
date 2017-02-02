@@ -41,8 +41,8 @@ options=set_params(options,'calib',			CALB_DIR); % where is the calibration file
 options=set_params(options,'freq',			10	); 	% frequency of acquisition for synchronisation
 													% Very large frequency means less accurate left to right synchronisation
 													% Very small frequency means more frame drops
-options=set_params(options,'first_image',	101	); % where to start reading the acquisition
-options=set_params(options,'last_image',	200	); 	% where to stop reading the acquisition
+options=set_params(options,'first_image',	51	); % where to start reading the acquisition
+options=set_params(options,'last_image',	150	); 	% where to stop reading the acquisition
 													% both first_image and last_image represent (stereo) pair numbers
 options=set_params(options,'steps',			2	); % frames resampling frequency (next_frame = current_frame + steps)
 options=set_params(options,'verbose',		0	); 	% show verbose during data acquisition
@@ -62,10 +62,10 @@ options=set_params(options,'gridmargin',	5.0	); % discarded image margins during
 options=set_params(options,'gridhorizon',	5.0	); % discarded image horison during features extraction
 % optimiser parameters
 options=set_params(options,'optimiser'); % loads the pwg_optimiser defaults
-options=set_params(options,'ncams',			20	); % PWGOPTIMISER: number of cams in each bundle
-options=set_params(options,'nkeys',			10	); % PWGOPTIMISER: number of keyframes in each bundle
+options=set_params(options,'ncams',			30	); % PWGOPTIMISER: number of cams in each bundle
+%options=set_params(options,'nkeys',			10	); % PWGOPTIMISER: number of keyframes in each bundle
 options=set_params(options,'nview',			10	); % PWGOPTIMISER: minimum number of views to accept a 3D point
-options=set_params(options,'sigma_r',		1.0	); % PWGOPTIMISER: image measurements noise
-options=set_params(options,'gateratio',		0.3	); % PWGOPTIMISER: gate ratio between maximum and minimum acceptable inlier
-options=set_params(options,'verbose',		1	); % PWGOPTIMISER: show verbose during optimisation
+options=set_params(options,'sigma_r',		0.5	); % PWGOPTIMISER: image measurements noise
+options=set_params(options,'gateratio',		0.2	); % PWGOPTIMISER: gate ratio between maximum and minimum acceptable inlier
+options=set_params(options,'verbose',		2	); % PWGOPTIMISER: show verbose during optimisation
 options=set_params(options,'maxitr',		100	); % PWGOPTIMISER: maximum number of iterations in case no convergence

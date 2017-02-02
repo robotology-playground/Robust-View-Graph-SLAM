@@ -14,8 +14,8 @@ function [options,encoders,floatingbase]=icub_config()
 matlabrc;
 
 % Toolbox functions
-addpath('/home/tariq/Dev/mexopencv'); % mexopencv for features extraction
-addpath('/home/tariq/Dev/vlfeat-0.9.20/toolbox'); vl_setup(); % vlfeat for matching
+addpath('./mexopencv'); % mexopencv for features extraction
+addpath('../vlfeat/toolbox'); vl_setup(); % vlfeat for matching
 addpath('../../suitesparse/CHOLMOD/MATLAB'); % CHOLMOD, for spinv
 addpath('./batch/common'); % rvgslam, estimation common functions
 addpath('./batch/estimator_relative'); % rvgslam for relative pose estimation
@@ -63,7 +63,7 @@ options=set_params(options,'gridhorizon',	5.0	); % discarded image horison durin
 % optimiser parameters
 options=set_params(options,'optimiser'); % loads the pwg_optimiser defaults
 options=set_params(options,'ncams',			20	); % PWGOPTIMISER: number of cams in each bundle
-options=set_params(options,'nkeys',			10	); % PWGOPTIMISER: number of keyframes in each bundle
+%options=set_params(options,'nkeys',			10	); % PWGOPTIMISER: number of keyframes in each bundle
 options=set_params(options,'nview',			10	); % PWGOPTIMISER: minimum number of views to accept a 3D point
 options=set_params(options,'sigma_r',		1.0	); % PWGOPTIMISER: image measurements noise
 options=set_params(options,'gateratio',		0.3	); % PWGOPTIMISER: gate ratio between maximum and minimum acceptable inlier

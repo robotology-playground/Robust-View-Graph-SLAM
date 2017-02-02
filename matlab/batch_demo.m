@@ -33,9 +33,11 @@ assert(any(strcmp(robot,{'r1','icub','heicub'})),['Unknown robot: ', robot]);
 % setup for icub, heicub, and r1
 switch robot
 	case 'icub'%iCub@iit
+		%[options, encoders, floatingbase] = icub_config(); FIXME: not tested yet
 	case 'heicub'%iCub@heidelberg
 		[options, encoders, floatingbase] = heicub_config();
 	case 'r1'%r1@iit
+		%[options, encoders, floatingbase] = icub_config(); FIXME: not tested yet
 end
 
 % Compute forward kinematics

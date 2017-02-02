@@ -1,5 +1,5 @@
 function p = transform_to_global_w(p, b)
-% function p = transform_to_global(p, b)
+% function p = transform_to_global_w(p, b)
 %
 % Transform a list of poses [x;y;phi] so that they are global wrt a base pose.
 % Also works for lists of points [x;y].
