@@ -46,7 +46,8 @@ function pwg_install()
 		%-------------------------------------------------------------------------------
 		% SuiteSparse option
 		%-------------------------------------------------------------------------------
-		include = '-I../../CHOLMOD/MATLAB -I../../AMD/Include -I../../COLAMD/Include -I../../CCOLAMD/Include -I../../CAMD/Include -I../include -I../../UFconfig' ;
+		include = '-I../../CHOLMOD/MATLAB -I../../AMD/Include -I../../COLAMD/Include -I../../CCOLAMD/Include -I../../CAMD/Include -I../Include -I../../UFconfig -I/usr/include/suitesparse
+        ' ;
 
 		if (v < 7.0)
 			% do not attempt to compile CHOLMOD with large file support
