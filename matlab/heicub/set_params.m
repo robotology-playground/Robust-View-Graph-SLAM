@@ -1,7 +1,7 @@
 function options = set_params(options, field, val)
 %options = set_params(options)
 %
-% loads options for the batch implementation
+% loads (default) options for the batch implementation
 %
 %	For iCub@heidelberg.
 %
@@ -12,10 +12,10 @@ function options = set_params(options, field, val)
 % Genova, Italy, 2015
 
 if nargin < 1 % set basic defaults
-    options.freq = 15;
-    options.first_image = 0;
-    options.last_image = 0;
-    options.steps = 0;
+    options.freq = 5;
+    options.first_image = 0; % 0 - ignore
+    options.last_image = 0; % 0 - ignore
+    options.steps = 0; % 0 - ignore
     options.verbose = 2;
     return
 end
@@ -33,7 +33,7 @@ if nargin == 2 % assign calibration or vision or optimiser configurations
     elseif strcmp(field, 'optimiser')
         options = set_optimise_options(options);
     else
-        error('Invalid option, should be "vision" or "optimiser"')
+        error('Invalid option, should be "calib", "vision" or "optimiser"');
     end
 end
 
@@ -46,19 +46,20 @@ if nargin == 3 % change a field
         options.(field) = val;
         options = set_calib_options(options);
     else
-        assert(isfield(options, field), ['Invalid field ' field]);
+        assert(isfield(options, field), ['Invalid field ' field ', it should be initialised first.']);
         options.(field) = val;
     end
 end
 
-if isfield(options, 'save')
+if isfield(options, 'save') % create results folder
     if ~isdir(strcat(options.save))
         mkdir(strcat(options.save));
     end
     save(strcat(options.save,'/options'), 'options');
 end
 
-
+%
+%
 function options = set_vision_options(options)
 % This function sets the visual processing options
 %
@@ -69,18 +70,18 @@ function options = set_vision_options(options)
 % Genova, Italy, 2014
 options.splitimage			=	0;			% plit stereo composit into left and right images (For R1)
 options.minbase     		=	34/1000;	% minimum baseline to perform triangulation (meters)
-options.mindisp     		=	2;			% minimum pixel displacement in the images to be considered
+options.mindisp     		=	2.0;		% minimum pixel displacement in the images to be considered
 options.bucketsize      	=	[150,150];	% bucket size
 options.ransac          	=	200;		% number of ransac iterations
 options.RANSAC_pixtol   	=	0.5;		% tolerance RANSAC   .1 with ladybug / 1 marulan
-options.mincorrnr       	=	25;			% minimum number of inliers to trust two-view results
-options.mininlnr        	=	10;			% min num of matches to compute two-view geometries
+options.mincorrnr       	=	25;			% minimum number of matches to compute two-view geometries
+options.mininlnr        	=	10;			% minimum number of inliers to trust two-view results
 options.merge_tracks		=	1;			% perform global data associations?
 %options.roterrtol			=	eps;		% threshold in pixels for inlier (in rotation averaging)
 %options.maxnumfeat      	=	Inf;
 options.gridsize        	=	0;			% 3
-options.gridmargin      	=	5;			% 20
-options.gridhorizon     	=	5;			% 120
+options.gridmargin      	=	5.0;		% discarded image margins during features extraction
+options.gridhorizon     	=	5.0;		% discarded image horison during features extraction
 options.method  			=	'kaze';		% sift, kaze, or fast
 if strcmp(options.method,'sift')
     options.siftthreshold   =	[50,0];
@@ -97,6 +98,8 @@ else
     error('Features extraction method can be either sift, kaze or fast');
 end
 
+%
+%
 function options = set_optimise_options(options)  
 % This function sets the PWG optimisation options
 %
@@ -106,7 +109,7 @@ function options = set_optimise_options(options)
 % Koroibot, iCub Facility, Istituto Italiano di Tecnologia
 % Genova, Italy, 2014
 options.ncams       		=	20;		% number of frames inside the bundle
-options.nkeys       		=	20;		% number of key-frames in the bundle
+%options.nkeys       		=	20;		% number of key-frames in the bundle
 options.nview				=	15;		% minimum number of views to consider a point in the map
 %options.sigma_a			=	1;		% rotational noise std in degrees
 %options.sigma_b			=	1;		% translational noise std in milli-meters
@@ -121,6 +124,8 @@ options.checkrank			=	1;
 options.verbose				=	2;		% verbose level: 0,1,2
 options.maxitr				=	100;	% number of iterations, and residuals gate thresholds
 
+%
+%
 function options = set_calib_options(options)
 % This function sets the camera calibration options
 %

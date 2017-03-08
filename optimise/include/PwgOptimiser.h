@@ -15,7 +15,7 @@
 #ifndef PWGOPTIMISER_H
 #define PWGOPTIMISER_H
 
-#include "RecoverMoments.h"
+#include "matlab/mex.h"
 #include <unistd.h> // sleep command
 #include "eigen3/Eigen/Sparse"
 #include "eigen3/Eigen/Dense"

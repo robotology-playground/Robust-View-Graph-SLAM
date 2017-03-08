@@ -1,5 +1,6 @@
 #include "mex.h"
 #include "PwgOptimiser.h"
+#include "RecoverMoments.h"
 
 /****************************/
 

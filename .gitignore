@@ -38,3 +38,6 @@ doc/
 
 # Merge files
 *.orig
+
+# Compiled mex wrappers
+*.mexa64

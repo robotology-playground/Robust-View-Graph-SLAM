@@ -7,8 +7,8 @@ function [imgl, imgr, waist, floatingbase] = sync_images_with_encoders(cam1, cam
 % iCub - Koroibot
 
 rate = 1/freq;
-disp([' ----> Frames captured at ',num2str(1/rate),' Hz']);
-disp([' ----> Frames later than ',num2str(rate/2),' sec were dropped']);
+fprintf([' ----> Frames captured at ',num2str(1/rate),' Hz.\n']);
+fprintf([' ----> Left frames with a right frame match later than ',num2str(rate/2),' sec will be dropped.\n']);
 
 if isempty(cam1)||isempty(cam2)
 	error('imgl or imgr data is empty'); 
@@ -50,8 +50,8 @@ else
     floatingbase = [];
 end
 
-disp([' ----> Frames dropped ',num2str(sum(~use))]);
-disp([' ----> Frames taken ',num2str(length(on))]);
+fprintf([' ----> Left frames dropped ',num2str(sum(~use)),' out of ',num2str(length(use)),'.\n']);
+fprintf([' ----> Pairs taken, ',num2str(length(on)),'.\n']);
 
 % old working code
 %%%%%%%%%%%%%%%%%%

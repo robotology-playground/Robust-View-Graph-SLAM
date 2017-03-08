@@ -23,6 +23,8 @@ function C=initialise_graph_constraints(C,kpts,Pkin,options)
 % configurations
 config_visual();
 
+fprintf(['Initialising graph constraints (length(C)=',num2str(length(C)),') ...\n']);
+
 for k=1:length(C)
 	% get the poeses
 	if is_calibrated(C(k),options)

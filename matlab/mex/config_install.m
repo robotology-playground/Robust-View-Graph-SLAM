@@ -19,5 +19,5 @@ eigen = '/home/tariq/Dev/eigen';
 %suitesparse = '/home/tariq/Dev/suitesparse/'; % use dowloadable SuiteSparse
 suitesparse = [vgslam 'SuiteSparse/']; % use supplied (old version) SuiteSparse
 
-spinv = 1;
-pwg = 1;
+spinv = true;
+pwg = true;

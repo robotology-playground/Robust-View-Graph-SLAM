@@ -16,15 +16,15 @@ if isstruct(options)
     if isfield(options,'folder') && isfield(options,'freq')
         path_to_img = options.folder;
         freq = options.freq;
-	start = 0;
+		start = 0;
         if isfield(options,'first_image')
             start = options.first_image;                      
         end
-	stop = 0;
+		stop = 0;
         if isfield(options,'last_image')
             stop = options.last_image;                       
         end
-	steps = 0; 
+		steps = 0; 
         if isfield(options,'steps')
             steps = options.steps;                     
         end

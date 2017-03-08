@@ -1,5 +1,5 @@
-% function batch_demo(robot)
-%function batch_demo(robot)
+% function batch_demo(DATA_DIR,robot)
+%function batch_demo(DATA_DIR,robot)
 %
 % Performs view-graph slam 
 % Requirements:
@@ -25,19 +25,21 @@
 % sudo ln -s /usr/lib/x86_64-linux-gnu/libstdc++.so.6 /usr/local/MATLAB/R2016b/bin/glnxa64/../../sys/os/glnxa64/libstdc++.so.6
 % restart MATLAB
 
-clc; clear all; % FIXME: temporary thing, remove after using this as a function
-
-robot = 'heicub'; %icub, heicub, r1
-assert(any(strcmp(robot,{'r1','icub','heicub'})),['Unknown robot: ', robot]);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FIXME: temporary thing, remove after using this as a function
+DATA_DIR = '/home/tariq/Documents/Robust-View-Graph-SLAM/matlab/heicub/data/data_set1';
+robot = 'heicub'; %icub, heicub, r1 % FIXME: temporary thing, remove after using this as a function
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % setup for icub, heicub, and r1
+assert(any(strcmp(robot,{'r1','icub','heicub'})),['Unknown robot: ', robot]);
 switch robot
 	case 'icub'%iCub@iit
-		%[options, encoders, floatingbase] = icub_config(); FIXME: not tested yet
+		%[options, encoders, floatingbase] = icub_config(DATA_DIR); FIXME: not tested yet
 	case 'heicub'%iCub@heidelberg
-		[options, encoders, floatingbase] = heicub_config();
+		[options, encoders, floatingbase] = heicub_config(DATA_DIR);
 	case 'r1'%r1@iit
-		%[options, encoders, floatingbase] = icub_config(); FIXME: not tested yet
+		%[options, encoders, floatingbase] = icub_config(DATA_DIR); FIXME: not tested yet
 end
 
 % Compute forward kinematics
@@ -48,6 +50,8 @@ Pkin = cameras_from_kinematics(encoders, floatingbase);
 
 % Utilise kinematics or epipolar geometry to initialise constraints
 C = initialise_graph_constraints(C,kpts,Pkin,options); 
+
+return
 
 % Refined sets of pair-wise geometry constraints using image correspondences
 C = optimise_pwg_constraints(C,kpts,options);

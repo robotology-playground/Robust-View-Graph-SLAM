@@ -224,7 +224,9 @@ size_t cholmod_l_mult_size_t (size_t a, size_t k, int *ok) ;
 #define Int UF_long
 #define Int_max UF_long_max
 #define CHOLMOD(name) cholmod_l_ ## name
+#ifndef LONG  /* Added by tariq to suppress a redefinition error */
 #define LONG
+#endif /* Added by tariq to suppress a redefinition error */
 #define DOUBLE
 #define ITYPE CHOLMOD_LONG
 #define DTYPE CHOLMOD_DOUBLE

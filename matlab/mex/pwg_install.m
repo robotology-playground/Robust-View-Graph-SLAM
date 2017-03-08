@@ -46,7 +46,7 @@ function pwg_install()
 		%-------------------------------------------------------------------------------
 		% SuiteSparse option
 		%-------------------------------------------------------------------------------
-		include = '-I../../CHOLMOD/MATLAB -I../../AMD/Include -I../../COLAMD/Include -I../../CCOLAMD/Include -I../../CAMD/Include -I../Include -I../../UFconfig' ;
+		include = '-I../../CHOLMOD/MATLAB -I../../AMD/Include -I../../COLAMD/Include -I../../CCOLAMD/Include -I../../CAMD/Include -I../include -I../../UFconfig' ;
 
 		if (v < 7.0)
 			% do not attempt to compile CHOLMOD with large file support
@@ -112,6 +112,10 @@ function pwg_install()
 		include = strrep(include, '../', cholmod_path);
 		include = strrep(include, '/', filesep);
 		include = [include ' -I' vgslam 'optimise/include -I' eigen];
+		
+		if 1; % Debugging ....
+			include, pause;
+		end
 		
 		libs = ['-lcholmod -lcolamd -lccolamd -lamd -lcamd -lmetis -lsuitesparseconfig ',' -L' metis_path];
 		

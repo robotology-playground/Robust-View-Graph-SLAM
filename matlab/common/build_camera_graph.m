@@ -12,13 +12,21 @@ function [C,kpts]=build_camera_graph(options)
 % Koroibot, iCub Facility, Istituto Italiano di Tecnologia
 % Genova, Italy, 2016
 
-fprintf('Building the camera graph.\n');
 nimages=size(options.cam_left.image,2)+size(options.cam_right.image,2);
 kpts=cell(1,nimages); desc=cell(1,nimages); C=[]; k=0;
 thickness=options.ncams-1;
+%nkeys=0;
 ncorners=options.mincorrnr;
 mindisp=options.mindisp;
-%nkeys=0;
+
+fprintf('Building the camera graph ');
+if isfield(options,'kazethreshold')
+	fprintf(['(detector = KAZE<',num2str(options.kazethreshold),',',num2str(options.kazeratio),'>']);
+end
+fprintf([', thickness = ',num2str(thickness)]);
+fprintf([', mincorrnr = ',num2str(ncorners)]);
+fprintf([', mindisp = ',num2str(mindisp)]);
+fprintf([') ...\n']);
 for i=1:2:nimages-1	% FIXME: No edge from even to odd
 					% This was assumed because even-to-odd edge results 
 					% were strange
@@ -41,7 +49,7 @@ for i=1:2:nimages-1	% FIXME: No edge from even to odd
             C(k).edge=[i,j];	% FIXME: doesn't account for uncomputed edges
             C(k).weight=size(matches,2);
             C(k).matches=matches;
-	    fprintf('Edge [%d,%d,%d].\n',i,j,size(matches,2));
+	    	fprintf('Edge [%d,%d,%d].\n',i,j,size(matches,2));
         %end
     end
 end

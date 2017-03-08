@@ -13,6 +13,7 @@
  */
 
 #include "PwgOptimiser.h"
+#include "RecoverMoments.h"
 
 // /*=====================*/
 PwgOptimiser::PwgOptimiser(void){

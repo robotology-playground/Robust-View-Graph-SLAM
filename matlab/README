@@ -28,6 +28,13 @@ T. Abuhashim and L. Natale, "Robustness in view-graph SLAM," 2016 19th Internati
 Acknowledgement: This research has received funding from the European Union’s Seventh Framework Programme for research, technological development and demonstration under grant agreement No. 611909 (KoroiBot).
 License: Released under the terms of the LGPLv2.1 or later, see LGPL.TXT.
 
+Before running the demo, run check_data.m to find out the follwing parameters:
+ 1- freq: required synchronisation frequency
+ 2- first_image: identification number of the first image to be processed (ignore initial instances where cameras are stationary).
+ 3- last_image: identification number of the last image to be processed (ignore last instances where cameras are stationary).
+ 4- steps: number of frame jumps, 1 means take all frames, 2 means take every second frame (jump over one frame), and etc.
+In later releases, we will implement an automatic demo parameters identification version of this script.
+
 The main function is batch_demo. In order to run this simulation, a robot has to be configured first:
  1- iCub@iit
 	  icub_config.m contains paths to robot related functions, and parameters (which are explained at declaration)
@@ -40,10 +47,8 @@ The main function is batch_demo. In order to run this simulation, a robot has to
       the r1 folder contains icub related functions
 		
 For all robots, config files operate in the same way, but they are different in the way they collect the data, perform synchronisation, and generate forward kinematics.
-In every robot config file, the following three lines need to be updated:
-	addpath('/path/to/mexopencv'); % mexopencv
-	addpath('/path/to/vlfeat/toolbox'); vl_setup(); % vlfeat
-	DATA_DIR='/path/to/data_set'; % data set
+In every robot config file, the following line need to be updated:
+			DATA_DIR='/path/to/data_set'; % data set
 One may also tune the parameters in the config functions. There are three sets of parameters (for full list of parameters, check the defauls in set_param.m):
  1- Data related parameters (folder, save, calib, freq, first_image, last_image, steps).
  2- Vision related parameters (for example, kazethreshold, kazeratio, mindisp, ransac, mincorrnr, etc ...)

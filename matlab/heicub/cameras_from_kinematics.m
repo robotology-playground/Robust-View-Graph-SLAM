@@ -51,7 +51,7 @@ waist = encoders([7 8 9],:);
 
 if size(neck, 2)>1;
     disp('  ');
-    disp('Camera poses from kinematics.');
+    disp('Camera poses from kinematics ...');
 end
 
 H=[
@@ -98,6 +98,8 @@ for i=1:size(P,2)
     cij=transform_to_relative_w(cj,ci);
     %P{i}=[w2R(cij(4:6)) cij(1:3)];
 end
+
+disp(['Kinematics contains ',num2str(size(P,2)),' camera poses']);
 
 % plot ?
 if 0
