@@ -138,9 +138,9 @@ If compiling without MATLAB, in the makefile, comment out the line
 ```
 #include make/matlab.mak. Then, "make".
 ```
-To compile our code with VLFeat, in `.bash_aliases` or `.bashrc` add: 
+To compile our code with VLFeat, update the environmental variable:
 ```
-export VLFEAT_ROOT=/path/to/vlfeat/directory
+VLFEAT_ROOT=/path/to/vlfeat/directory
 ```
 
 ### Matlab
