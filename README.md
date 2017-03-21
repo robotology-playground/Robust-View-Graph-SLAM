@@ -15,10 +15,7 @@
 
 This implementation was tested on Ubuntu Trusty Tahr (14.04.5 LTS) and Kylin (16.04.1 LTS). Install all required tools:
 ```
-sudo apt-get install git
-sudo apt-get install g++
-sudo apt-get install cmake
-sudo apt-get install cmake-curses-gui
+sudo apt-get install git g++ cmake cmake-curses-gui
 ```
 Cmake 3.2.2 or higher is required, so:
 ```
@@ -31,14 +28,6 @@ Then, check
 ```
 cmake --version
 ``` 
-In case of segmentation fault,
-```
-sudo apt-get install cmake
-```
-Then, check
-```
-cmake --version
-```
 
 ### OpenCV and OpenCV_Contrib
 ```
@@ -48,7 +37,14 @@ mkdir opencv_build
 cd opencv_build
 cmake -DOPENCV_EXTRA_MODULES_PATH=../opencv_contrib/modules ../opencv
 make -j5
+```
+To install:
+```
 sudo make install
+```
+If not installing, then update the environmental variable:
+```
+OPENCV_DIR=/path/to/your/opencv_build
 ```
 To check the currently installed version of opencv:
 ```
@@ -81,6 +77,11 @@ Then;
 make
 sudo make install INSTALL=yourprefix
 ```
+Then update the environmental variable:
+```
+SUITESPARSE_DIR=path/to/your/SuiteSparse/install
+```
+
 ### Eigen
 Download and compile [**Eigen**](http://eigen.tuxfamily.org/index.php?title=Main_Page).
 ```
@@ -91,17 +92,26 @@ cd build
 cmake ../ -DCMAKE_INSTALL_PREFIX=yourprefix
 sudo make install
 ```
+Then update the environmental variable:
+```
+EIGEN_INCLUDE_DIR=path/to/your/eigen/build/include
+```
 
 ### libboost
 Install using precompiled binaries,
 ```
 sudo apt-get install libboost-all-dev
 ```
-Or, download source from [**Boost**](http://www.boost.org/users/download/), then follow instructions to compile.
+If you don't like to install boost system-wise, download source from [**Boost**](http://www.boost.org/users/download/), then follow instructions to compile.
 ```
 cd path/to/boost
 mkdir build
 ./bootstrap.sh PREFIX=path/to/boost/build
+./b2
+```
+Then update the environmental variable:
+```
+EIGEN_INCLUDE_DIR=path/to/your/eigen/build/include
 ```
 
 ### YARP Network and iCub
@@ -128,10 +138,15 @@ If compiling without MATLAB, in the makefile, comment out the line
 ```
 #include make/matlab.mak. Then, "make".
 ```
-To compile our code with VLFeat, in `.bash_aliases` or `.bashrc` write: 
-
+To compile our code with VLFeat, in `.bash_aliases` or `.bashrc` add: 
 ```
 export VLFEAT_ROOT=/path/to/vlfeat/directory
+```
+
+### Matlab
+After installing Matlab, update the environmental variable:
+```
+MATLAB_ROOT=path/to/your/MATLAB/RXXXXx
 ```
 
 ## Compiling MEX functions in MATLAB
