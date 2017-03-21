@@ -56,39 +56,52 @@ pkg-config --modversion opencv
 ```
 
 ### SuiteSparse
-To download the most recent version:
+#####To download the most recent version:
 ```
-git clone https://github.com/jluttine/suitesparse.git
+#####git clone https://github.com/jluttine/suitesparse.git
 ```
-However, our implementation of Takahashi's inverse (spinv) needs UFconfig, this is found in [**SuiteSparse-3.7.1.tar.gz**](http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-3.7.1.tar.gz). Also, need to install lapack, blas, openblas, metis, and parmetis (not really needed at the moment).
+#####However, our implementation of Takahashi's inverse (spinv) needs UFconfig, this is found in [**SuiteSparse-3.7.1.tar.gz**](http://faculty.cse.tamu.edu/davis/SuiteSparse/SuiteSparse-3.7.1.tar.gz). Also, need to install lapack, blas, openblas, metis, and parmetis (not really needed at the moment).
 ```
-sudo apt-get install liblapack-dev libblas-dev libopenblas-dev libmetis-dev libparmetis-dev
+sudo apt-get install liblapack-dev libblas-dev libopenblas-dev 
+#####sudo apt-get install libmetis-dev libparmetis-dev
 cd SuiteSparse
 ```
-Download [**metis-4.0.3**](http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/OLD/metis-4.0.3.tar.gz), and rename the folder to matis-4.0. In the Makefile.in, update the following:
+#####Download [**metis-4.0.3**](http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/OLD/metis-4.0.3.tar.gz), and rename the folder to matis-4.0. In the Makefile.in, update the following:
 ```
-CC = gcc
-OPTFLAGS = -O3 
-COPTIONS = -fPIC
+#####CC = gcc
+#####OPTFLAGS = -O3 
+#####COPTIONS = -fPIC
+```
+Download [**SuiteSparse**](http://faculty.cse.tamu.edu/davis/suitesparse.html). To compile without metis, edit like 293 in SuiteSparse_config/SuiteSparse_config.mk
+```
+CHOLMOD_CONFIG ?= $(GPU_CONFIG) -DNPARTITION
 ```
 Then;
 ```
 make
-sudo make install
+sudo make install INSTALL=yourprefix
 ```
 ### Eigen
-Download and compile [**Eigen**](http://bitbucket.org/eigen/eigen/get/3.3-rc1.tar.bz2).
+Download and compile [**Eigen**](http://eigen.tuxfamily.org/index.php?title=Main_Page).
 ```
-cd Eigen
+hg clone https://bitbucket.org/eigen/eigen/
+cd eigen
 mkdir build
 cd build
-cmake ../
+cmake ../ -DCMAKE_INSTALL_PREFIX=yourprefix
 sudo make install
 ```
 
 ### libboost
+Install using precompiled binaries,
 ```
 sudo apt-get install libboost-all-dev
+```
+Or, download source from [**Boost**](http://www.boost.org/users/download/), then follow instructions to compile.
+```
+cd path/to/boost
+mkdir build
+./bootstrap.sh PREFIX=path/to/boost/build
 ```
 
 ### YARP Network and iCub
