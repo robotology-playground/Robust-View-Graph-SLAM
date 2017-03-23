@@ -106,8 +106,9 @@ If you don't like to install boost system-wise, download source from [**Boost**]
 ```
 cd path/to/boost
 mkdir build
-./bootstrap.sh PREFIX=path/to/boost/build
+./bootstrap.sh PREFIX=path/to/install
 ./b2
+./b2 install --prefix=path/to/install
 ```
 Then update the environmental variable:
 ```
