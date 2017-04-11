@@ -55,7 +55,7 @@ end
 
 function options = set_vision_options(options)
 % ============= % vision options - defaults
-options.splitimage  =0;
+options.splitimage  =1;
 options.minbase     =34/1000;% minimum baseline to perform triangulation (meters)
 options.mindisp     =2;% minimum pixel displacement in the images to be considered
 options.bucketsize      =[150,150];% bucket size

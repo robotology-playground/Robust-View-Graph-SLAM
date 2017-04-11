@@ -1,4 +1,4 @@
-function [P, A0, H0, A_left, A_right] = cameras_from_kinematics(eyes, neck, waist, floatingbase)
+function [P, A0, H0, A_left, A_right] = cameras_from_kinematics(encoders, floatingbase)
 
 %--------
 % this function takes inputs as the pairwise_geometry of set of images and
@@ -37,9 +37,13 @@ function [P, A0, H0, A_left, A_right] = cameras_from_kinematics(eyes, neck, wais
 %       a = eye(4);
 %--------
 
+eyes = encoders([1 2 3],:);
+neck = encoders([4 5 6],:);
+waist = encoders([7 8 9],:);
+
 if size(neck, 2)>1;
-    disp('  ');
-    disp('Camera poses from kinematics.');
+    %disp('  ');
+    disp(' - Computing camera poses from kinematics.');
 end
 
 % compute camera matrices from forwark kinematics

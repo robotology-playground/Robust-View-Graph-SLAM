@@ -35,7 +35,7 @@ if isdir([folder, '/img/left'])
     end
 end
 if isempty(imgl); 
-    disp('left camera data is empty'); 
+    disp(' - left camera data is empty'); 
 else % remove unreadable files
     idx = [];
     count = 0;
@@ -47,7 +47,9 @@ else % remove unreadable files
            count = count+1;
         end
     end
-    fprintf('%d left images do not exist',count);
+    if count> 0
+    	fprintf(' - %d left images do not exist',count);
+    end
     imgl.pkg = imgl.pkg(idx);
     imgl.tx = imgl.tx(idx);
     imgl.rx = imgl.rx(idx);
@@ -71,7 +73,7 @@ if isdir([folder, '/img/right'])
     end
 end
 if isempty(imgr); 
-    disp('right camera data is empty'); 
+    disp(' - right camera data is empty'); 
 else % remove unreadable files
     idx = [];
     count = 0;
@@ -83,7 +85,9 @@ else % remove unreadable files
            count = count+1;
         end
     end
-    fprintf('%d right images do not exist',count);
+    if count> 0
+    	fprintf(' - %d right images do not exist',count);
+    end
     imgr.pkg = imgr.pkg(idx);
     imgr.tx = imgr.tx(idx);
     imgr.rx = imgr.rx(idx);
@@ -108,7 +112,7 @@ if isdir([folder, '/inertial'])
         time_rx_min = [time_rx_min, imu.rx(1)];
     end
 end
-if isempty(imu); disp('imu data is empty'); end;
+if isempty(imu); disp(' - imu data is empty'); end;
 
 % read head
 if isdir([folder, '/head'])
@@ -123,7 +127,7 @@ if isdir([folder, '/head'])
         time_rx_min = [time_rx_min, hd.rx(1)];
     end
 end
-if isempty(hd); disp('head data is empty'); end;
+if isempty(hd); disp(' - head data is empty'); end;
 
 % read torso
 if isdir([folder, '/torso'])
@@ -137,7 +141,7 @@ if isdir([folder, '/torso'])
         time_rx_min = [time_rx_min, tor.rx(1)];
     end
 end
-if isempty(hd); disp('torso data is empty'); end;
+if isempty(hd); disp(' - torso data is empty'); end;
 
 % read floating base
 if isdir([folder, '/floating_base'])
@@ -152,7 +156,7 @@ if isdir([folder, '/floating_base'])
         time_rx_min = [time_rx_min, floatingbase.rx(1)];
     end
 end
-if isempty(floatingbase); disp('floatingbase data is empty'); end;
+if isempty(floatingbase); disp(' - floatingbase data is empty'); end;
 
 % % read left hand
 % data = importdata([folder, '/cartesian/left/data.log']);

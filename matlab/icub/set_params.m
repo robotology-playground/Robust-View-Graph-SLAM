@@ -56,31 +56,33 @@ end
 function options = set_vision_options(options)
 % ============= % vision options - defaults
 options.splitimage  =0;
-options.minbase     =34/1000;% minimum baseline to perform triangulation (meters)
+%options.minbase     =34/1000;% minimum baseline to perform triangulation (meters)
 options.mindisp     =2;% minimum pixel displacement in the images to be considered
-options.bucketsize      =[150,150];% bucket size
-options.ransac          =200;% number of ransac iterations
-options.RANSAC_pixtol   =.5;% tolerance RANSAC   .1 with ladybug / 1 marulan
+%options.bucketsize      =[150,150];% bucket size
+%options.ransac          =200;% number of ransac iterations
+%options.RANSAC_pixtol   =.5;% tolerance RANSAC   .1 with ladybug / 1 marulan
 options.mincorrnr       =25;% minimum number of inliers to trust two-view results
 options.mininlnr        =10;% min num of matches to compute two-view geometries
 %options.merge_tracks=1;% perform global data associations?
 %options.roterrtol=eps;% threshold in pixels for inlier (in rotation averaging)
-options.maxnumfeat      =Inf;
-options.gridsize        =0;% 3
+%options.maxnumfeat      =Inf;
+%options.gridsize        =0;% 3
 options.gridmargin      =5;% 20
 options.gridhorizon     =5;% 120
-options.method  ='fast';% sift, kaze
-if strcmp(options.method,'sift');
+options.detector  ='KAZE';% sift, kaze
+if strcmp(options.detector,'SIFT');
     options.siftthreshold   =[50,0];
     options.siftratio       =2;
-elseif strcmp(options.method,'kaze');
-    options.kazethreshold   =0.0001;
-    options.kazeratio       =0.5;
-elseif strcmp(options.method,'fast');
-    options.fastmargin      =10;%20
-    options.fastthreshold   =20;% 20
-    options.fastnonmax      =0;% 0
-    options.LKWinSize       =[15,15];
+elseif strcmp(options.detector,'KAZE');
+    kazethreshold   =0.0001;
+    kazeratio       =0.5;
+    options.detector_param =[kazethreshold,kazeratio];
+elseif strcmp(options.detector,'FAST');
+    fastmargin      =10;%20
+    fastthreshold   =20;% 20
+    fastnonmax      =0;% 0
+    LKWinSize       =[15,15];
+    options.detector_param =[fastmargin,fastthreshold,fastnonmax,LKWinSize(1)];
 else
     error('Features extraction method can be either sift, kaze or fast');
 end
@@ -120,17 +122,17 @@ options.maxitr      =100;% number of iterations, and residuals gate thresholds
 function options = set_calib_options(options)
 % ============= % Camera calibration 
 %load(strcat(options.calib,'/left_dist/Calib_Results.mat'));
-load(strcat(options.calib{1},'/Calib_Results.mat'));
+load(strcat(options.calib,'/left/Calib_Results.mat'));
 options.K1=[fc(1),alpha_c*fc(1),cc(1);0,fc(2),cc(2);0,0,1];
 options.fc1=fc;
 options.kc1=kc;
-options.alpha_c1 =alpha_c;
+%options.alpha_c1 =alpha_c;
 options.cc1=cc;
 %load(strcat(options.calib,'/right_dist/Calib_Results.mat'));
-load(strcat(options.calib{2},'/Calib_Results.mat'));
+load(strcat(options.calib,'/right/Calib_Results.mat'));
 options.K2=[fc(1),alpha_c*fc(1),cc(1);0,fc(2),cc(2);0,0,1];
 options.fc2=fc;
 options.kc2=kc;
-options.alpha_c2 =alpha_c;
+%options.alpha_c2 =alpha_c;
 options.cc2=cc;
 options.imgsize=[ny,nx];

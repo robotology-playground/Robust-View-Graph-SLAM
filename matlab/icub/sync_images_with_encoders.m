@@ -2,11 +2,11 @@ function [imgl, imgr, eyes, neck, waist, floatingbase] = sync_images_with_encode
 
 rate = 1/freq;
 
-disp([' ----> Frames captured at ',num2str(1/rate),' Hz']);
-disp([' ----> Frames later than ',num2str(rate/2),' sec were dropped']);
+disp([' - Frames captured at ',num2str(1/rate),' Hz']);
+disp([' - Frames later than ',num2str(rate/2),' sec were dropped']);
 
 if isempty(cam1)||isempty(cam2); 
-    error('imgl or imgr data is empty'); 
+    error(' - imgl or imgr data is empty'); 
 end;
 
 % right images
@@ -57,8 +57,8 @@ else
     floatingbase = [];
 end
 
-disp([' ----> Frames dropped ',num2str(sum(~use))]);
-disp([' ----> Frames taken ',num2str(length(on))]);
+disp([' - Number of pairs dropped = ',num2str(sum(~use))]);
+disp([' - Number of pairs taken = ',num2str(length(on))]);
 
 % old working code
 %%%%%%%%%%%%%%%%%%

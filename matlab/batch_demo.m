@@ -1,5 +1,5 @@
-% function batch_demo(DATA_DIR,robot)
-%function batch_demo(DATA_DIR,robot)
+% function batch_demo(robot)
+%function batch_demo(robot)
 %
 % Performs view-graph slam 
 % Requirements:
@@ -25,39 +25,32 @@
 % sudo ln -s /usr/lib/x86_64-linux-gnu/libstdc++.so.6 /usr/local/MATLAB/R2016b/bin/glnxa64/../../sys/os/glnxa64/libstdc++.so.6
 % restart MATLAB
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% FIXME: temporary thing, remove after using this as a function
-DATA_DIR = '/home/tariq/Documents/Robust-View-Graph-SLAM/matlab/heicub/data/data_set1';
-robot = 'heicub'; %icub, heicub, r1 % FIXME: temporary thing, remove after using this as a function
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Restore original <Default>Properties of root,
+% load default PATH, run STARTUP.m:
+%matlabrc;
+restoredefaultpath ;
+clc;
 
-% setup for icub, heicub, and r1
-assert(any(strcmp(robot,{'r1','icub','heicub'})),['Unknown robot: ', robot]);
-switch robot
-	case 'icub'%iCub@iit
-		%[options, encoders, floatingbase] = icub_config(DATA_DIR); FIXME: not tested yet
-	case 'heicub'%iCub@heidelberg
-		[options, encoders, floatingbase] = heicub_config(DATA_DIR);
-	case 'r1'%r1@iit
-		%[options, encoders, floatingbase] = icub_config(DATA_DIR); FIXME: not tested yet
-end
+robot = 'icub';
+
+% Configure a robot
+[options,encoders,floatingbase] = config_robot(robot);
 
 % Compute forward kinematics
-Pkin = cameras_from_kinematics(encoders, floatingbase);
+Pkin = cameras_from_kinematics(encoders,floatingbase);
 
 % Perform matching (or tracking) of image correspondences
-[C,kpts] = build_camera_graph(options);
+C = build_camera_graph(options);
 
 % Utilise kinematics or epipolar geometry to initialise constraints
-C = initialise_graph_constraints(C,kpts,Pkin,options); 
-
-return
+C = initialise_graph_constraints(C,Pkin,options); 
 
 % Refined sets of pair-wise geometry constraints using image correspondences
-C = optimise_pwg_constraints(C,kpts,options);
+%C = optimise_pwg_constraints(C,options);
 
 % Assign constraint weights
-C = assign_constraint_weight(C);
+%C = assign_constraint_weight(C);
 
 % Optimise for global camera poses using all the constraints in the graph
 %C = optimise_graph_constraints(C);
+
