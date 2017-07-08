@@ -1,8 +1,14 @@
-function [y,Y]=initialise_info_matrix(Ct,xs,ncams)
+function [y,Y]=initialise_info_matrix(varargin)
 %[y,Y]=initialise_info_matrix(Ct,xs,ncams)
 %
 % Tariq Abuhashim, 2016.
 % iCub - Koroibot
+
+assert(nargin~=3,['Function takes three arguments.',... 
+		'[y,Y]=initialise_info_matrix(Ct,xs,ncams)']);
+Ct=varargin{1};
+xs=varargin{2};
+ncams=varargin{3};
 
 switch_config;
 

@@ -25,8 +25,10 @@ while true
 	
 	% Check if ...
 	if 	k>length(C) || ... % end of constraints is reached, or ...
-	(is_new_keyframe(C(k),keyframe) && keyframe>0) % a new key-frame is coming next
-	% and hence run optimisation.
+		(is_new_keyframe(C(k),keyframe) && ... % a new key-frame is coming next
+	 	keyframe>0) % first keyframe in the data
+		% and hence run optimisation.
+		
 		ncams = length(camera); % number of included camera
 		npts = length(tracks); % number of included 3D tracks
 		xs = [xc;xf]; % state vector
@@ -46,6 +48,7 @@ while true
 		if k>length(C)
 			break
 		end
+		
 	end
 
 	% Check if this is a new keyframe, and hence reset all vectors

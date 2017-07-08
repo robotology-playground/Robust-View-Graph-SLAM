@@ -31,19 +31,19 @@
 restoredefaultpath ;
 clc;
 
-robot = 'icub';
+robot = 'hrp2';
 
 % Configure a robot
 [options,encoders,floatingbase] = config_robot(robot);
 
 % Compute forward kinematics
-Pkin = cameras_from_kinematics(encoders,floatingbase);
+P = cameras_from_kinematics(encoders,floatingbase);
 
 % Perform matching (or tracking) of image correspondences
 C = build_camera_graph(options);
 
 % Utilise kinematics or epipolar geometry to initialise constraints
-C = initialise_graph_constraints(C,Pkin,options); 
+%C = initialise_graph_constraints(C,P,options); 
 
 % Refined sets of pair-wise geometry constraints using image correspondences
 %C = optimise_pwg_constraints(C,options);

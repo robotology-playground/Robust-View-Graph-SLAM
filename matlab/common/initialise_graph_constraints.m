@@ -105,7 +105,7 @@ function flag=has_scan(C,options)
 % Genova, Italy, 2016
 	% FIXME: scan merging, not implemented yet
 	flag=logical(mod(C.edge(1),2)&has_correspondence(C,options) ... 
-		&(C.edge(2)-C.edge(1))==1);
+		&(C.edge(2)-C.edge(1))==1)&norm(C.t)>.05;
 end %has_scan()
 %
 %

@@ -33,11 +33,11 @@ if nargin == 2 % assign calibration or vision or optimiser configurations
 end
 
 if nargin == 3 % change a field
-    if strcmp(field, 'folder');
+    if strcmp(field, 'folder')
         options.(field) = val;
-    elseif strcmp(field, 'save');
+    elseif strcmp(field, 'save')
         options.(field) = val;
-    elseif strcmp(field, 'calib');
+    elseif strcmp(field, 'calib')
         options.(field) = val;
         options = set_calib_options(options);
     else
@@ -47,7 +47,7 @@ if nargin == 3 % change a field
 end
 
 if isfield(options, 'save')
-    if ~isdir(strcat(options.save));
+    if ~isdir(strcat(options.save))
         mkdir(strcat(options.save));
     end
     save(strcat(options.save,'/options'), 'options');
@@ -70,14 +70,14 @@ options.mininlnr        =10;% min num of matches to compute two-view geometries
 options.gridmargin      =5;% 20
 options.gridhorizon     =5;% 120
 options.detector  ='KAZE';% sift, kaze
-if strcmp(options.detector,'SIFT');
+if strcmp(options.detector,'SIFT')
     options.siftthreshold   =[50,0];
     options.siftratio       =2;
-elseif strcmp(options.detector,'KAZE');
+elseif strcmp(options.detector,'KAZE')
     kazethreshold   =0.0001;
     kazeratio       =0.5;
     options.detector_param =[kazethreshold,kazeratio];
-elseif strcmp(options.detector,'FAST');
+elseif strcmp(options.detector,'FAST')
     fastmargin      =10;%20
     fastthreshold   =20;% 20
     fastnonmax      =0;% 0

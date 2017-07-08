@@ -12,22 +12,21 @@ function C=build_camera_graph(options)
 % Koroibot, iCub Facility, Istituto Italiano di Tecnologia
 % Genova, Italy, 2016
 
-nimages=size(options.cam_left.image,2)+size(options.cam_right.image,2);
-kpts=cell(1,nimages); 
-desc=cell(1,nimages);
-thickness=options.ncams-1;
-ncorners=options.mincorrnr;
-mindisp=options.mindisp;
-C=[]; k=0; %nkeys=0;
+nimages = size(options.cam_left.image,2)+size(options.cam_right.image,2);
+kpts = cell(1,nimages); 
+desc = cell(1,nimages);
+thickness = options.ncams-1;
+ncorners = options.mincorrnr;
+mindisp = options.mindisp;
+C = []; k = 0; %nkeys=0;
  
 fprintf(' - Building the camera graph ');
-if isfield(options,'kazethreshold')
-	fprintf(['(detector = KAZE<',num2str(options.kazethreshold),',',num2str(options.kazeratio),'>']);
-end
+fprintf(['(detector = ',options.detector,'<',strjoin(arrayfun(@(x) num2str(x),options.detector_param,'UniformOutput',false),','),'>']);
 fprintf([', thickness = ',num2str(thickness)]);
 fprintf([', mincorrnr = ',num2str(ncorners)]);
 fprintf([', mindisp = ',num2str(mindisp)]);
 fprintf([') ...\n']);
+
 for i=1:2:nimages-1	% FIXME: No edge from even to odd
 					% This was assumed because even-to-odd
 					% edge results were strange
@@ -41,47 +40,55 @@ for i=1:2:nimages-1	% FIXME: No edge from even to odd
     switch options.detector
     case 'KAZE'
     	if isempty(kpts{i})
-        	[kpts{i},desc{i}]=get_akaze(options,i);
+        	[kpts{i},desc{i}] = get_akaze(options,i);
         end
-        c1=kpts{i};d1=desc{i}; % KAZE is unique, so no need to repeat
+        c1 = kpts{i}; d1 = desc{i}; % KAZE is unique, so no need to repeat
 	case 'FAST'
-		c1=get_fast(options,i);
+		c1 = get_fast(options,i); % Corners in each image are unique, but not their tracks
 	end % switch
 
 	% track in the remaining frames
     for j=i+1:min(i+thickness,nimages)
+    
     	switch options.detector
     	case 'KAZE'
         	if isempty(kpts{j})
-            	[kpts{j},desc{j}]=get_akaze(options,j);
+            	[kpts{j},desc{j}] = get_akaze(options,j);
         	end
-        	c2=kpts{j};d2=desc{j}; % KAZE is unique, so no need to repeat
-        	kazeratio=options.detector_param(2);
-        	matches=vl_ubcmatch(desc{i}',desc{j}',kazeratio); % Matching using vlFeat
+        	c2 = kpts{j}; d2 = desc{j}; % KAZE is unique, so no need to repeat
+        	kazeratio = options.detector_param(2);
+        	matches = vl_ubcmatch(desc{i}',desc{j}',kazeratio); % Matching using vlFeat
         case 'FAST'
-        	c2=track_fast(options,c1,i,j);
-        	matches=[1:size(c1,1);1:size(c2,1)]; % tracked in the same order using optical flow
+        	c2 = track_fast(options,c1,i,j);
+        	% FIXME: fast and optical flow are not unique, we need to find away to merge those in images
+        	% i.e., a corner extracted from frame 2 should be merged with the same point tracked into frame 2
+        	% for example, using nearest-neighbour, or buy extracting local descriptors.
+        	% Hence, c2 and kpts{j} should have the same ID
+        	matches = [1:size(c1,1);1:size(c2,1)]; % tracked in the same order using optical flow
         end % switch
-        vis=remove_points_at_infinity(c1(matches(1,:),1:2)',c2(matches(2,:),1:2)',mindisp);
-        matches=matches(1:2,vis==1);
+        
+        vis = remove_points_at_infinity(c1(matches(1,:),1:2)',c2(matches(2,:),1:2)',mindisp);
+        matches = matches(1:2,vis==1);
+        
         if size(matches,2)>ncorners
-            k=k+1;
-            C(k).edge=[i,j]; % FIXME: doesn't account for uncomputed edges
-            C(k).weight=size(matches,2);
-            C(k).kpts1=c1(matches(1,:),:);
-            C(k).kpts2=c2(matches(2,:),:);
-            C(k).matches=matches;
+            k = k+1;
+            C(k).edge = [i,j]; % FIXME: doesn't account for uncomputed edges
+            C(k).weight = size(matches,2);
+            C(k).kpts1 = c1(matches(1,:),:);
+            C(k).kpts2 = c2(matches(2,:),:);
+            C(k).matches = matches;
 	    	fprintf('Edge [%d,%d,%d].\n',i,j,size(matches,2));
 	    	if 0
 	    		clf;
-	    		im1=get_image_k(options,i);
-				im2=get_image_k(options,j);
+	    		im1 = get_image_k(options,i);
+				im2 = get_image_k(options,j);
 				imshow([im1,im2]); hold on;
 				plot(c1(matches(1,:),1),c1(matches(1,:),2),'r+');
 				plot(c2(matches(2,:),1)+size(im1,2),c2(matches(2,:),2),'b+');
 	   			drawnow;
 	    	end
         end % if
+        
     end % for
     
 end
