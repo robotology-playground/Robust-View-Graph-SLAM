@@ -3,7 +3,7 @@
  * MATLAB and C++ Implementations of View-Graph SLAM.
  * This is a robust mixture between Nonlinear Least-Squares Estimation and Multiple-Views Pose-Graph SLAM. This implementation is Applicable for both, stereo and monocular settings.
  * If you are planning on using this implementation, please cite our paper:
- * T. Abuhashim and L. Natale, "Robustness in view-graph SLAM," 2016 19th International Conference on Information Fusion (FUSION), Heidelberg, 2016, pp. 942-949. URL: http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=7527987&isnumber=7527857
+   T. Abuhashim and L. Natale, "Robustness in view-graph SLAM," 2016 19th International Conference on Information Fusion (FUSION), Heidelberg, 2016, pp. 942-949. URL: http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=7527987&isnumber=7527857
  * Copyright (C) 2016 iCub Facility - Istituto Italiano di Tecnologia
  * Authors: Tariq Abuhashim, Nicolo' Genesio
  * Emails: t.abuhashim@gmail.com, nicogene@hotmail.it
