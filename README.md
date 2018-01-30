@@ -1,4 +1,4 @@
-## Release Notes (The current source is out-of-date, a new release will be published by the end of 2017).
+## Release Notes (The current source is out-of-date, a new release will be published by mid 2018).
 
  * MATLAB and C++ Implementations of View-Graph SLAM.
  * This is a robust mixture between Nonlinear Least-Squares Estimation and Multiple-Views Pose-Graph SLAM. This implementation is Applicable for both, stereo and monocular settings.
